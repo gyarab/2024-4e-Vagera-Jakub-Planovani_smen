@@ -1,0 +1,1 @@
+# 2024-4e-Vagera-Jakub-Planovani_smen
