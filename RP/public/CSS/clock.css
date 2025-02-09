@@ -1,0 +1,68 @@
+/** {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html, body {
+    height: 100%;
+    width: 100%;
+  }
+  
+  body {
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }*/
+  
+  .clock {
+    height: 45px;
+    color: black;
+    font-size: 35px;
+    font-family: sans-serif;
+    line-height: 50px;
+    display: flex;
+    position: relative;
+    /*background: green;*/
+    overflow: hidden;
+  }
+  
+  .clock::before, .clock::after {
+    /*content: '';*/
+    width: 15px;
+    height: 40px;
+    background: white;
+    position: absolute;
+    z-index: 2;
+  }
+  
+  .clock::after {
+    bottom: 0;
+    background: white;
+  }
+  
+  .clock > div {
+    display: flex;
+  }
+  
+  .tick {
+    line-height: 5px;
+  }
+  
+  .tick-hidden {
+    opacity: 0;
+  }
+  
+  .move {
+    animation: move linear 1s infinite;
+  }
+  
+  @keyframes move {
+    from {
+      transform: translateY(0px);
+    }
+    to {
+      transform: translateY(0px);
+    }
+  }

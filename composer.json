@@ -1,0 +1,11 @@
+{
+    "require": {
+        "pusher/pusher-php-server": "^7.0",
+        "munafio/chatify": "^1.6"
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
+        }
+    }
+}

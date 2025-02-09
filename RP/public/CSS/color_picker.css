@@ -1,0 +1,106 @@
+/**
+ * color-swatch.css
+ * @version 1.0.2
+ * @summary 25-08-2021
+ * @author Mads Stoumann
+ * @description Color Swatches in radio-button-group
+ */
+ .color-swatch {
+    --gap: 0.5rem;
+    --ico: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M14 2.5l-8.5 8.5-3.5-3.5-1.5 1.5 5 5 10-10z"></path></svg>');
+    --ico-c: #111;
+    --ico-trp: url('data:image/svg+xml;utf8,<svg preserveAspectRatio="none" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="5" height="5" fill="rgb(220,220,220)" /><rect x="5" y="5" width="5" height="5" fill="rgb(220,220,220)" /></svg>');
+    --ico-trp-sz: 0.65rem;
+    --ico-w: 50%;
+    --item-bdrs: 50%;
+    --item-bxsh-w: 0.125rem;
+    --items-per-row: 5;
+  
+    background-color: var(--cbgc, transparent);
+    border: 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gap);
+    max-width: var(--maw, 20rem);
+    padding-block: var(--gap);
+    padding-inline: var(--gap) 0;
+  }
+  .color-item {
+    --w: calc((100% / var(--items-per-row)) - var(--gap));
+    aspect-ratio: 1;
+    background-color: var(--bgc);
+    border: var(--bdw, 0.125rem) solid color-mix(in hsl, #000 10%, var(--bgc));
+    border-radius: var(--item-bdrs);
+    box-shadow: var(--bxsh, none);
+    box-sizing: border-box;
+    display: inline-block;
+    flex: 0 0 var(--w);
+    position: relative;
+    width: var(--w);
+  }
+  .color-item[style="--bgc:transparent"] {
+    background: var(--ico-trp);
+    background-position: 0 0; 
+    background-size: var(--ico-trp-sz);
+  }
+  .color-item i {
+    background-color: transparent;
+    display: block;
+    height: 100%;
+    mask: no-repeat center/var(--ico-w) var(--ico);
+    -webkit-mask: no-repeat center/var(--ico-w) var(--ico);
+    width: 100%;
+  }
+  .color-item input { 
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    left: 0;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+   }
+   
+   /* STATES */
+  .color-item input:checked + i {
+    background-color: color-contrast(var(--bgc) vs white, black);
+  }
+  .color-item:focus-within {
+    --bdw: 0;
+    --bxsh: 0 0 0 var(--item-bxsh-w) #FFF, 0 0 0 calc(2 * var(--item-bxsh-w)) var(--bdc);
+    transform: scale(1.1);
+    z-index: 1;
+  }
+  @media screen and (prefers-reduced-motion: no-preference) {
+    .color-item {
+      transition: all .3s ease-in-out;
+    }
+    @media (hover: hover) {
+      .color-item:hover {
+        transform: scale(1.1);
+      }
+    }
+  }
+  
+  /* Support for browsers, that do not support `color-contrast` */
+  @supports not (color: color-contrast(red vs black, white)) {
+    .color-item input:checked + i {
+      background-color: var(--ico-c);
+    }
+  }
+  /* Support for browsers, that do not support `color-mix` */
+  @supports not (color: color-mix(in hsl, #000 10%, white)) {
+    .color-item {
+      border: var(--bdw, 0.125rem) solid var(--bdc, hsl(0, 0%, 60%));
+    }
+  }
+  /* Support for browsers, that do not support `aspect-ratio` */
+  @supports not (aspect-ratio: 1) {
+    .color-item::after {
+      content: "";
+      display: block;
+      padding-bottom: 100%;
+    }
+  }
