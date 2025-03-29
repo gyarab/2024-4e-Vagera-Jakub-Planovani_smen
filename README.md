@@ -18,7 +18,7 @@ Maturitní ročníkový projekt 2024/2025. Projekt umožnuje vytvářet, plánov
 
 ## Instalace webového serveru
 
-Laravel webový server je uložena na větvy masters. K instalaci je zapotřebí 
+Webový server je uložena na větvy master. K instalaci je možná přes příkaz:  
 ```git
 git clone -b master https://github.com/gyarab/2024-4e-Vagera-Jakub-Planovani_smen.git
 ```
@@ -33,54 +33,49 @@ DB_USERNAME=myusername
 DB_PASSWORD=mypassword
 
 ```
+K spuštění serveru je nutno v bashi v adresáři `/RP` zadat příkaz: 
+```bash
+#Všeobecné spuštění
+php artisan serve
+
+#Pro konkrétní spuštění
+php artisan serve --host=10.9.9.127 --port=8000
+```
+
 [Optional] Pro odesílání emailů v projektu je zapotřebí zadat parametry odkazují na službu, která je schopná odesílat emaily do souboru `.ENV` (K zasílání emailů jsem využívam službu [Mailtrap](https://mailtrap.io/), ale může zde být uvedená i jiná služba). Pro spuštění a odesíláních živých zpráv je zapotřebí do souboru`.ENV` vložit osobní přihlašovací parametry ke službě [Pusher](https://pusher.com/). 
 ```env
+#Pro zasílaní emailů
+MAIL_USERNAME=myusername
+MAIL_PASSWORD=mypassword
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS="example@gmail.com"
+MAIL_FROM_NAME="${APP_NAME}"
+
+#Pro pusher
+BROADCAST_DRIVER=pusher
+PUSHER_APP_ID=pusherid
+PUSHER_APP_KEY=publickey
+PUSHER_APP_SECRET=secretkey
+PUSHER_APP_CLUSTER=eu
+PUSHER_SCHEME=https
+PUSHER_PORT=443
+PUSHER_APP_TLS=true
 ```
 ## Instace android aplikace
-```
+Android aplikace je uložena na větvy main. K instalaci je možná přes příkaz:  
+```git
 git clone -b main https://github.com/gyarab/2024-4e-Vagera-Jakub-Planovani_smen.git
 ```
+Pro úspěšné přihlášení do aplikace je zapotřebí spuštený webového server a aby uživatel měl v databázi účet. Cesta k serveru se v aplikaci na stavuje v souboru `/connection/ConnectionFile.java`. K ověřování server používá nástroj Laravel Sanctum. Pokud server běží na adrese jiné něž localhost, je zapotřebí na serveru do souboru `/config/sanctum.php` nastavit tuto důvěryhodnou adresu.
+```php
+//sanctum.php
 
-## Learning Laravel
+'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', sprintf(
+  '%s%s',
+  'localhost,localhost:3000,127.0.0.1,mojeadresa',
+  env('APP_URL') ? ','.parse_url(env('APP_URL'), PHP_URL_HOST) : ''
+))),
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+```
+[Optional] Pro spuštění a odesíláních živých zpráv v aplikaci je zapotřebí do souboru `/connection/PusherConnection.java` nastavit osobní klíč a cluster. 
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
