@@ -18,7 +18,7 @@ Maturitní ročníkový projekt 2024/2025. Projekt umožnuje vytvářet, plánov
 
 ## Instalace webového serveru
 
-Webový server je uložena na větvy master. K instalaci je možná přes příkaz:  
+Webový server je uložena na větvy master. Instalace je možná přes příkaz:  
 ```git
 git clone -b master https://github.com/gyarab/2024-4e-Vagera-Jakub-Planovani_smen.git
 ```
@@ -62,7 +62,7 @@ PUSHER_PORT=443
 PUSHER_APP_TLS=true
 ```
 ## Instace android aplikace
-Android aplikace je uložena na větvy main. K instalaci je možná přes příkaz:  
+Android aplikace je uložena na větvy main. Instalace je možná přes příkaz:  
 ```git
 git clone -b main https://github.com/gyarab/2024-4e-Vagera-Jakub-Planovani_smen.git
 ```
