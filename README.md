@@ -14,15 +14,32 @@
 
 ## O projektu
 
-Maturitní ročníkový projekt 2024/2025. Projekt umožnuje vytvářet, plánovat, přihlašovat se a monitorovat pracovní směny v webovém rozhranní v frameworku Laravel a v adnroid operačním systému. 
+Maturitní ročníkový projekt 2024/2025. Projekt umožnuje vytvářet, plánovat, přihlašovat se a monitorovat pracovní směny v webovém rozhranní v frameworku Laravel a v Adnroid operačním systému. 
 
 ## Instalace webového serveru
 
+Laravel webový server je uložena na větvy masters. K instalaci je zapotřebí 
+```git
+git clone -b master https://github.com/gyarab/2024-4e-Vagera-Jakub-Planovani_smen.git
 ```
-git clone -b master https://github.com/username/repository.git
-```
+K přihlášení do systému je potřeba instalace MySQL databáze. Do databáze je zapotřebí zkopírovat strukturu projektu z souboru `XXX.sql`. Dále je potřeba v Laravel frameworku nastavit přístupové parametry v souboru `.ENV`
+```env
 
-## Instace Operačního systému
+DB_CONNECTION=mysql
+DB_HOST=myhost
+DB_PORT=3306
+DB_DATABASE=mydatabase
+DB_USERNAME=myusername
+DB_PASSWORD=mypassword
+
+```
+[Optional] Pro odesílání emailů v projektu je zapotřebí zadat parametry odkazují na službu, která je schopná odesílat emaily do souboru `.ENV` (K zasílání emailů jsem využívam službu [Mailtrap](https://mailtrap.io/), ale může zde být uvedená i jiná služba). Pro spuštění a odesíláních živých zpráv je zapotřebí do souboru`.ENV` vložit osobní přihlašovací parametry ke službě [Pusher](https://pusher.com/). 
+```env
+```
+## Instace android aplikace
+```
+git clone -b main https://github.com/gyarab/2024-4e-Vagera-Jakub-Planovani_smen.git
+```
 
 ## Learning Laravel
 
