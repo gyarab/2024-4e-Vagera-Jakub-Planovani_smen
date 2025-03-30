@@ -14,15 +14,15 @@
 
 ## O projektu
 
-Maturitní ročníkový projekt 2024/2025. Projekt umožnuje vytvářet, plánovat, přihlašovat se a monitorovat pracovní směny v webovém rozhranní v frameworku Laravel a v Adnroid operačním systému. 
+Maturitní ročníkový projekt 2024/2025. Projekt umožnuje vytvářet, plánovat, přihlašovat se a monitorovat pracovní směny ve webovém rozhranní ve frameworku Laravel a v Android operačním systému. 
 
 ## Instalace webového serveru
 
-Webový server je uložena na větvy master. Instalace je možná přes příkaz:  
+Webový server je uložen na větvy master. Instalace je možná přes příkaz:  
 ```git
 git clone -b master https://github.com/gyarab/2024-4e-Vagera-Jakub-Planovani_smen.git
 ```
-K přihlášení do systému je potřeba instalace MySQL databáze. Do databáze je zapotřebí zkopírovat strukturu projektu z souboru `XXX.sql`. Dále je potřeba v Laravel frameworku nastavit přístupové parametry v souboru `.ENV`
+K přihlášení do systému je potřeba instalace MySQL databáze. Do databáze je zapotřebí zkopírovat strukturu projektu ze souboru `XXX.sql`. Dále je potřeba v Laravel frameworku nastavit přístupové parametry v souboru `.ENV`
 ```env
 
 DB_CONNECTION=mysql
@@ -33,7 +33,7 @@ DB_USERNAME=myusername
 DB_PASSWORD=mypassword
 
 ```
-K spuštění serveru je nutno v bashi v adresáři `/RP` zadat příkaz: 
+Ke spuštění serveru je nutno v bashi v adresáři `/RP` zadat příkaz: 
 ```bash
 #Všeobecné spuštění
 php artisan serve
@@ -42,7 +42,7 @@ php artisan serve
 php artisan serve --host=10.9.9.127 --port=8000
 ```
 
-[Optional] Pro odesílání emailů v projektu je zapotřebí zadat parametry odkazují na službu, která je schopná odesílat emaily do souboru `.ENV` (K zasílání emailů jsem využívam službu [Mailtrap](https://mailtrap.io/), ale může zde být uvedená i jiná služba). Pro spuštění a odesíláních živých zpráv je zapotřebí do souboru`.ENV` vložit osobní přihlašovací parametry ke službě [Pusher](https://pusher.com/). 
+[Optional] Pro odesílání emailů v projektu je zapotřebí zadat parametry odkazující na službu, která je schopná odesílat emaily do souboru `.ENV` (K zasílání emailů jsem využívam službu [Mailtrap](https://mailtrap.io/), ale může zde být uvedena i jiná služba). Pro spuštění a odesíláních živých zpráv je zapotřebí do souboru`.ENV` vložit osobní přihlašovací parametry ke službě [Pusher](https://pusher.com/). 
 ```env
 #Pro zasílaní emailů
 MAIL_USERNAME=myusername
@@ -61,12 +61,12 @@ PUSHER_SCHEME=https
 PUSHER_PORT=443
 PUSHER_APP_TLS=true
 ```
-## Instace android aplikace
-Android aplikace je uložena na větvy main. Instalace je možná přes příkaz:  
+## Instace Android aplikace
+Android aplikace je uložena na větvi main. Instalace je možná přes příkaz:  
 ```git
 git clone -b main https://github.com/gyarab/2024-4e-Vagera-Jakub-Planovani_smen.git
 ```
-Pro úspěšné přihlášení do aplikace je zapotřebí spuštený webového server a aby uživatel měl v databázi účet. Cesta k serveru se v aplikaci na stavuje v souboru `/connection/ConnectionFile.java`. K ověřování server používá nástroj Laravel Sanctum. Pokud server běží na adrese jiné něž localhost, je zapotřebí na serveru do souboru `/config/sanctum.php` nastavit tuto důvěryhodnou adresu.
+Pro úspěšné přihlášení do aplikace je zapotřebí mít spuštený webového server a aby uživatel měl v databázi účet. Cesta k serveru se v aplikaci nastavuje v souboru `/connection/ConnectionFile.java`. K ověřování server používá nástroj Laravel Sanctum. Pokud server běží na adrese jiné něž localhost, je zapotřebí na serveru do souboru `/config/sanctum.php` nastavit tuto adresu.
 ```php
 //sanctum.php
 
@@ -77,5 +77,13 @@ Pro úspěšné přihlášení do aplikace je zapotřebí spuštený webového s
 ))),
 
 ```
-[Optional] Pro spuštění a odesíláních živých zpráv v aplikaci je zapotřebí do souboru `/connection/PusherConnection.java` nastavit osobní klíč a cluster. 
+[Optional] Pro spuštění a odesíláních živých zpráv v aplikaci je zapotřebí do souboru `/connection/PusherConnection.java` nastavit osobní klíč a cluster.
 
+
+
+<!--<p align="center">
+<a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a> 
+  <a href="https://laravel.com" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Plus_symbol.svg/1200px-Plus_symbol.svg.png" height="150" width="150" style="margin-right: 400" alt="Plus Logo"></a>
+<a href="https://laravel.com" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Android_Studio_icon_%282023%29.svg/2048px-Android_Studio_icon_%282023%29.svg.png"  height="150" width="150" alt="Android Logo"></a>
+
+</p>-->
