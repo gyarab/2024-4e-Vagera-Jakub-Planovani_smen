@@ -22,7 +22,7 @@ Webový server je uložen na větvy master. Instalace je možná přes příkaz:
 ```git
 git clone -b master https://github.com/gyarab/2024-4e-Vagera-Jakub-Planovani_smen.git
 ```
-K přihlášení do systému je potřeba instalace MySQL databáze. Do databáze je zapotřebí zkopírovat strukturu projektu ze souboru `XXX.sql`. Dále je potřeba v Laravel frameworku nastavit přístupové parametry v souboru `.ENV`
+K přihlášení do systému je potřeba instalace MySQL databáze. Do databáze je zapotřebí zkopírovat strukturu projektu ze souboru `RP_database.sql`. V struktuře se nachází jeden účet s heslem Qwerty123 schopný přihlášení do systému. Dále je potřeba v Laravel frameworku nastavit přístupové parametry v souboru `.ENV`
 ```env
 
 DB_CONNECTION=mysql
