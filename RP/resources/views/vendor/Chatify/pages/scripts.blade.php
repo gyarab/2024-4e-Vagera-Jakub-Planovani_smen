@@ -3,6 +3,7 @@
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
 </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script>
@@ -31,7 +32,43 @@
             }
 
         }
+      
+                            $.ajax({
+                                url: '{{ route('showProfileImage') }}',
+                                type: 'POST',
+                                data: {
+                                    _token: '{{ csrf_token() }}',
+                                },
+                                success: function(response) {
 
+                                    $('#profileHeader').attr('src', response.url);
+                                    $('#smallProfileHeader').attr('src', response.url);
+
+                                },
+                                error: function(xhr, status, error) {
+                                    alert('Error fetching image:', error);
+                                }
+                            });
+                            $.ajax({
+                                url: '{{ route('parameters') }}',
+                                type: 'POST',
+                                data: {
+                                    _token: '{{ csrf_token() }}',
+                                    
+                                },
+                                success: function(response) {
+                                    
+                                    document.getElementById("name_header").innerHTML = response.first_name + " "+ response.middle_name + " "  + response.last_name;
+                                    //document.getElementById("user-name").innerHTML = response.first_name + " "+ response.middle_name + " "  + response.last_name;
+
+
+                                },
+                                error: function(xhr, status, error) {
+                                    alert('Error fetching image:', error);
+                                }
+                            });
+                            
+                        
         showNavbar('header-toggle', 'nav-bar', 'body-pd', 'header')
 
         /*===== LINK ACTIVE =====*/

@@ -8,6 +8,9 @@ class ProfilePictures extends Controller
 {
 public function store(Request $request)
 {
+    /**
+     * Stara verrze ukladani
+     */
     $request->validate([
         'id' => 'required',
         'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -16,10 +19,8 @@ public function store(Request $request)
     $request->image->move(public_path('images'), $imageName);
     $product = new profile_pictures();
     $product->id = $request->id;
-    //$product->description = $request->description;
     $product->image = 'images/'.$imageName;
     $product->save();
-    //return redirect()->route('products.index')->with('success', 'Product created successfully.');
 }
 }
 

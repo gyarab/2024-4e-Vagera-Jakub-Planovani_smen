@@ -35,17 +35,33 @@
 </head>
 
 <body id="body-pd">
-    @include('vendor.Chatify.pages.header')
-    @include('vendor.Chatify.pages.sidebar')
+    @include('vendor.Chatify.pages.header-admin')
+    @include('vendor.Chatify.pages.sidebar-admin')
     @include('admin.scripts')
-    <div class="height-100 bg-light">
+    <div class="border-start height-100 bg-light">
         <script>
             var icon_value = "btnMobile";
+            function error_sweet_alert(message) {
+            Swal.fire({
+                title: "Connection failed",
+                text: "",
+                icon: "error"
+            });
+
+        }
+        function success_sweet_alert(message) {
+            Swal.fire({
+                title: message,
+                text: "",
+                icon: "success"
+            });
+
+        }
         </script>
         <div class="container">
-            <div class="row">
+            <div class="row ">
             
-                <div class="col-12 col-md-3">
+                <div class="col-12 col-md-3 mt-3">
                     <div class="card">
                         <div class="card-body">
                             <h5>Device </h5>
@@ -58,7 +74,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-md-9">
+                <div class="col-12 col-md-9 mt-3">
               
                     <div class="card">
                         <div class="card-body">
@@ -77,68 +93,38 @@
                         
                                     </div>
                             
-                                    <!--<div class="p-2 mb-3" style="background: #4CAF50;color:#ffffff; font-size: 20px;">
-                                Description
-                            </div>-->
                                 </div>
                             </div>
 
                         </div>
                     </div>
                     <!-- source: https://www.geeksforgeeks.org/how-to-specify-minimum-maximum-number-of-characters-allowed-in-an-input-field-in-html/ -->
-                    <!-- <input type="hidden" id="hip">
-                    <div class="row">
-                        <div class="col-12">
-                            <br>
-                            <div class="p-2 mb-2" style="background: #4CAF50;color:#ffffff; font-size: 20px;">Enter IP
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 col-md-12">
-                            <input id="ip1" class="form-control" maxlength="3" type="text"
-                                style="width: 58px;display: inline" onkeyup="checkIP1(this.value)">
-                            <p style="font-size:30px; display: inline;height:38px">.</p>
-                            <input id="ip2" class="form-control" maxlength="3" type="text"
-                                style="width: 58px;display: inline" onkeyup="checkIP2(this.value)">
-                            <p style="font-size:30px; display: inline;height:38px">.</p>
-                            <input id="ip3" class="form-control" maxlength="3" type="text"
-                                style="width: 58px;display: inline" onkeyup="checkIP3(this.value)">
-                            <p style="font-size:30px; display: inline;height:38px">.</p>
-                            <input id="ip4" class="form-control" maxlength="3" type="text"
-                                style="width: 58px;display: inline">
-
-                            <button type="button" class="btn btn-primary mt-2" onclick="add_ip()"
-                                style="float:right">ADD
-                                IP</button>
-                            <button type="button" class="btn btn-warning mt-2" onclick="get_my_ip()"
-                                style="float:right;margin-right:10px ">GET DEVICE IP</button>
-                        </div>
-                    </div>-->
-
+        
                 </div>
-                <!--<div class="col-12 col-md-6">
-                    <br>
-                    <div class="row">
-                        <div class="col-12">
-
-                            <div class="p-2 mb-3" style="background: #4CAF50;color:#ffffff; font-size: 20px;">
-                                Description
-                            </div>
-                        </div>
-                    </div>
-
-                    <input id="mytext" class="form-control" style="display: inline" type="text">
-
-                </div>-->
+       
             </div>
             <div class="row mt-4">
                 <div class="col-12 col-md-6">
                     <div class="card">
                         <div class="card-body">
                             <h5>Current device</h5>
-                            <hr>
-                            <i class="bi bi-patch-check-fill text-primary fs-3"></i>
+                            <hr >
+                
+                            <div class="row">
+                                <div class="col-2">
+                                    <i id="verify" class="bi bi-patch-check-fill text-primary fs-3" style="display: inline"></i>
+                                    <i id="x-circle" class="bi bi-x-circle text-danger fs-3" style="display: inline"></i>
+                                </div>
+                                <div class="col-1">
+                                    <i id="device_icon" class="bi fs-3" style="display: inline"></i>
+
+                                </div>
+                                <div class="col-9 mt-1">
+                                    <input type="text" class="form-control" id="currentDescription" style="display: inline" disabled readonly>
+
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -182,26 +168,13 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-12 col-md-5">
-                    <div class="form-group">
-                        <input id="mycookie" class="form-control" style="display: inline" type="text">
-                    </div>
-                </div>
-                <div class="col-12 col-md-7">
-                    <div class="row">
-                        <div class="col-12">
 
-                            <input type="button" class="btn btn-warning mb-2 mb-md-0 " onclick="get_my_cookie()"
-                                value="GET DEVICE COOKIE IDENTIFIER">
-
-                            <input type="button" class="btn btn-primary mb-2 mb-md-0" style="float:right"
-                                onclick="" value="ADD COOKIE">
-                        </div>
-                    </div>
-                </div>
                 <script>
+                     document.getElementById("desc").value = "";
+
+                     validateSecureCookie();
+                    loadDevices();
                     function add_cookie() {
-                        alert("123456");
                         let description = document.getElementById("desc").value;
                         $.ajax({
                             url: '{{ route('registerDevice') }}',
@@ -213,13 +186,16 @@
                             },
                             success: function(response) {
 
-                                alert(response.device_token);
+                                validateSecureCookie();
+                                loadDevices();
+                                success_sweet_alert("Device registered");
                             },
                             error: function(xhr, status, error) {
-                                alert('Error fetching image:', error);
+                                error_sweet_alert('Error fetching image:1', error);
                             }
                         });
                     }
+                    function validateSecureCookie() {
                     $.ajax({
                             url: '{{ route('validateSecureCookie') }}',
                             type: 'POST',
@@ -227,16 +203,26 @@
                                 _token: '{{ csrf_token() }}',
                             },
                             success: function(response) {
-
-                                alert(response.status);
-                                //document.getElementById("currentDevice").innerHTML = ; 
+                                document.getElementById("x-circle").style.display = "none";
+                                document.getElementById("verify").style.display = "block";
+                                document.getElementById("currentDescription").value = response.description;
+                                if(response.icon == "btnLaptop"){
+                                    document.getElementById("device_icon").classList.add("bi-laptop");
+                                }else if(response.icon == "btnComputer"){
+                                    document.getElementById("device_icon").classList.add("bi-pc-display");
+                                }else{
+                                    document.getElementById("device_icon").classList.add("bi-phone");
+                                }
+   
 
                             },
                             error: function(xhr, status, error) {
-                                alert('Error fetching image:', error);
+                                document.getElementById("verify").style.display = "none";
+                                document.getElementById("x-circle").style.display = "block";
                             }
                         });
-
+                    }
+                    function loadDevices() {
                         $.ajax({
                             url: '{{ route('loadDevices') }}',
                             type: 'POST',
@@ -245,14 +231,14 @@
                             },
                             success: function(response) {
 
-                                //alert(response);
                                 document.getElementById("allDevices").innerHTML = response; 
 
                             },
                             error: function(xhr, status, error) {
-                                alert('Error fetching image:', error);
+                                error_sweet_alert('Error fetching ');
                             }
                         });
+                    }
                         function changeDeviceStatusActive(value){
                         $.ajax({
                             url: '{{ route('changeDeviceStatusActive') }}',
@@ -262,13 +248,11 @@
                                 id_device: value,
                             },
                             success: function(response) {
-
-                                alert("------------");
-                                //document.getElementById("allDevices").innerHTML = response; 
+                                loadDevices();
 
                             },
                             error: function(xhr, status, error) {
-                                alert('Error fetching image:', error);
+                                error_sweet_alert('Error fetching');
                             }
                         });
                     }
@@ -281,27 +265,23 @@
                                 id_device: value,
                             },
                             success: function(response) {
+                                loadDevices();
 
-                                alert("------------");
-                                //document.getElementById("allDevices").innerHTML = response; 
 
                             },
                             error: function(xhr, status, error) {
-                                alert('Error fetching image:', error);
+                                error_sweet_alert('Error fetching');
                             }
                         });
 
                     }
-                        //changeDeviceStatus
                    function btnChanger(vall){
             icon_value = vall;
 
-                    //alert("123");
-                    //document.getElementById("btnComputer").class = "btn btn-outline-primary rounded active";
                     document.getElementById("btnMobile").classList.remove("active"); 
                     document.getElementById("btnLaptop").classList.remove("active"); 
                     document.getElementById("btnComputer").classList.remove("active"); 
-                    const element = document.getElementById(vall);  // Get the DIV element
+                    const element = document.getElementById(vall);  
                     element.classList.add("active"); 
                     }
                 </script>

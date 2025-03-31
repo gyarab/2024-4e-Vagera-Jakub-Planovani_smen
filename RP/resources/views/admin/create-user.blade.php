@@ -481,10 +481,10 @@
                                                         if (response.status == 1) {
                                                             var file = document.getElementById('imageInput').files[0];
 
-                                                            if (!file) {
+                                                            /*if (!file) {
                                                                 alert('Please select an image file.');
                                                                 return;
-                                                            }
+                                                            }*/
 
                                                             // Create a FormData object to send the file data
                                                             var formData = new FormData();
@@ -520,7 +520,17 @@
                                                             popup.innerHTML = "Provide correct email form";
 
 
-                                                        } else {
+                                                        } else   if (response.email == 2) {
+                                                            var popup = document.getElementById("emailHelp");
+                                                            popup.style.display = "inline";
+                                                            popup.innerHTML = "Email already exists";
+                                                        }else{
+                                                            var popup = document.getElementById("emailHelp");
+                                                            popup.style.display = "inline";
+                                                            popup.innerHTML = "Provide correct email form";
+
+
+                                                        }
                                                             var popup = document.getElementById("emailHelp");
                                                             popup.style.display = "none";
 

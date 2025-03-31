@@ -5,6 +5,7 @@ use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\CertainStatisticsController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\EmployeeLoader;
 use App\Http\Controllers\OrganizationController;
@@ -29,6 +30,9 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Optional;
+use Illuminate\Support\Facades\Broadcast;
+use App\Http\Controllers\AuthManager;
+
 
 /** source: https://www.youtube.com/watch?v=0uUgkbhQvxk */
 Route::get('/', function () {
@@ -43,20 +47,7 @@ Route::get('/verification', function () {
 Route::get('/verification-success', function () {
     return view('verification-success');
 });
-/*Route::get('/auth/login', function () {
-    return view('/auth/login');
-});*/
-/*Route::get('/auth/register', function () {
-    return view('/auth/register');
-});*/
 
-/*Route::get('/admin/dashboard', function () {
-    return view('admin.dashboard');
-})->middleware(['auth', 'verified', 'admin'])->name('admin.dashboard');
-
-Route::get('/admin/dashboard2', function () {
-    return view('admin.dashboard2');
-})->middleware(['auth', 'verified', 'admin'])->name('admin.dashboard2');*/
 Route::get('/admin/dashboard3', function () {
     return view('admin.dashboard3');
 })->middleware(['auth', 'verified', 'admin'])->name('admin.dashboard3');
@@ -106,12 +97,12 @@ Route::get('/admin/board', function () {
     return view('admin.board',compact('id','parameters'));
 })->middleware(['auth', 'verified', 'admin'])->name('admin.board');
 
-Route::get('/admin/board2', function () {
+Route::get('/admin/board-information', function () {
     $id = (new ProfileController)->session_id();
     $parameters = (new ProfileController)->session_parameters();
     $board = (new BoardController)->boardLoader();
-    return view('admin.board2',compact('id','parameters', 'board'));
-})->middleware(['auth', 'verified', 'admin'])->name('admin.board2');
+    return view('admin.board-information',compact('id','parameters', 'board'));
+})->middleware(['auth', 'verified', 'admin'])->name('admin.board-information');
 
 Route::get('/admin/employee-list', function () {
     $id = (new ProfileController)->session_id();
@@ -124,6 +115,11 @@ Route::get('/admin/calendar', function () {
     $parameters = (new ProfileController)->session_parameters();
     return view('admin.calendar',compact('id','parameters'));
 })->middleware(['auth', 'verified', 'admin'])->name('admin.calendar');
+Route::get('/admin/calendar-view', function () {
+    $id = (new ProfileController)->session_id();
+    $parameters = (new ProfileController)->session_parameters();
+    return view('admin.calendar-view',compact('id','parameters'));
+})->middleware(['auth', 'verified', 'admin'])->name('admin.calendar-view');
 
 Route::get('/admin/offers', function () {
     $id = (new ProfileController)->session_id();
@@ -150,6 +146,12 @@ Route::get('/admin/time-options', function () {
     return view('admin.time-options',compact('id','parameters'));
 })->middleware(['auth', 'verified', 'admin'])->name('admin.time-options');
 
+Route::get('/admin/employee-statistics', function () {
+    $id = (new ProfileController)->session_id();
+    $parameters = (new ProfileController)->session_parameters();
+    return view('admin.employee-statistics',compact('id','parameters'));
+})->middleware(['auth', 'verified', 'admin'])->name('admin.employee-statistics');
+
 Route::get('/admin/employee-list/{id}', [EmployeeLoader::class, 'showProfile'])->name('profile');
 //Route::get('/chatify/{id}', [EmployeeLoader::class, 'showChatify'])->name('chatifys');
 
@@ -160,6 +162,10 @@ Route::get('/admin/detail-offer/{id}', [OfferController::class, 'showOffer'])->n
 
 Route::get('/admin/permanent-time-options/{id}', [OptionsController::class, 'showPermanentOption'])->name('showPermanentOption');
 
+Route::get('/admin/employee-statistics/{id}', [CertainStatisticsController::class, 'showCertainStatistics'])->name('showCertainStatistics');
+
+/*Route::post('/api/login_mobile',[AuthManager::class, "login"]);
+Route::post('/api/register_mobile',[AuthManager::class, "register"]);*/
 /*Route::get('/admin/employee-list/{id}', function () {
     $id = (new ProfileController)->session_id();
     $parameters = (new ProfileController)->session_parameters();
@@ -175,6 +181,12 @@ Route::get('/admin/editor-profile', function () {
     //Route::get('/profile-image/{filename}', [ImageController::class, 'showProfileImage'])->name('profile.image');
     return view('admin.editor-profile',compact('id','parameters'));
 })->middleware(['auth', 'verified', 'admin'])->name('admin.editor-profile');
+
+Route::get('/admin/my-statistics', function () {
+    $id = (new ProfileController)->session_id();
+    $parameters = (new ProfileController)->session_parameters();
+    return view('admin.my-statistics',compact('id','parameters'));
+})->middleware(['auth', 'verified', 'admin'])->name('admin.my-statistics');
 
 Route::get('/admin/confirm-offer-request', function () {
     $id = (new ProfileController)->session_id();
@@ -223,8 +235,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-   // Route::get('/admin/dashboard2', [ProfileController::class, 'session_id'])->name('admin.dashboard2');
-    //Route::get('/admin/dashboard2', [PersonalShiftControler::class, 'admin.yesterday_shift'])->name('admin.dashboard3');
 
 });
 
@@ -245,12 +255,14 @@ Route::post('/loadAssignmentStructure',  [AssignmentController::class, 'loadAssi
 Route::post('/insertAssignments',  [AssignmentController::class, 'insertAssignments'])->name('insertAssignments');
 Route::post('/loadAssignmentTimeline',  [AssignmentController::class, 'loadAssignmentTimeline'])->name('loadAssignmentTimeline');
 Route::post('/loadAssignmentList',  [AssignmentController::class, 'loadAssignmentList'])->name('loadAssignmentList');
+Route::post('/loadShiftAssignmentStructure',  [AssignmentController::class, 'loadShiftAssignmentStructure'])->name('loadShiftAssignmentStructure');
 
 
 Route::post('/structureRightsGet',  [RightsController::class, 'structureRightsGet'])->name('structureRightsGet');
 Route::post('/insertRights',  [RightsController::class, 'insertRights'])->name('insertRights');
 Route::post('/loadRightstTimeline',  [RightsController::class, 'loadRightstTimeline'])->name('loadRightstTimeline');
 Route::post('/loadRightsList',  [RightsController::class, 'loadRightsList'])->name('loadRightsList');
+Route::post('loadObjectsRights', [RightsController::class, 'loadObjectsRights'])->name('loadObjectsRights');
 
 
 Route::post('/saveBoard',  [BoardController::class, 'saveBoard'])->name('saveBoard');
@@ -273,6 +285,8 @@ Route::post('/changeDeviceStatusSuspend',  [DeviceController::class, 'changeDevi
 
 
 Route::post('/cal_obj_load',  [CalendarController::class, 'cal_obj_load'])->name('cal_obj_load');
+Route::post('/cal_obj_load_view',  [CalendarController::class, 'cal_obj_load_view'])->name('cal_obj_load_view');
+
 Route::post('/pickLoaderCalendar',  [CalendarController::class, 'pickLoaderCalendar'])->name('pickLoaderCalendar');
 Route::post('/getCommentCalendar',  [CalendarController::class, 'getCommentCalendar'])->name('getCommentCalendar');
 Route::post('/getSavedCalendarData',  [CalendarController::class, 'getSavedCalendarData'])->name('getSavedCalendarData');
@@ -285,6 +299,9 @@ Route::post('/deleteOffer',  [CalendarController::class, 'deleteOffer'])->name('
 
 Route::post('/insertCalendarData',  [AlgorithmController::class, 'insertCalendarData'])->name('insertCalendarData');
 Route::post('/loadEmployeeTableCalendar',  [AlgorithmController::class, 'loadEmployeeTableCalendar'])->name('loadEmployeeTableCalendar');
+Route::post('/algorithmSelectBest',   [AlgorithmController::class, 'algorithmSelectBest'])->name('algorithmSelectBest');
+Route::post('/algorithmPick',   [AlgorithmController::class, 'algorithmPick'])->name('algorithmPick');
+Route::post('/algorithmBestCombination',   [AlgorithmController::class, 'algorithmBestCombination'])->name('algorithmBestCombination');
 
 
 Route::post('/today_offer',  [PersonalShiftControler::class, 'today_offer'])->name('today_offer');
@@ -315,6 +332,21 @@ Route::post('/insertTimeOptions',   [OptionsController::class, 'insertTimeOption
 
 
 Route::post('/yearlyStats',   [StatisticsController::class, 'yearlyStats'])->name('yearlyStats');
+Route::post('/weekStats',   [StatisticsController::class, 'weekStats'])->name('weekStats');
+Route::post('/myStatsTable',   [StatisticsController::class, 'myStatsTable'])->name('myStatsTable');
+Route::post('/myStats',   [StatisticsController::class, 'myStats'])->name('myStats');
+Route::post('/loadStatsComment',   [StatisticsController::class, 'loadStatsComment'])->name('loadStatsComment');
+Route::post('/loadPieStats',   [StatisticsController::class, 'loadPieStats'])->name('loadPieStats');
+Route::post('/loadTableLog',   [StatisticsController::class, 'loadTableLog'])->name('loadTableLog');
+Route::post('/loadTableBreak',   [StatisticsController::class, 'loadTableBreak'])->name('loadTableBreak');
+
+
+Route::post('/certainStatsTable',   [CertainStatisticsController::class, 'certainStatsTable'])->name('certainStatsTable');
+Route::post('/certainStats',   [CertainStatisticsController::class, 'certainStats'])->name('certainStats');
+Route::post('/loadStatsCommentCertain',   [CertainStatisticsController::class, 'loadStatsCommentCertain'])->name('loadStatsCommentCertain');
+Route::post('/loadPieStatsCertain',   [CertainStatisticsController::class, 'loadPieStatsCertain'])->name('loadPieStatsCertain');
+Route::post('/loadTableLogCertain',   [CertainStatisticsController::class, 'loadTableLogCertain'])->name('loadTableLogCertain');
+Route::post('/loadTableBreakCertain',   [CertainStatisticsController::class, 'loadTableBreakCertain'])->name('loadTableBreakCertain');
 
 
 
@@ -323,6 +355,9 @@ Route::post('/confirmDeparture',   [AttendanceController::class, 'confirmDepartu
 Route::post('/attendanceConditions',   [AttendanceController::class, 'attendanceConditions'])->name('attendanceConditions');
 Route::post('/startBreak',   [AttendanceController::class, 'startBreak'])->name('startBreak');
 Route::post('/endBreak',   [AttendanceController::class, 'endBreak'])->name('endBreak');
+
+
+
 
 
 
@@ -346,8 +381,9 @@ Route::prefix('admin/object-model/create-model-object/')->group(function () {
     Route::post('structureDelete', [ObjectStructureController::class, 'structureDelete'])->name('structureDelete');
     Route::post('structureRename', [ObjectStructureController::class, 'structureRename'])->name('structureRename');
     Route::post('selectMainObjects', [ObjectStructureController::class, 'selectMainObjects'])->name('selectMainObjects');
-    
+    Route::post('treeLoad', [ObjectStructureController::class, 'treeLoad'])->name('treeLoad');
 
+    
     
     //Route::post('objectDropdown', [ObjectStructureController::class, 'objectDropdown'])->name('objectDropdown');
 });
@@ -383,7 +419,10 @@ Route::prefix('admin/shift-model/create-model-shift/')->group(function () {
     Route::post('shiftSave', [ShiftController::class, 'shiftSave'])->name('shiftSave');
     Route::post('loadExistingShiftParametrs', [ShiftController::class, 'loadExistingShiftParametrs'])->name('loadExistingShiftParametrs');
     Route::post('editShift', [ShiftController::class, 'editShift'])->name('editShift');
+    Route::post('enableShift', [ShiftController::class, 'enableShift'])->name('enableShift');
+    Route::post('deleteShift', [ShiftController::class, 'deleteShift'])->name('deleteShift');
 
+    
     });
     Route::prefix('admin/editor-profile/')->group(function () {
     
@@ -469,7 +508,7 @@ Route::get('/admin/dashboard3', function () {
 })->middleware(['auth', 'verified', 'admin'])->name('admin.dashboard3');
 
 
-Route::get('/admin/dashboard4', function () {
+Route::get('/admin/dashboard-main', function () {
     $id = (new ProfileController)->session_id();
     $parameters = (new ProfileController)->session_parameters();
     $yesterday = (new PersonalShiftControler)->yesterday_shift();
@@ -484,11 +523,18 @@ Route::get('/admin/dashboard4', function () {
     $tommorow_offer2 = (new PersonalShiftControler)->tommorow_offer_next();
     $tomorrow_shift_next = (new PersonalShiftControler)->tomorrow_shift_next();
 
-    return view('admin.dashboard4', compact('id','yesterday','today','tommorow','parameters','worked','planned1','planned2', 'board', 'today_offer', 'tommorow_offer', 'tommorow_offer2', 'tomorrow_shift_next'));
-})->middleware(['auth', 'verified', 'admin'])->name('admin.dashboard4');
+    return view('admin.dashboard-main', compact('id','yesterday','today','tommorow','parameters','worked','planned1','planned2', 'board', 'today_offer', 'tommorow_offer', 'tommorow_offer2', 'tomorrow_shift_next'));
+})->middleware(['auth', 'verified', 'admin'])->name('admin.dashboard-main');
 /*Route::post('/admin/user_data' ,[UserController::class, 'admin.user_data']);
 Route::get('/admin/dttest' ,[UserController::class, 'index']);*/
 
+Route::post('/broadcasting/auth', function (Request $request) {
+    try {
+        return Broadcast::auth($request);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+});
 
 //Route::get('/', 'MessagesController@index')->name(config('chatify.routes.prefix'));
 

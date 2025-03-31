@@ -23,11 +23,14 @@
     <link href="{{ asset('CSS/graph.css') }}" rel="stylesheet">
     <link href="{{ asset('CSS/card.css') }}" rel="stylesheet">
     <link href="{{ asset('CSS/clock.css') }}" rel="stylesheet">
+    <link href="{{ asset('CSS/tree.css') }}" rel="stylesheet">
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="{{ asset('CSS/clock2.css') }}" rel="stylesheet">
     <link href="{{ asset('CSS/object-structure1.css') }}" rel="stylesheet">
     <link href="{{ asset('CSS/select-button.css') }}" rel="stylesheet">
-
+    <title>Objects</title>
+    <link rel="icon" type="image/x-icon" href="{{ URL('images/cropped_imageic.ico') }}">
 
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -40,9 +43,31 @@
     @include('admin.scripts')
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
-    <div class="height-100 bg-light">
+    <div class="border-start wh-100 bg-light">
         <div class="container-fluid">
+            <div class="modal fade w-100" id="rightsModal" tabindex="-1" data-bs-backdrop="false"
+                aria-labelledby="rightsModalLabel" aria-hidden="true">
+                <div class="container modal-dialog modal-dialog-centered w-100 modal-xl ">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="rightsModalLabel">Management Rights
 
+                            </h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row mb-1">
+                                <h6 id="selectedRightsObject">Selected object - </h6>
+                                <br>
+                                <p id="selectedRightsObject">Managers : </p>
+                                <div id="rightsTable">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="col py-3">
                 <div class="row">
                     <div class='col-12 col-md-6 flex '>
@@ -65,13 +90,11 @@
                                 <div class="col-12">
                                     <h5>Create new main object:</h5>
 
-                                    <!--<label for="new_object"></label>-->
                                     <div class="input-group mb-2 mb-md-0 ">
                                         <input id="new_object" class="form-control" placeholder="Enter name"
                                             name="new_object" style="display:inline" type="text">
 
 
-                                        <!--<div class="popup">-->
                                         <div class="input-group-append">
                                             <input id="savemain" type="button" onclick="create_model_object()"
                                                 class="btn btn-primary" style="display:inline" value="Create object">
@@ -79,7 +102,8 @@
                                         </div>
 
                                     </div>
-                                    <small id="label1" class="text-form" style="visibility:hidden;color:red">Needs to
+                                    <small id="label1" class="text-form" style="visibility:hidden;color:red">Needs
+                                        to
                                         be
                                         filled
                                         *</small>
@@ -88,7 +112,7 @@
                             <div class="row">
 
                                 <div class="col-12">
-                                    <h5>Create new ub-object:</h5>
+                                    <h5>Create new sub-object:</h5>
                                     <div class="input-group mb-2 mb-md-0">
                                         <input id="new_sub_object" class="form-control" placeholder="Enter name"
                                             name="new_sub_object" style="display:inline" type="text">
@@ -99,16 +123,14 @@
                                         </div>
                                     </div>
 
-                                    <small id="label2" class="text-form" style="visibility:hidden;color:red"></small>
+                                    <small id="label2" class="text-form"
+                                        style="visibility:hidden;color:red"></small>
                                     <br>
                                 </div>
                             </div>
                             <div class="row ">
                                 <div class='col-12 col-md-6'>
                                     <div class="input-group mt-2 mt-md-0">
-                                        <!--<div class="input-group-prepend">
-                                    <span style="background: #4CAF50;color:#ffffff;" class="input-group-text" id="basic-addon1">Rename selected object</span>
-                                  </div>-->
                                         <input id="rename_input" class="form-control" placeholder="Enter new name"
                                             name="rename_input" style="display:inline" type="text">
                                         <div class="input-group-append">
@@ -140,13 +162,12 @@
                                 <div class='col-12 '>
 
                                     <h5>Select icon for sub-object:</h5>
-                                    <!--<i class="bi bi-building"></i>-->
                                     <div class="radio-group">
                                         <input type="radio" id="option1" style="display: none;" name="Icons"
                                             value="home" checked>
                                         <label id="l1" for="option1" class="p-1 px-2 border border-grey"
                                             style="cursor: pointer;" onclick="selectIcon(this.id)"><i id="ic1"
-                                                class="bi bi-house "
+                                                class="bi bi-house"
                                                 style="font-size: 30px;color: #0d6efd "></i></label>
 
                                         <input type="radio" id="option2" style="display: none;" name="Icons"
@@ -231,17 +252,12 @@
                                                     document.getElementById("ic" + i).style.color = "#0d6efd ";
                                                 }
 
-
-
-                                                //document.getElementById("").innerHTML = " ";
                                             }
                                         }
                                     </script>
                                 </div>
                             </div>
 
-                            <!--</div>-->
-                            <!--<br>-->
                             <br>
 
                             <script>
@@ -261,12 +277,13 @@
                                         },
 
                                         success: function(response) {
-                                            $('#structure').html(response);
+                                            document.getElementById("structure").innerHTML = response;
+                                            loadPreview(current_object);
 
 
                                         },
                                         error: function(response) {
-                                            alert("dsad");
+                                            error_alert("dsad 1 ");
                                         }
                                     });
                                 }
@@ -285,10 +302,11 @@
                                             $('#structure').html(response);
                                             document.getElementById("h_controler").innerHTML = "Control panel : ";
                                             sub_object = "";
+                                            loadPreview(current_object);
 
                                         },
                                         error: function(response) {
-                                            alert("dsad");
+                                            error_alert("dsad 9");
                                         }
                                     });
 
@@ -312,15 +330,10 @@
                                     });
                                 </script>
                                 <script>
-                                    $("input[@name='accept-offers']").change(function() {
-                                        // Do something interesting here
-                                        alert("ds");
-                                    });
+                              
 
                                     function radiocheck(browser) {
-                                        //alert(browser);
 
-                                        //document.getElementById("h_controler").value;
                                         $.ajax({
                                             url: '{{ route('parametrsGet') }}',
                                             type: 'POST',
@@ -336,7 +349,6 @@
                                                     if (my_icon.trim() == response.icon.trim()) {
                                                         document.getElementById("ic" + t).style.color = "#0d6efd";
                                                         document.getElementById("option" + t).checked = true;
-                                                        //alert(document.getElementById("ic"+ t).className );
                                                     }
 
                                                 }
@@ -344,7 +356,7 @@
 
                                             },
                                             error: function(response) {
-                                                alert("dsad");
+                                                error_alert("dsad 8");
                                             }
                                         });
                                     }
@@ -355,19 +367,12 @@
                                             var popup = document.getElementById("label1");
                                             popup.style.visibility = "visible";
                                         } else {
-                                            //alert(browser);
                                             var ele = document.getElementsByName('Icons');
                                             var sub_icon = "";
                                             for (i = 0; i < ele.length; i++) {
                                                 if (ele[i].checked) {
-                                                    //alert(ele[i].value);
-                                                    //document.getElementById().sty
-
                                                     sub_icon = document.getElementById("ic" + (i + 1)).className;
-                                                    //alert(sub_icon);
-                                                    //sub_icon = (ele[i].value);
                                                 }
-                                                //document.getElementById("result").innerHTML = "Gender: " + ele[i].value;
                                             }
                                             $.ajax({
                                                 url: '{{ route('structureCreate') }}',
@@ -384,12 +389,14 @@
                                                     popup.style.visibility = "hidden";
                                                     sub_object = '';
                                                     structure_load();
+                                                    loadPreview(current_object);
+
                                                     success_alert("Object created successfully");
 
 
                                                 },
                                                 error: function(response) {
-                                                    alert("dsad");
+                                                    error_alert("dsad 7");
                                                 }
                                             });
                                         }
@@ -405,34 +412,15 @@
                                             if (sub_object != "") {
                                                 var popup = document.getElementById("label2");
                                                 popup.style.visibility = "hidden";
-                                                /*var bb = "box" + previous;
-                                                var hh = "hid" + previous;
-                                                var pj = document.getElementById(bb).value;
-                                                var jj = document.getElementById(hh).value;*/
-                                                /*$.ajax({
-                                                    url: "../objects/insert-sub_object.php",
-                                                    method: "POST",
-                                                    data: {
-                                                        name: q,
-                                                        sup: pj,
-                                                        id: jj
-                                                    },
-                                                    success: function(data) {
-
-                                                    }
-                                                });*/
                                                 var ele = document.getElementsByName('Icons');
                                                 var sub_icon = "";
                                                 for (i = 0; i < ele.length; i++) {
                                                     if (ele[i].checked) {
-                                                        //alert(ele[i].value);
-                                                        //document.getElementById().sty
+
 
                                                         sub_icon = document.getElementById("ic" + (i + 1)).className;
-                                                        // alert(sub_icon);
-                                                        //sub_icon = (ele[i].value);
+
                                                     }
-                                                    //document.getElementById("result").innerHTML = "Gender: " + ele[i].value;
                                                 }
                                                 document.getElementById("new_sub_object").value = "";
                                                 $.ajax({
@@ -448,6 +436,8 @@
                                                     success: function(response) {
                                                         structure_load();
                                                         sub_object = "";
+                                                        loadPreview(current_object);
+
                                                         document.getElementById("h_controler").innerHTML = "Control panel : ";
                                                         success_alert("New sub-object is saved");
 
@@ -455,25 +445,10 @@
 
                                                     },
                                                     error: function(response) {
-                                                        alert("dsad");
+                                                        error_alert("dsad 6");
                                                     }
                                                 });
-                                                /*var newa = document.getElementById("res");
-                                                newa.value = "";
-                                                var input4 = 0;*/
-                                                //document.getElementById("new_object").value = "";
-                                                /*var ChA = JSON.parse(input4);
-                                                $.ajax({
-                                                    url: "../objects/load_object3.php",
-                                                    method: "POST",
-                                                    data: {
-                                                        input: ChA
-                                                    },
-                                                    success: function(data) {
-                                                        $("#res").html(data);
-                                                        success_alert("New sub-object is saved");
-                                                    }
-                                                });*/
+
                                             } else {
                                                 var popup = document.getElementById("label2");
                                                 popup.style.visibility = "visible";
@@ -484,13 +459,11 @@
                                     }
 
                                     function delete_object() {
-                                        //alert("sd");
 
                                         if (sub_object != "") {
                                             var popup3 = document.getElementById("label4");
 
                                             popup3.style.visibility = "hidden";
-                                            //alert("Asd");
 
 
                                             $.ajax({
@@ -502,13 +475,11 @@
 
                                                 },
                                                 success: function(response) {
-                                                    //alert(response);
-                                                    structure_load();
-                                                    sub_object = "";
-                                                    document.getElementById("h_controler").innerHTML = "Control panel : ";
+                                                    sure_delete()
+
                                                 },
                                                 error: function(response) {
-                                                    alert("dsad");
+                                                    error_alert("dsad 5");
                                                 }
                                             });
 
@@ -531,56 +502,14 @@
                                             if (sub_object != "") {
                                                 var popup = document.getElementById("label3");
                                                 popup.style.visibility = "hidden";
-                                                /*var bb = "box" + previous;
-                                                var hh = "hid" + previous;
-                                                var pj = document.getElementById(bb).value;
-                                                var jj = document.getElementById(hh).value;
-                                                var var_return;
-                                                $.ajax({
-                                                    url: "../objects/rename_object.php",
-                                                    method: "POST",
-                                                    dataType: "json",
-                                                    cache: false,
-                                                    async: false,
-                                                    data: {
-                                                        name: q,
-                                                        sup: pj,
-                                                        id: jj
-                                                    },
-                                                    success: function(data) {
 
-                                                        var_return = data;
-                                                    }
-                                                });
-                                                
-
-                                                var newa = document.getElementById("res");
-                                                newa.value = "";
-                                                var input4 = 0;
-                                                var ChA = JSON.parse(input4);
-                                                $.ajax({
-                                                    url: "../objects/load_object3.php",
-                                                    method: "POST",
-                                                    data: {
-                                                        input: ChA
-                                                    },
-                                                    success: function(data) {
-                                                        $("#res").html(data);
-                                                        if (var_return == 0) {
-                                                            success_alert("Object was renamed successfully");
-                                                        } else {
-                                                            error_alert("Error occur");
-
-                                                        }
-                                                    }
-                                                });*/
                                                 var ele = document.getElementsByName('Icons');
                                                 var sub_icon = "";
                                                 for (i = 0; i < ele.length; i++) {
                                                     if (ele[i].checked) {
 
                                                         sub_icon = document.getElementById("ic" + (i + 1)).className;
-                                 
+
                                                     }
                                                 }
                                                 $.ajax({
@@ -594,8 +523,9 @@
                                                     },
                                                     success: function(response) {
                                                         structure_load();
+                                                        loadPreview(current_object);
+
                                                         sub_object = "";
-                                                        //alert(response);
                                                         document.getElementById("rename_input").value = "";
                                                         document.getElementById("h_controler").innerHTML = "Control panel : ";
                                                         success_alert("New sub-object is saved");
@@ -604,7 +534,7 @@
 
                                                     },
                                                     error: function(response) {
-                                                        alert("dsad");
+                                                        error_alert("dsad 4");
                                                     }
                                                 });
                                             } else {
@@ -614,12 +544,6 @@
                                             }
 
                                         }
-                                    }
-
-
-
-                                    function submit_subtable() {
-                                        //let q = document.getElementById("new_sub_object").value;
                                     }
                                 </script>
                                 <script>
@@ -643,7 +567,7 @@
 
                                     function error_alert(message) {
                                         Swal.fire({
-                                            title: message,
+                                            title: "Connection Error",
                                             text: "",
                                             icon: "error"
                                         });
@@ -660,9 +584,12 @@
                                         }).then((result) => {
                                             /* Read more about isConfirmed, isDenied below */
                                             if (result.isConfirmed) {
-                                                //change_data()
-                                                deletefce();
+                                                structure_load();
+                                                loadPreview(current_object);
 
+                                                sub_object = "";
+                                                document.getElementById("h_controler").innerHTML = "Control panel : ";
+                                                success_alert("Object deleted");
                                             }
                                         });
                                     }
@@ -678,7 +605,63 @@
                 <div class="row">
                     <div class="col-12 mt-3">
                         <div class="card p-3 ">
-                            <p id=""></p>
+                            <h5>Structure tree preview
+                            </h5>
+                            <hr>
+
+                            <div style="overflow:auto">
+                                <div class="tree">
+                                    <div id="tree_content">
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <script>
+                                function loadPreview(object_id) {
+                                    $.ajax({
+                                        url: '{{ route('treeLoad') }}',
+                                        type: 'POST',
+                                        data: {
+                                            _token: '{{ csrf_token() }}',
+                                            object: object_id
+
+                                        },
+                                        success: function(response) {
+                                            document.getElementById("tree_content").innerHTML = response;
+
+                                        },
+                                        error: function(response) {
+                                            alert("dsad 3");
+                                        }
+
+                                    });
+                                }
+
+                                function openTree(treeId) {
+                                    document.getElementById("selectedRightsObject").innerHTML = "Selected object: " + document.getElementById(
+                                        treeId).innerHTML;
+                                    var indexTree = treeId.substring(3);
+                                    var valueTree = document.getElementById("hid" + indexTree).value;
+                                    $.ajax({
+                                        url: '{{ route('loadObjectsRights') }}',
+                                        type: 'POST',
+                                        data: {
+                                            _token: '{{ csrf_token() }}',
+                                            id_object: valueTree,
+
+                                        },
+                                        success: function(response) {
+                                            document.getElementById("rightsTable").innerHTML = response;
+                                        },
+                                        error: function(response) {
+                                            alert("dsad 2 ");
+                                        }
+                                    });
+                                }
+                            </script>
+
                         </div>
 
                     </div>

@@ -6,6 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Mail\VerificationEmail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\ProfileUpdateRequest;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
 
 
 class VerificationController extends Controller
@@ -35,12 +41,11 @@ class VerificationController extends Controller
         $fetch = DB::select("SELECT email_verified_at FROM users WHERE  id='$id' ");
         $code = "";
         $status = true;
-        foreach ($fetch as $result) {  
-            //$status = $result->email_verified_at;
+        foreach ($fetch as $result) {
 
-            if( $result->email_verified_at == null){
+            if ($result->email_verified_at == null) {
                 $fetch_codes = DB::select("SELECT * FROM verification_codes WHERE  id='$id' ");
-                foreach ($fetch_codes as $result_codes) {  
+                foreach ($fetch_codes as $result_codes) {
                     $code = $result_codes->verification_code;
                 }
                 $status = false;
@@ -48,37 +53,52 @@ class VerificationController extends Controller
             }
         }
 
-        //$id = $request->input('id');
         return response()->json([
             'verification_code' => $code,
             'status' => $status
 
-            //'path' => $imagePath
         ]);
     }
     public function verificationNew(Request $request)
     {
-        $verification_code = generateRandomString();
-        $id = $request->input('id');
-        $details = [
-            'title' => 'Hello from Laravel!',
-            'body' => 'This is a test email sent using Mailtrap.',
-            'verify' => $verification_code
-        ];
-       DB::update("UPDATE verification_codes SET verification_code = '$verification_code' WHERE id='$id' ");
-       //echo ("UPDATE verification_codes SET verification_code = '$verification_code' WHERE id='$id' ");
-        /*$fetch_email = DB::select("SELECT email FROM users WHERE id='$id'");
-        $email = '';
-        foreach ($fetch_email as $result) {  
-            $email = $result->email;
+        $verification_code = generateRandomStringV();
+        $id_client = $request->input('id');
+        $id_creator = Auth::id();
+
+        $success = 0;
+        $fetch_existence = DB::select("SELECT COUNT(*) AS count FROM verification_codes WHERE id='$id_client' ");
+        if ($fetch_existence[0]->count == 0) {
+            $fetch_users = DB::select("SELECT COUNT(*) AS count FROM users WHERE id='$id_client' AND email_verified_at IS NULL ");
+            if ($fetch_users[0]->count > 0) {
+                DB::insert("INSERT INTO verification_codes (id, verification_code, created_at, updated_at, created_by) VALUES ('$id_client', '$verification_code', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '$id_creator') ");
+                $success = 1;
+            }
+
+        } else {
+            DB::update("UPDATE verification_codes SET verification_code = '$verification_code' WHERE id='$id_client' ");
+            $success = 1;
+        }
+ 
+        if ($success == 1) {
+            $fetch_email = DB::select("SELECT * FROM users WHERE id='$id_client' ");
+            $email = "";
+
+            foreach ($fetch_email as $result) {
+                $details = [
+                    'name' => $result->first_name . " " . $result->middle_name . " " . $result->last_name,
+                    'body' => '',
+                    'verify' => $verification_code
+                ];
+                $email = $result->email;
+                Mail::to($email)->send(new VerificationEmail($details));
+
+
+            }
+
         }
 
-        Mail::to( $email)->send(new VerificationEmail($details));*/
-        //
-        
-        //Mail::to('vageja5zs@gmail.com')->send(new VerificationEmail($details));
     }
-        public function verifyUser(Request $request)
+    public function verifyUser(Request $request)
     {
         $id = $request->input('id');
 
@@ -87,10 +107,11 @@ class VerificationController extends Controller
 
     }
 }
-function generateRandomString($length = 6) {
+function generateRandomStringV($length = 6)
+{
 
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    
+
     $randomString = '';
 
     for ($i = 0; $i < $length; $i++) {

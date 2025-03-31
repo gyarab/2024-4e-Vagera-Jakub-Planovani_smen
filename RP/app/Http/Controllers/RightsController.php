@@ -15,24 +15,20 @@ use Illuminate\Support\Facades\Storage;
 
 class RightsController extends Controller
 {
-    public function showRights($id){
+    public function showRights($id)
+    {
         $user = User::find($id);
         return view('admin/manager-rights', compact('user'));
     }
-    public function loadRightsList(Request $request){
+    public function loadRightsList(Request $request)
+    {
         $obj = $request->input('id_object');
-  
+
         $id_decrypted_obj = Crypt::decrypt($obj);
         $id = $request->input('id');
         $fetch_rights = DB::select("SELECT * FROM management_rights, object_model WHERE management_rights.id='$id' AND management_rights.id='$id' AND object_model.id_object=management_rights.id_object ");
-       /*echo '<ul class="list-group list-group-flush">';
-        foreach ($fetch_rights as $result) {
-            echo '<li class="list-group-item mr-0 p-0 d-flex justify-content-between align-items-center flex-wrap">';
-            echo "<h6>$result->object_name</h6>";
-            echo "</li>";
-        }
-        echo '</ul>';*/
-       
+
+
         $id_obj = array();
         $name_obj = array();
         $superior_obj = array();
@@ -47,7 +43,7 @@ class RightsController extends Controller
         }
         array_multisort($id_obj, $name_obj, $superior_obj);
         for ($x = 0; $x < count($name_obj); $x++) {
-            if ( $id_obj[$x] == $id_decrypted_obj ) {
+            if ($id_obj[$x] == $id_decrypted_obj) {
                 static $dd = 1;
 
 
@@ -67,47 +63,42 @@ class RightsController extends Controller
             }
 
         }
-        //echo $arr_obj[0];
-        //echo $arr_obj;
+
         echo "<div class='row mt-2 '>";
-        //echo '<ul class="list-group list-group-flush">';
+       
         foreach ($arr_obj as $result) {
             $fetch_rights = DB::select("SELECT * FROM management_rights, object_model WHERE management_rights.id='$id' AND management_rights.id_object='$result' AND object_model.id_object=management_rights.id_object ");
             foreach ($fetch_rights as $result_rights) {
-                //echo '<li class="list-group-item mr-0 p-0 d-flex justify-content-between align-items-center flex-wrap">';
-               echo "<div class='col-6'>";
+                echo "<div class='col-6'>";
                 echo "<h6 class='mt-2'>$result_rights->object_name</h6>";
                 echo "<hr>";
                 echo "</div>";
-                //echo "</li>";
             }
         }
         echo "</div>";
-        //echo '</ul>';
     }
-    public function insertRights(Request $request){
+    public function insertRights(Request $request)
+    {
         $arr = $request->input('obj_arr');
         $id = $request->input('id');
         $obj = Crypt::decrypt($request->input('main_obj'));
         $id_creator = Auth::id();
-        $t=date("Y-m-d H:i:s");
+        $t = date("Y-m-d H:i:s");
         DB::insert("INSERT INTO management_rights_logs (id, timestamp_at, made_by) VALUES ('$id','$t', '$id_creator')");
-        if($arr > 0){
-        foreach ( $arr as $result) {
-           $result_decrypt = Crypt::decrypt($result) ;
-            $fetch = DB::select("SELECT COUNT(*) AS count FROM management_rights WHERE id='$id' AND id_object='$result_decrypt' ");
-            //echo "SELECT COUNT(*) AS count FROM management_rights WHERE id='$id' AND id_object='$result_decrypt' ";
-            $counter = $fetch[0]->count;
+        if ($arr > 0) {
+            foreach ($arr as $result) {
+                $result_decrypt = Crypt::decrypt($result);
+                $fetch = DB::select("SELECT COUNT(*) AS count FROM management_rights WHERE id='$id' AND id_object='$result_decrypt' ");
+                $counter = $fetch[0]->count;
 
-            if($counter == 0){
-                 DB::insert("INSERT INTO management_rights (id, id_object, updated_at, updated_by) VALUES ('$id', '$result_decrypt','$t', '$id_creator')");
-                //echo ("INSERT INTO management_rights (id, id_object, updated_at, updated_by) VALUES ('$id', '$result_decrypt','$t', '$id_creator')");
+                if ($counter == 0) {
+                    DB::insert("INSERT INTO management_rights (id, id_object, updated_at, updated_by) VALUES ('$id', '$result_decrypt','$t', '$id_creator')");
 
-            }else{
-                DB::update("UPDATE management_rights SET updated_at = '$t', updated_by = '$id_creator' WHERE id='$id' AND id_object='$result_decrypt' ");
+                } else {
+                    DB::update("UPDATE management_rights SET updated_at = '$t', updated_by = '$id_creator' WHERE id='$id' AND id_object='$result_decrypt' ");
+                }
             }
         }
-    }
 
 
         $id_obj = array();
@@ -116,7 +107,6 @@ class RightsController extends Controller
         $arr_obj = array();
         $arr_shi = array();
 
-        //$fetch = DB::select("SELECT * FROM object_model ORDER BY object_name");
         $fetch_objects = DB::select("SELECT * FROM object_model");
         foreach ($fetch_objects as $result_objects) {
 
@@ -127,7 +117,7 @@ class RightsController extends Controller
         }
         array_multisort($id_obj, $name_obj, $superior_obj);
         for ($x = 0; $x < count($name_obj); $x++) {
-            if ( $id_obj[$x] == $obj ) {
+            if ($id_obj[$x] == $obj) {
                 static $dd = 1;
 
 
@@ -147,22 +137,16 @@ class RightsController extends Controller
             }
 
         }
-        /*foreach ($arr_obj as $value) {
-            $fetch_shifts = DB::select("SELECT * FROM shift_model WHERE id_object='$value' ");
-            foreach ($fetch_shifts as $result_shifts) {
-                echo $result_shifts->id_shift;
-                array_push($arr_shi, $result_shifts->id_shift);
 
-            }
-        }*/
         foreach ($arr_obj as $objr) {
             DB::delete("DELETE FROM management_rights WHERE id='$id' AND id_object='$objr' AND updated_at != '$t'");
 
         }
-    
+
 
     }
-    public function loadRightstTimeline(Request $request){
+    public function loadRightstTimeline(Request $request)
+    {
         $id = $request->input('id');
         $id_creator = Auth::id();
         $number = $request->input('number');
@@ -170,45 +154,41 @@ class RightsController extends Controller
         echo "<ul class='sessions px-0'>";
         $counter = 0;
         foreach ($fetch as $result) {
-            if( $counter == $number){
+            if ($counter == $number) {
                 break;
-                 }
-            echo '<li>';
-            echo '<div class="time">'.$result->timestamp_at.'</div>';
-            echo '<p class="mr-2" style="display:inline">Edited by: '.$result->first_name.' '.$result->middle_name.' '.$result->last_name.'&nbsp;&nbsp;</p>';
-                   $fetch_img = DB::select("SELECT COUNT(*) AS count FROM profile_pictures WHERE id = '$id_creator'");
-        $supress = $fetch_img[0]->count;
-        if ($supress > 0) {
-            $fetch_link = DB::select("SELECT * FROM profile_pictures WHERE id = '$id_creator'");
-            $link_image = "";
-            foreach ($fetch_link as $result_link) {
-                $link_image = $result_link->image_link;
             }
-            $imageUrl = Storage::url($link_image);
-        } else {
-            $imageUrl = Storage::url('profile-images/avatar_blank2.jpg');
-        }
-       echo '<img id="imagePersoanl" src="'.$imageUrl.'" alt="editor profile" class="rounded-circle object-fit-cover ml-2" style="height: 25px; width: 25px;display:inline">';
+            echo '<li>';
+            echo '<div class="time">' . $result->timestamp_at . '</div>';
+            echo '<p class="mr-2" style="display:inline">Edited by: ' . $result->first_name . ' ' . $result->middle_name . ' ' . $result->last_name . '&nbsp;&nbsp;</p>';
+            $fetch_img = DB::select("SELECT COUNT(*) AS count FROM profile_pictures WHERE id = '$id_creator'");
+            $supress = $fetch_img[0]->count;
+            if ($supress > 0) {
+                $fetch_link = DB::select("SELECT * FROM profile_pictures WHERE id = '$id_creator'");
+                $link_image = "";
+                foreach ($fetch_link as $result_link) {
+                    $link_image = $result_link->image_link;
+                }
+                $imageUrl = Storage::url($link_image);
+            } else {
+                $imageUrl = Storage::url('profile-images/avatar_blank2.jpg');
+            }
+            echo '<img id="imagePersoanl" src="' . $imageUrl . '" alt="editor profile" class="rounded-circle object-fit-cover ml-2" style="height: 25px; width: 25px;display:inline">';
             echo '</li>';
             $counter++;
         }
         echo "</ul>";
-        if( $counter >= $number){
+        if ($counter >= $number) {
             echo "<center><button onclick='loadTimeline(5)' class='btn btn-outline-secondary' >Load more&nbsp;<i class='bi bi-arrow-down'></i></button></center>";
         }
 
     }
     private function subObjectInsert($searching, $dat1, $dat2, $dat4, array &$arr_obj)
     {
-        /*global $arr_obj;
-        global $arr_sort;*/
+
         $find = 0;
         for ($i = 0; $i < count($dat2); $i++) {
             if ($searching == $dat4[$i]) {
                 array_push($arr_obj, $dat1[$i]);
-                //echo "dddd";
-
-
 
                 $sea = $dat1[$i] . "";
                 if ($sea != null) {
@@ -227,7 +207,7 @@ class RightsController extends Controller
     public function structureRightsGet(Request $request)
     {
         $object = $request->input('object');
-       $id = $request->input('id');
+        $id = $request->input('id');
         $is_encrypte = 0;
 
 
@@ -237,7 +217,6 @@ class RightsController extends Controller
             $object_decrypted = Crypt::decrypt($object);
         }
 
-      // Example ID (could be a UUID or other identifier)
 
         $encryptedId = Crypt::encrypt($id);
         $data_name = array();
@@ -279,7 +258,7 @@ class RightsController extends Controller
             $search_main = $encrytion[$object_decrypted];
         }
 
-        array_multisort($data2, $data1/*, $data3*/ , $data4);
+        array_multisort($data2, $data1 , $data4);
         $search = "";
         $count = 0;
 
@@ -303,10 +282,10 @@ class RightsController extends Controller
                 echo $data2[$x];
                 echo "</p>";
                 echo "<div style='float: right; display: inline' class='mt-2'><input id='" . $data1[$x] . "' value='$data1[$x]' type='checkbox' name='ch_rights' class='hidden radio-label' ";
-               $rr = Crypt::decrypt($data1[$x]);
+                $rr = Crypt::decrypt($data1[$x]);
                 $fetch_assignment = DB::select("SELECT COUNT(*) AS count FROM management_rights WHERE id_object='$rr' AND id='$id' ");
                 $counter = $fetch_assignment[0]->count;
-                if($counter > 0){
+                if ($counter > 0) {
                     echo "checked";
                 }
                 echo " >";
@@ -318,7 +297,7 @@ class RightsController extends Controller
 
                 for ($h = 0; $h < count($data2); $h++) {
                     if ($search == $data4[$h]) {
-                        sub_object($search, $data1, $data2, /*$data3,*/ $data4, $previous, $id );
+                        sub_object($search, $data1, $data2, $data4, $previous, $id);
                         $row++;
                         break;
                     }
@@ -343,8 +322,49 @@ class RightsController extends Controller
 
 
     }
+    public function loadObjectsRights(Request $request)
+    {
+        $object_crypted = $request->input('id_object');
+        $object = Crypt::decrypt($object_crypted);
+        $fetch_count = DB::select("SELECT COUNT(*) AS count FROM management_rights, users WHERE users.id=management_rights.id AND management_rights.id_object='$object'  ");
+        $fetch = DB::select("SELECT *, users.id AS user_id FROM management_rights, users WHERE users.id=management_rights.id AND management_rights.id_object='$object'  ");
+
+        if ($fetch_count[0]->count > 0) {
+           echo "<ul class='list-group overflow-auto' style='max-height: 350px;'>";
+            foreach ($fetch as $row) {
+                echo "<li id='a_a-$row->user_id' onclick='pickUser(this.id)' class='list-group-item list-group-item-action  '>";
+                echo "<div class='row'><div class='col-12 col-md-6'>";
+                $fetch_count = DB::select("SELECT COUNT(*) AS count FROM profile_pictures WHERE id ='$row->user_id'");
+                if ($fetch_count[0]->count > 0) {
+                    $fetch_link = DB::select("SELECT * FROM profile_pictures WHERE id ='$row->user_id'");
+                    $link_image = "";
+                    foreach ($fetch_link as $result_link) {
+                        $link_image = $result_link->image_link;
+                    }
+                    $imageUrl = Storage::url($link_image);
+                    echo ' <img src="' . $imageUrl . '"';
+                } else {
+                    $imageUrl = Storage::url('profile-images/avatar_blank2.jpg');
+                    echo '<img src="' . $imageUrl . '"';
+                }
+
+                echo '  alt="" class="avatar-sm rounded-circle"  style="height: 25px; width: 25px; display: inline" />';
+                echo '<div class=" mx-2" style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden; display: inline ">' . $row->first_name . ' ' . $row->middle_name . ' ' . $row->last_name . '</div>';
+                echo "</div><div class='col-12 col-md-6'>";
+                $fetch_editor = DB::select("SELECT * FROM users WHERE users.id='$row->updated_by'  ");
+                foreach($fetch_editor as $row_editor){
+                    echo '<div class=" mx-2 float-start float-md-end" style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden; ">Editied by: ' . $row_editor->first_name . ' ' . $row_editor->middle_name . ' ' . $row_editor->last_name . '</div>';
+
+                }
+
+                echo "</div></div>";
+                echo "</li>";
+            }
+            echo "</ul>";
+        }
+    }
 }
-function sub_object($searching, $dat1, $dat2, /*$dat3,*/ $dat4, $previous, $id)
+function sub_object($searching, $dat1, $dat2,  $dat4, $previous, $id)
 {
     static $dd = 1;
     $find = 0;
@@ -354,19 +374,8 @@ function sub_object($searching, $dat1, $dat2, /*$dat3,*/ $dat4, $previous, $id)
         if ($searching == $dat4[$i]) {
             if ($find == 0) {
                 $find = 1;
-                //echo "<ul>";
-                //echo "<hr>";
-            } else {
-
-            }
-            // echo "<div class='accordion-item w-100'>";
-
-            //echo "<li>";
-            //echo "<input id='hid" . $dd . "' type='hidden' name='hid' value='" . $dat1[$i] . "'>";
-            //echo "<button class='btn btn-light w-100' style='text-align: left;'>" . $searching . "</button>";
-
-            //echo "<input id='box" . $dd . "' type='button' onclick='Helal(this.id)' name='box' value='" . $dat2[$i] . "'>";
-            //echo "<div class='accordion-body w-100' id='$previous'>";
+              
+            } 
             $itemId = $previous . "-item-" . $dat1[$i];
             $dd++;
             $row = 0;
@@ -374,16 +383,6 @@ function sub_object($searching, $dat1, $dat2, /*$dat3,*/ $dat4, $previous, $id)
             if ($sea != null) {
                 for ($h = 0; $h < count($dat2); $h++) {
                     if ($sea == $dat4[$h]) {
-                        /*echo "<div class='accordion-body'>";
-                        echo "<div class='accordion mt-3 w-100' id='accordionExampleNested" . $previous . "'>";
-                        echo "<div class='accordion-item w-100'>";
-
-                        echo "<h2 class='accordion-header' id='headingNestedOne" . $previous . "'>";
-                        echo "<button class='accordion-button btn btn-light w-100' type='button' data-bs-toggle='collapse' data-bs-target='#collapseNestedOne" . $previous . "' aria-expanded='true' aria-controls='collapseNestedOne" . $previous . "'>";
-                        echo " $dat2[$i] ";
-                        echo "</button>";
-                        echo "</h2>";*/
-                        //$id_decrypted_obj = Crypt::decrypt(payload: $id_obj);
 
                         echo "<div class='accordion-item w-100 mt-2'>";
 
@@ -395,7 +394,7 @@ function sub_object($searching, $dat1, $dat2, /*$dat3,*/ $dat4, $previous, $id)
                         $ee = Crypt::decrypt($dat1[$i]);
                         $fetch_assignment = DB::select("SELECT COUNT(*) AS count FROM management_rights WHERE id_object='$ee' AND id='$id' ");
                         $counter = $fetch_assignment[0]->count;
-                        if($counter > 0){
+                        if ($counter > 0) {
                             echo "checked";
                         }
                         echo " >";
@@ -408,10 +407,7 @@ function sub_object($searching, $dat1, $dat2, /*$dat3,*/ $dat4, $previous, $id)
                         echo "<div id='collapse$dat1[$i]' class='w-100 accordion-collapse collapse' aria-labelledby='heading$dat1[$i]' data-bs-parent='heading$previous'>";
                         echo "<div class='accordion-body pt-0 pb-0  w-100'>";
 
-                        //echo "<div id='collapseOne' class='accordion-collapse collapse w-100' aria-labelledby='headingOne' data-bs-parent='#accordionExampleNested" . $previous . "'>";
-                        sub_object($sea, $dat1, $dat2,/* $dat3,*/ $dat4, $dat1[$i], $id);
-                        /*echo "</div>";
-                        echo "</div>";*/
+                        sub_object($sea, $dat1, $dat2, $dat4, $dat1[$i], $id);
 
                         echo "</div>";
                         echo "</div>";
@@ -419,57 +415,28 @@ function sub_object($searching, $dat1, $dat2, /*$dat3,*/ $dat4, $previous, $id)
                         $find2 = 1;
                         break;
 
-                    }/*else{
-                  /*echo "<h2 class='accordion-header w-100' id='headingTwo' >";
-                  echo  "<button class='accordion-button w-100' type='button' data-bs-toggle='collapse' data-bs-target='#collapseTwo' aria-expanded='true' aria-controls='collapseTwo' >";
-                  echo   $dat2[$i] ;
-                  echo "</button>";
-                  echo "</h2>";*/
-                    //echo "<button class='btn btn-light w-100' style='text-align: left;'>" . $dat2[$i] . "</button>";
-                    /*break;
-                    }*/
+                    }
                 }
             }
             if ($find2 == 0) {
-                /*echo " <div id='collapseNestedOne" . $previous  . "' class='accordion-collapse collapse w-100' aria-labelledby='headingNestedOne" . $previous . "' data-bs-parent='#accordionExampleNested" . $previous . "'>";
-                echo " <div class='accordion-body'>";
-                echo "<button class='btn btn-light w-100' style='text-align: left;'>" . $dat2[$i] . "</button>";
-                echo "</div>";
-                echo "</div>";*/
 
-
-                /*echo "<div id='collapse$dat1[$i]' class='accordion-collapse collapse' aria-labelledby='heading$dat1[$i]' data-bs-parent='heading$previous'>";
-                echo "<div class='accordion-body'>";*/
                 echo "<button class='btn btn-light w-100 mt-3 mb-3 pt-2 pb-2' style='text-align: left;align-items: center;'>" . $dat2[$i] . "<div style='float:right' style='margin-right: 35px '>";
                 echo "<input id='" . $dat1[$i] . "' value='$dat1[$i]' type='checkbox' name='ch_rights' class='hidden radio-label' ";
                 $yy = Crypt::decrypt($dat1[$i]);
                 $fetch_assignment2 = DB::select("SELECT COUNT(*) AS count FROM management_rights WHERE id_object='$yy' AND id='$id' ");
                 $counter2 = $fetch_assignment2[0]->count;
-                if($counter2 > 0){
+                if ($counter2 > 0) {
                     echo "checked";
-                } 
+                }
                 echo " >";
                 echo "<labelfor='yes-button' class='button-label mt-0' style='margin-left: 15px;margin-right: 15px;  '>Select </label>
                </div>";
                 echo "</button>";
-                /* ${item.content}
-                 ${item.children.length > 0 ? generateAccordion(item.children, `${parentId}-${index}`) : ''}*/
-                /*echo "</div>";
-                 echo "</div>";*/
-            } else {
-
+       
             }
-            //echo "</div>";
-
-            //echo "</li>";
-            // echo "</div>";
         }
     }
-    //echo "<h6>. $find.</h6>";
-    if ($find == 0) {
-        
-        echo "<h6>dsa</h6>";
-    }
+   
 
 }
 

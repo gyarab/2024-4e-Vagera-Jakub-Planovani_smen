@@ -18,8 +18,7 @@ class AttendanceController extends Controller
 {
     public function endBreak(Request $request)
     {
-        // $mysqli = require("../database.php");
-//$conn = new mysqli($host, $username, $password, $dbname);
+ 
         $id = Auth::id();/**id uzivatele */
         $y = date('Y-m-d', strtotime("-1 days"));/** vcerejsi datum */
         $currentTime = date('H:i:s');/** soucasny cas */
@@ -27,18 +26,14 @@ class AttendanceController extends Controller
 
         $checkfrom = 0;/** promena udava zdal-li existuje validni smena co zacala vcera */
         /** SQL prikaz na vyhledani vcerejsich smen */
-        //$fetchy = DB::select("");
         $fetchy_count = DB::select("SELECT COUNT(*) as count FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL AND attendance.saved_at='$y' AND attendance.id='$id' ");
         $fetchy = DB::select("SELECT * FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL AND attendance.saved_at='$y' AND attendance.id='$id' ");
 
         $fetchtd_count = DB::select("SELECT COUNT(*) AS count FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL AND attendance.saved_at='$td' AND attendance.id='$id' ");
         $fetchtd = DB::select("SELECT * FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL AND attendance.saved_at='$td' AND attendance.id='$id' ");
 
-        /*$sqly = "SELECT * FROM shift_active_data WHERE (shift_active_data.saved_date='$y' AND shift_active_data.id_user='$id' AND shift_active_data.id_saved  IN (SELECT planned_id FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL))";
-        $fetchy = mysqli_query($conn, $sqly);
         /** SQL prikaz na vyhledani dnesnich smen */
-        /*$sqltd = "SELECT * FROM shift_active_data WHERE (shift_active_data.saved_date='$td' AND shift_active_data.id_user='$id' AND shift_active_data.id_saved  IN (SELECT planned_id FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL))";
-        $fetchtd = mysqli_query($conn, $sqltd);
+      
         /**vcerejsi hledani */
         if ($fetchy_count[0]->count > 0) {
             $checkfrom = 1;
@@ -56,10 +51,7 @@ class AttendanceController extends Controller
             } else {
                 DB::update("UPDATE attendance SET pause_to='$currentTime' WHERE id_attendance=$id_plan_y");
             }
-            /*if (!mysqli_query($conn, $sqly_insert)) {
-                
-            }*/
-
+    
 
         }
         /**dnesni hledani */
@@ -74,16 +66,12 @@ class AttendanceController extends Controller
                 }
                 if ($pause_to_td != null) {
                     DB::update("UPDATE attendance SET pause_to= '$pause_to_td||$currentTime' WHERE id_attendance=$id_plan_td");
-                    //echo json_encode($pause_to_td);
 
                 } else {
                     DB::update("UPDATE attendance SET pause_to='$currentTime' WHERE id_attendance=$id_plan_td");
-                    //echo json_encode( $pause_to_td);
 
                 }
-                /*if (!mysqli_query($conn, $sqltd_insert)) {
-                    
-                }*/
+        
 
 
             }
@@ -91,8 +79,7 @@ class AttendanceController extends Controller
     }
     public function startBreak(Request $request)
     {
-        //$mysqli = require("../database.php");
-        //$conn = new mysqli($host, $username, $password, $dbname);
+
         $id = Auth::id();/**id uzivatele */
         $y = date('Y-m-d', strtotime("-1 days"));/** vcerejsi datum */
         $currentTime = date('H:i:s');/** soucasny cas */
@@ -105,15 +92,12 @@ class AttendanceController extends Controller
 
         $checkfrom = 0;/** promena udava zdal-li existuje validni smena co zacala vcera */
         /** SQL prikaz na vyhledani vcerejsich smen */
-        //$fetchy = DB::select("SELECT * FROM shift_active_data WHERE (shift_active_data.saved_at='$y' AND shift_active_data.id='$id' AND IN (SELECT 1 FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL AND shift_active_data.saved_at=attendace.saved_at AND attendace.id='$id' AND shift_active_data.id_shift=attendace.id_shift ))");
         $fetchy_count = DB::select("SELECT COUNT(*) as count FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL AND attendance.saved_at='$y' AND attendance.id='$id' ");
         $fetchy = DB::select("SELECT * FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL AND attendance.saved_at='$y' AND attendance.id='$id' ");
 
-        //$sqly = "SELECT * FROM shift_active_data WHERE (shift_active_data.saved_date='$y' AND shift_active_data.id_user='$id' AND shift_active_data.id_saved IN (SELECT planned_id FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL))";
-        // $fetchy = mysqli_query($conn, $sqly);
+ 
         /** SQL prikaz na vyhledani dnesnich smen */
-        /*$sqltd = "SELECT * FROM shift_active_data WHERE (shift_active_data.saved_date='$td' AND shift_active_data.id_user='$id' AND shift_active_data.id_saved IN (SELECT planned_id FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL))";
-        $fetchtd = mysqli_query($conn, $sqltd);*/
+
         $fetchtd_count = DB::select("SELECT COUNT(*) AS count FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL AND attendance.saved_at='$td' AND attendance.id='$id' ");
 
         $fetchtd = DB::select("SELECT * FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL AND attendance.saved_at='$td' AND attendance.id='$id' ");
@@ -124,9 +108,7 @@ class AttendanceController extends Controller
             foreach ($fetchy as $row_y) {
                 $id_plan_y = $row_y->id_attendance;
                 $fetch_from_y = DB::select("SELECT pause_from FROM attendance WHERE id_attendance = $id_plan_y ");
-                /*while ($row_y_from = mysqli_fetch_assoc($fetch_from_y)) {
-                    $pause_from_y = $row_y_from['pause_from'];
-                }*/
+         
                 foreach ($fetch_from_y as $row_y_from) {
                     $pause_from_y = $row_y_from->pause_from;
                 }
@@ -138,9 +120,7 @@ class AttendanceController extends Controller
             } else {
                 DB::update("UPDATE attendance SET pause_from='$currentTime' WHERE id_attendance=$id_plan_y");
             }
-            /*if (!mysqli_query($conn, $sqly_insert)) {
-                
-            }*/
+       
 
 
         }
@@ -148,31 +128,22 @@ class AttendanceController extends Controller
         if ($checkfrom == 0) {
 
             if ($fetchtd_count[0]->count > 0) {
-                echo "sdsda";
                 foreach ($fetchtd as $row_td) {
-                    // while ($row_td = mysqli_fetch_assoc($fetchtd)) {
                     $id_plan_td = $row_td->id_attendance;
-                    //$fetch_from_td = mysqli_query($conn, "SELECT pause_from FROM attendance WHERE planned_id = $id_plan_td ");
                     $fetch_from_td = DB::select("SELECT pause_from FROM attendance WHERE id_attendance = $id_plan_td ");
-                    /*while ($row_td_from = mysqli_fetch_assoc($fetch_from_td)) {
-                        $pause_from_td = $row_td_from['pause_from'];
-                    }*/
+              
                     foreach ($fetch_from_td as $row_td_from) {
                         $pause_from_td = $row_td_from->pause_from;
                     }
                 }
                 if ($pause_from_td != null) {
                     DB::update("UPDATE attendance SET pause_from= '$pause_from_td||$currentTime' WHERE id_attendance=$id_plan_td");
-                    //echo json_encode($pause_from_td);
 
                 } else {
                     DB::update("UPDATE attendance SET pause_from='$currentTime' WHERE id_attendance=$id_plan_td");
-                    //echo json_encode( $pause_from_td);
 
                 }
-                /*if (!mysqli_query($conn, $sqltd_insert)) {
-                    
-                }*/
+          
 
 
             }
@@ -184,8 +155,11 @@ class AttendanceController extends Controller
         $pause = 0;
         $pause_have = 0;
         $dd = 0;
-        //$mysqli = require ("../database.php");
-        //$conn = new mysqli($host, $username, $password, $dbname);
+        $pfrom_td = "";
+        $pto_td = "";
+        $pfrom_y = "";
+        $pto_y = "";
+        
         $y = date('Y-m-d', strtotime("-1 days"));/**-zjisteni vcerejsiho dne */
         $td = date('Y-m-d');/**-zjisteni dnesniho dne */
         $tm = date('Y-m-d', strtotime("1 days"));/**-zjisteni zitrejsiho dne */
@@ -195,13 +169,9 @@ class AttendanceController extends Controller
         $sqltm = "SELECT * FROM shift_active_data WHERE saved_date='$tm' AND id_user='$u' ORDER BY saved_from "; /**-SQl dotaz - vybere zitrejsi smeny  */
         $sqlcl = "SELECT * FROM shift_active_data, create_shift WHERE id_user='$u' AND saved_date >= DATE('$td') AND create_shift.id_shift = shift_active_data.id_of_shift ORDER BY saved_from DESC "; /**-SQL dotaz - co vyhledava nejblizsi nasledujici smenu */
         /**-prikazy, ktere ziskavaji predchozi vysledky z SQL dotazu  */
-        /* $fetchy = mysqli_query($conn, $sqly);
-         $fetchtd = mysqli_query($conn, $sqltd);
-         $fetchtm = mysqli_query($conn, $sqltm);
-         $fetchcl = mysqli_query($conn, $sqlcl);*/
+      
         $checkfrom = 0;/**promena, podle ktere se nacita tlacitko budto na prihlaseni do smeny (promena je 0) nebo na odhlaseni ze smeny (promena je 1) */
         /** - SQL dotaz, ktery vyhledava vcerejsi smeny u kterych se uzivatel nezaregistroval a nebo se jeste neodlasil */
-        //return "SELECT * , shift_active_data.saved_from AS p_from, shift_active_data.saved_to AS p_to, shift_active_data.comments AS com, shift_active_data.id_shift AS shi, shift_active_data.saved_at AS dates FROM shift_active_data WHERE (shift_active_data.saved_at='$y' AND shift_active_data.id='$u' AND NOT EXISTS (SELECT 1 FROM attendance WHERE attendance.id_shift=shift_active_data.id_shift AND attendance.id='$u' AND attendance.saved_at='$y')) OR (shift_active_data.saved_at='$y' AND shift_active_data.id='$u' AND EXISTS (SELECT 1 FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL AND attendance.id_shift=shift_active_data.id_shift AND attendance.id='$u' AND attendance.saved_at='$y') ";
 
         $fetchfryy = DB::select("SELECT * , shift_active_data.saved_from AS p_from, shift_active_data.saved_to AS p_to, shift_active_data.comments AS com, shift_active_data.id_shift AS shi, shift_active_data.saved_at AS dates FROM shift_active_data WHERE (shift_active_data.saved_at='$y' AND shift_active_data.id='$u' AND NOT EXISTS (SELECT 1 FROM attendance WHERE attendance.id_shift=shift_active_data.id_shift AND attendance.id='$u' AND attendance.saved_at='$y')) OR (shift_active_data.saved_at='$y' AND shift_active_data.id='$u' AND EXISTS (SELECT 1 FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL AND attendance.id_shift=shift_active_data.id_shift AND attendance.id='$u' AND attendance.saved_at='$y')) ");
 
@@ -221,28 +191,20 @@ class AttendanceController extends Controller
         $fetchfrtdtd_count = DB::select("SELECT COUNT(*) AS count FROM shift_active_data WHERE (shift_active_data.saved_at='$td' AND shift_active_data.id='$u' AND NOT EXISTS (SELECT 1 FROM attendance WHERE attendance.id_shift=shift_active_data.id_shift AND attendance.id='$u' AND attendance.saved_at='$td')) OR (shift_active_data.saved_at='$td' AND shift_active_data.id='$u' AND EXISTS (SELECT 1 FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL AND attendance.id_shift=shift_active_data.id_shift AND attendance.id='$u' AND attendance.saved_at='$td')) ");
 
         /**-prikazy, ktere ziskavaji predchozi vysledky z SQL dotazu  */
-        /*$fetchfryy = mysqli_query($conn, $sqlfry);
-        $fetchfrtdtd = mysqli_query($conn, $sqlfrtd);
-        $fetchypf = mysqli_query($conn, $sqlypf);
-        $fetchtdpf = mysqli_query($conn, $sqltdpf);
+     
 
 
         /** tato cast zjistuje zda-li existuji nejake vysledky z dotatzu pro vcerejsi den */
-        //return "SELECT COUNT(*) AS count FROM shift_active_data WHERE (shift_active_data.saved_at='$y' AND shift_active_data.id='$u' AND NOT EXISTS (SELECT 1 FROM attendance WHERE attendance.id_shift=shift_active_data.id_shift AND attendance.id='$u' AND attendance.saved_at='$y'))";
-       // return "SELECT COUNT(*) AS count FROM shift_active_data WHERE (shift_active_data.saved_at='$y' AND shift_active_data.id='$u' AND NOT EXISTS (SELECT 1 FROM attendance WHERE attendance.id_shift=shift_active_data.id_shift AND attendance.id='$u' AND attendance.saved_at='$y')) OR (shift_active_data.saved_at='$y' AND shift_active_data.id='$u' AND EXISTS (SELECT 1 FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL AND attendance.id_shift=shift_active_data.id_shift AND attendance.id='$u' AND attendance.saved_at='$y'))";
-       if ($fetchfryy_count[0]->count > 0) {
-           
+        if ($fetchfryy_count[0]->count > 0) {
+
             $fetchfryych_count = DB::select("SELECT COUNT(*) AS count FROM shift_active_data WHERE (shift_active_data.saved_at='$y' AND shift_active_data.id='$u' AND EXISTS (SELECT 1 FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL AND attendance.id_shift=shift_active_data.id_shift AND attendance.id='$u' AND attendance.saved_at='$y'))");
             $fetchfryych = DB::select("SELECT * FROM shift_active_data WHERE (shift_active_data.saved_at='$y' AND shift_active_data.id='$u' AND EXISTS (SELECT 1 FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL AND attendance.id_shift=shift_active_data.id_shift AND attendance.id='$u' AND attendance.saved_at='$y'))");
 
-            /* $fetchfryych = mysqli_query($conn, $sqlfrych);*/
-         
+
             foreach ($fetchfryy as $row_y) {
-                
-                //return 1;
+
                 $st = $row_y->p_from;
                 $en = $row_y->p_to;
-                //return 1;
                 /**podminka zkontroluje zda-li je jeste moznost se prihlasit do smeny - soucasny cas v timestapu je mensi nez timestamp kdy smena konci */
                 if (strtotime($st) >= strtotime($en)) {
                     if (strtotime(date('H:i:s')) < strtotime($en)) {
@@ -251,15 +213,11 @@ class AttendanceController extends Controller
                     }
                 }
             }
-            
+
             if ($fetchfryych_count[0]->count > 0) {
-                //return 1;
                 foreach ($fetchfryych as $row_y2) {
-                    //$id2 = $row_y2->id_saved;
                     $st2 = $row_y2->saved_from;
                     $en2 = $row_y2->saved_to;
-                    /**podminka zkontroluje zda-li je jeste moznost se z smeny ohlasit - jeste neuplynulo 24 hodin od zacatku naplanovane smeny */
-                    //$att_log = "SELECT * FROM attendance WHERE planned_id=$id2";
                     if (strtotime($st2) >= strtotime($en2)) {
                         if (strtotime(date('H:i:s')) < strtotime($st2)) {
 
@@ -276,12 +234,9 @@ class AttendanceController extends Controller
 
             if ($fetchfrtdtd_count[0]->count > 0) {
                 $dd = 1;
-               
-                //$fetchfrtdch_count = DB::select("SELECT COUNT(*) AS count FROM shift_active_data WHERE (shift_active_data.saved_at='$td' AND shift_active_data.id='$u' AND shift_active_data.id_active IN (SELECT id_planned FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL))");
-                //$fetchfrtdch = DB::select("SELECT * FROM shift_active_data WHERE (shift_active_data.saved_at='$td' AND shift_active_data.id='$u' AND shift_active_data.id_active IN (SELECT id_planned FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL))");
+
                 $fetchfrtdch_count = DB::select("SELECT COUNT(*) AS count FROM shift_active_data WHERE (shift_active_data.saved_at='$td' AND shift_active_data.id='$u' AND EXISTS (SELECT 1 FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL AND attendance.id_shift=shift_active_data.id_shift AND attendance.id='$u' AND attendance.saved_at='$td'))");
                 $fetchfrtdch = DB::select("SELECT * FROM shift_active_data WHERE (shift_active_data.saved_at='$td' AND shift_active_data.id='$u' AND EXISTS (SELECT 1 FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL AND attendance.id_shift=shift_active_data.id_shift AND attendance.id='$u' AND attendance.saved_at='$td'))");
-                //$fetchfrtdch = mysqli_query($conn, $sqlfrtdch);
                 foreach ($fetchfrtdtd as $row_td) {
                     $st3 = $row_td->saved_from;
                     $en3 = $row_td->saved_to;
@@ -295,42 +250,44 @@ class AttendanceController extends Controller
                         $have = 1;
                     }
                 }
-               
+
                 /**podminka kontroluje kontroluji zda-li se uzivatel uz na smenu prihlasil */
                 if ($fetchfrtdch_count[0]->count > 0) {
-                    
+
                     $have = 1;
                     $checkfrom = 1;
                 }
             }
         }
-      
+
         if ($fetchtdpf_count[0]->count > 0) {
+
             $pause_have = 1;
             foreach ($fetchtdpf as $row_id_td) {
                 $td_id = $row_id_td->id_active;
             }
             $fetchtdpf2 = DB::select("SELECT * FROM attendance WHERE id_planned = $td_id ");
-            //$fetchtdpf2 = mysqli_query($conn, $sqltdpf2);
             foreach ($fetchtdpf2 as $row_pause_td) {
                 $pfrom_td = $row_pause_td->pause_from;
                 $pto_td = $row_pause_td->pause_to;
             }
+
             if (strlen($pfrom_td) != strlen($pto_td)) {
                 $pause = 1;
 
             }
 
 
+
         }
         if ($pause_have == 0) {
+
             if ($fetchypf_count[0]->count > 0) {
                 $pause_have = 1;
                 foreach ($fetchypf as $row_id_y) {
                     $y_id = $row_id_y->id_active;
                 }
                 $fetchypf2 = DB::select("SELECT * FROM attendance WHERE id_planned = $y_id ");
-                //$fetchypf2 = mysqli_query($conn, $sqlypf2);
                 foreach ($fetchypf2 as $row_pause_y) {
                     $pfrom_y = $row_pause_y->pause_from;
                     $pto_y = $row_pause_y->pause_to;
@@ -352,11 +309,9 @@ class AttendanceController extends Controller
     }
     public function confirmDeparture(Request $request)
     {
-        //$mysqli = require ("../database.php");
-//$conn = new mysqli($host, $username, $password, $dbname);
-$id = Auth::id();/** id uzivatele*/
-//$ip_address = $_POST['ip_address'];/** ip addressa pouzivaneho zarizeni */
-//$cookie = $_POST['cookie'];
+     
+        $id = Auth::id();/** id uzivatele*/
+        
         $y = date('Y-m-d', strtotime("-1 days"));/** vcerejsi datum */
         $text = $request->input('text');/** text z komentare */
         $currentTime = date('H:i:s');/** soucasny cas */
@@ -373,27 +328,31 @@ $id = Auth::id();/** id uzivatele*/
          * status[1] = 1 - neni pridany komentar
          */
 
-         $cookie_checker = 0;
-         $encryptedCookie = $request->cookie('secure_device');
- 
-         if (!$encryptedCookie) {
-             $status[0] = 4;
-         }
- 
-         $data = decrypt($encryptedCookie); // Dešifrujeme cookie
-         $currentFingerprint = hash('sha256', $request->userAgent() . $request->ip());
- 
-         if ($data['fingerprint'] !== $currentFingerprint) {
-             $status[0] = 4;
-         } else {
-             $device_id = $data['device_id'];
-             $fetch_cookie = DB::select("SELECT COUNT(*) FROM devices WHERE device_token = '$device_id' ");
-             if ($fetch_cookie[0]->count == 0) {
-                 $status[0] = 4;
-                 $cookie_checker = 1;
- 
-             }
-         }
+        $cookie_checker = 1;
+        $encryptedCookie = $request->cookie('secure_device');
+
+        if (!$encryptedCookie) {
+            $status[0] = 4;
+        }
+
+        if($status[0] != 4){
+        $data = decrypt($encryptedCookie); // Dešifrujeme cookie
+        $currentFingerprint = hash('sha256', $request->userAgent() . "127.0.0.1");
+
+        if ($data['fingerprint'] !== $currentFingerprint) {
+            $status[0] = 4;
+        } else {
+            $device_id = $data['device_id'];
+            $fetch_cookie = DB::select("SELECT COUNT(*) AS count FROM devices WHERE device_token = '$device_id' ");
+            if ($fetch_cookie[0]->count > 0) {
+                $cookie_checker = 0;
+
+            }else{
+                $status[0] = 4;
+
+            }
+        }
+    }
 
         $ip_list = array();/**list na ip v databazi */
 
@@ -404,18 +363,7 @@ $id = Auth::id();/** id uzivatele*/
             $status[1] = 1;
             $text = "";
         }
-        /** Ziskani IP adres z databaze */
-        /*$sqlip = "SELECT * FROM IPS";
-        $fetchip = mysqli_query($conn, $sqlip);
-        while ($rowip = mysqli_fetch_assoc($fetchip)) {
-            array_push($ip_list, $rowip['ip_address']);
-        }
-        $cookie_list = array();
-        $sqlcookie = "SELECT * FROM cookie_list";
-        $fetchcookie = mysqli_query($conn, $sqlcookie);
-        while ($rowcookie = mysqli_fetch_assoc($fetchcookie)) {
-            array_push($cookie_list, $rowcookie['cookie_code']);
-        }*/
+     
 
         $checkfrom = 0;/** promena udava zdal-li existuje validni smena co zacala vcera */
         /** SQL prikaz na vyhledani vcerejsich smen */
@@ -425,20 +373,16 @@ $id = Auth::id();/** id uzivatele*/
         $fetchtd_count = DB::select("SELECT COUNT(*) AS count FROM shift_active_data WHERE shift_active_data.saved_at='$td' AND shift_active_data.id='$id' AND EXISTS (SELECT 1 FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL AND attendance.id='$id' AND attendance.saved_at='$td' AND attendance.id_shift=shift_active_data.id_shift )");
         $fetchtd = DB::select("SELECT *, shift_active_data.saved_from AS p_from, shift_active_data.saved_to AS p_to FROM shift_active_data WHERE shift_active_data.saved_at='$td' AND shift_active_data.id='$id' AND EXISTS (SELECT 1 FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL AND attendance.id='$id' AND attendance.saved_at='$td' AND attendance.id_shift=shift_active_data.id_shift )");
 
-        //$sqly = "SELECT * FROM shift_active_data WHERE (shift_active_data.saved_date='$y' AND shift_active_data.id_user='$id' AND shift_active_data.id_saved  IN (SELECT planned_id FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL))";
         /** SQL prikaz na vyhledani dnesnich smen */
-        /*$fetchy = mysqli_query($conn, $sqly);
-        $sqltd = "SELECT * FROM shift_active_data WHERE (shift_active_data.saved_date='$td' AND shift_active_data.id_user='$id' AND shift_active_data.id_saved  IN (SELECT planned_id FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL))";
-        $fetchtd = mysqli_query($conn, $sqltd);*/
-      
+       
+
         if ($fetchy_count[0]->count > 0) {
             $fetch_attendence_y = DB::select("SELECT * FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL AND attendance.id='$id' AND attendance.saved_at='$y'");
-          
-            foreach ($fetch_attendence_y as $row_tduy ) {
+
+            foreach ($fetch_attendence_y as $row_tduy) {
                 $id_plan_y = $row_tduy->id_attendance;
             }
             foreach ($fetchy as $row_y) {
-               // $id_plan = $row_y->id_attendance;
                 $st = $row_y->saved_from;
                 $en = $row_y->saved_to;
             }
@@ -450,58 +394,43 @@ $id = Auth::id();/** id uzivatele*/
                     if (strtotime($en) < strtotime($currentTime)) {
                         $status[0] = 1;
                         if ($status[1] == 0) {
-                            $status[0] = 0;
-                            //$sqlupdate = "UPDATE attendance SET log_to='$currentTime', com_to='$text', delay_dep=1 WHERE planned_id=$id_plan  ";
                             if ($cookie_checker != 1) {
-                            DB::update("UPDATE attendance SET log_to='$currentTime', com_to='$text', delay_dep=1 WHERE id_attendance=$id_plan_y");
+                                $status[0] = 0;
+                                DB::update("UPDATE attendance SET log_to='$currentTime', com_to='$text', delay_dep=1 WHERE id_attendance=$id_plan_y");
+                            }else{
+                                $status[0] = 4;
                             }
-                            /*checkip($ip_address,$cookie);
-                            if ($status[0] != 4) {
-                                if (!mysqli_query($conn, $sqlupdate)) {
-                                    $status[0] = 5;
-                                }
-                            }*/
+                    
 
                         }
-                       // echo json_encode($status);
-                       return response()->json(['left' => $status[0], 'comment' => $status[1]]);
+                        return response()->json(['left' => $status[0], 'comment' => $status[1]]);
 
 
                     } else if (strtotime($en) > strtotime($currentTime) && strtotime($en) - 600 > strtotime($currentTime)) {
                         $status[0] = 2;
                         if ($status[1] == 0) {
-                            $status[0] = 0;
                             if ($cookie_checker != 1) {
-                             DB::update("UPDATE attendance SET log_to='$currentTime', com_to='$text', delay_dep=1 WHERE id_attendance=$id_plan_y");
+                                $status[0] = 0;
+                                DB::update("UPDATE attendance SET log_to='$currentTime', com_to='$text', delay_dep=1 WHERE id_attendance=$id_plan_y");
 
+                            }else{
+                                $status[0] = 4;
                             }
-                           // $sqlupdate = "UPDATE attendance SET log_to='$currentTime', com_to='$text', delay_dep=1 WHERE planned_id=$id_plan  ";
-                            /*checkip($ip_address,$cookie);
-                            if ($status[0] != 4) {
-                                if (!mysqli_query($conn, $sqlupdate)) {
-                                    $status[0] = 5;
-                                }
-                            }*/
+                      
 
                         }
-                        //echo json_encode($status);
                         return response()->json(['left' => $status[0], 'comment' => $status[1]]);
 
 
                     } else {
-                        $status[0] = 0;
                         if ($cookie_checker != 1) {
+                            $status[0] = 0;
                             DB::update("UPDATE attendance SET log_to='$currentTime', com_to='$text', delay_dep=1 WHERE id_attendance=$id_plan_y");
 
+                        }else{
+                            $status[0] = 4;
                         }
-                        //$sqlupdate = "UPDATE attendance SET log_to='$currentTime', com_to='$text', delay_dep=1 WHERE planned_id=$id_plan  ";
-                        /*checkip($ip_address,$cookie);
-                        if ($status[0] != 4) {
-                            if (!mysqli_query($conn, $sqlupdate)) {
-                                $status[0] = 5;
-                            }
-                        }
-                        echo json_encode($status);*/
+    
                         return response()->json(['left' => $status[0], 'comment' => $status[1]]);
 
                     }
@@ -518,113 +447,80 @@ $id = Auth::id();/** id uzivatele*/
         if ($checkfrom == 0) {
             if ($fetchtd_count[0]->count > 0) {
                 $fetch_attendence = DB::select("SELECT * FROM attendance WHERE log_from IS NOT NULL AND log_to IS NULL AND attendance.id='$id' AND attendance.saved_at='$td'");
-                foreach ($fetch_attendence as $row_tdu ) {
+                foreach ($fetch_attendence as $row_tdu) {
                     $id_plan_td = $row_tdu->id_attendance;
                 }
-                foreach ($fetchtd as $row_td ) {
-                    //$id_plan_td = $row_td->id_attendance;
+                foreach ($fetchtd as $row_td) {
                     $st_td = $row_td->p_from;
                     $en_td = $row_td->p_to;
                 }
                 if (strtotime($st_td) >= strtotime($en_td)) {
                     $status[0] = 2;
                     if ($status[1] == 0) {
-                        $status[0] = 0;
+                        
                         if ($cookie_checker != 1) {
+                            $status[0] = 0;
                             DB::update("UPDATE attendance SET log_to='$currentTime', com_to='$text', delay_dep=0 WHERE id_attendance=$id_plan_td ");
+                        }else{
+                            $status[0] = 4;
                         }
-                        //checkip($ip_address,$cookie);
-                        /*if ($status[0] != 4) {
-                            if (!mysqli_query($conn, $sqlupdate_td)) {
-                                $status[0] = 5;
-                            }
-                        }*/
+           
 
                     }
                     return response()->json(['left' => $status[0], 'comment' => $status[1]]);
 
-                    //return response()->json(['status' => $status[0], 'comment' => $status[1]]);
- 
-                    //echo json_encode($status);
-
-                }else{
-            
-                
-                if (strtotime($en_td) < strtotime($currentTime)) {
-                    $status[0] = strtotime($st_td)."--".strtotime($en_td);
-                    if ($status[1] == 0) {
-                        $status[0] = 0;
-                        if ($cookie_checker != 1) {
-                        DB::update("UPDATE attendance SET log_to='$currentTime', com_to='$text', delay_dep=0 WHERE id_attendance=$id_plan_td  ");
-                        }
-                        /*checkip($ip_address,$cookie);
-                        if ($status[0] != 4) {
-                            if (!mysqli_query($conn, $sqlupdate_td)) {
-                                $status[0] = 5;
-
-                            }
-                        }*/
-
-                    }
-                    return response()->json(['left' => $status[0], 'comment' => $status[1]]);
-
-                    //return response()->json(['status' => $status[0], 'comment' => $status[1]]);
-
-                    /*$status[0] = strtotime($st_td)."--".strtotime($en_td);
-                    if ($status[1] == 0) {
-                        $status[0] = 0;
-                        $sqlupdate_td = "UPDATE attendance SET log_to='$currentTime', com_to='$text', delay_dep=0 WHERE planned_id=$id_plan_td  ";
-                        checkip($ip_address,$cookie);
-                        if ($status[0] != 4) {
-                            if (!mysqli_query($conn, $sqlupdate_td)) {
-                                $status[0] = 5;
-
-                            }
-                        }
-
-                    }
-                    echo json_encode($status);*/
-
-                } else if (strtotime($en_td) > strtotime($currentTime) && strtotime($en_td) - 600 > strtotime($currentTime)) {
-                    $status[0] = 2;
-                    if ($status[1] == 0) {
-                        $status[0] = 0;
-                        if ($cookie_checker != 1) {
-                        DB::update("UPDATE attendance SET log_to='$currentTime', com_to='$text', delay_dep=0 WHERE id_attendance=$id_plan_td  ");
-                        }
-                        /*checkip($ip_address,$cookie);
-                        if ($status[0] != 4) {
-                            if (!mysqli_query($conn, $sqlupdate_td)) {
-                                $status[0] = 5;
-                            }
-                        }*/
-
-                    }
-                    return response()->json(['left' => $status[0], 'comment' => $status[1]]);
-
-                    //return response()->json(['status' => $status[0], 'comment' => $status[1]]);
-
-                    //echo json_encode($status);
 
                 } else {
-                    $status[0] = 0;
-                    if ($cookie_checker != 1) {
-                    DB::update("UPDATE attendance SET log_to='$currentTime', com_to='$text', delay_dep=0 WHERE id_attendance=$id_plan_td ");
-                    }
-                    /*checkip($ip_address,$cookie);
-                    if ($status[0] != 4) {
-                        if (!mysqli_query($conn, $sqlupdate_td)) {
-                            $status[0] = 5;
+
+
+                    if (strtotime($en_td) < strtotime($currentTime)) {
+                        $status[0] = strtotime($st_td) . "--" . strtotime($en_td);
+                        if ($status[1] == 0) {
+                            if ($cookie_checker != 1) {
+                                $status[0] = 0;
+                                DB::update("UPDATE attendance SET log_to='$currentTime', com_to='$text', delay_dep=0 WHERE id_attendance=$id_plan_td  ");
+                            }else{
+                                $status[0] = 4;
+                            }
+              
+
                         }
-                    }*/
-                    return response()->json(['left' => $status[0], 'comment' => $status[1]]);
+                        return response()->json(['left' => $status[0], 'comment' => $status[1]]);
 
-                    //return response()->json(['status' => $status[0], 'comment' => $status[1]]);
-                    //echo json_encode($status);
+          
 
+                    } else if (strtotime($en_td) > strtotime($currentTime) && strtotime($en_td) - 600 > strtotime($currentTime)) {
+                        $status[0] = 2;
+                        if ($status[1] == 0) {
+                            
+                            if ($cookie_checker != 1) {
+                                $status[0] = 0;
+                                DB::update("UPDATE attendance SET log_to='$currentTime', com_to='$text', delay_dep=0 WHERE id_attendance=$id_plan_td  ");
+                            }else{
+                                $status[0] = 4;
+                            }
+              
+
+                        }
+                        return response()->json(['left' => $status[0], 'comment' => $status[1]]);
+
+           
+
+                    } else {
+                        if ($cookie_checker != 1) {                                    
+                            $status[0] = 0;
+                            DB::update("UPDATE attendance SET log_to='$currentTime', com_to='$text', delay_dep=0 WHERE id_attendance=$id_plan_td ");
+                        }else{
+                            $status[0] = 4;
+                        }
+               
+                        return response()->json(['left' => $status[0], 'comment' => $status[1]]);
+
+       
+
+                    }
                 }
-            }
-            
+
 
             }
 
@@ -635,12 +531,8 @@ $id = Auth::id();/** id uzivatele*/
     public function confirmArrival(Request $request)
     {
         /**tento soubor slouzi pro zaznamenavani prichodu na smenu */
-        //$mysqli = require ("../database.php");
 
-        //$conn = new mysqli($host, $username, $password, $dbname);
         $id = Auth::id(); /** id uzivatele*/
-        //$ip_address = $_POST['ip_address']; /** ip addressa pouzivaneho zarizeni */
-//$cookie = $_POST['cookie'];
         $y = date('Y-m-d', strtotime("-1 days"));/** vcerejsi datum */
         $text = $request->input('text'); /** text z komentare */
         $currentTime = date('H:i:s');/** soucasny cas */
@@ -657,33 +549,39 @@ $id = Auth::id();/** id uzivatele*/
          * status[1] = 0 - je pridany komentar
          * status[1] = 1 - neni pridany komentar
          */
-        $cookie_checker = 0;
+        $cookie_checker = 1;
         $encryptedCookie = $request->cookie('secure_device');
 
         if (!$encryptedCookie) {
             $status[0] = 4;
+
         }
 
-        $data = decrypt($encryptedCookie); // Dešifrujeme cookie
-        $currentFingerprint = hash('sha256', $request->userAgent() . $request->ip());
+        if ($status[0] != 4) {
+            $data = decrypt($encryptedCookie); // Dešifrujeme cookie
+            $currentFingerprint = hash('sha256', $request->userAgent() . "127.0.0.1");
 
-        if ($data['fingerprint'] !== $currentFingerprint) {
-            $status[0] = 4;
-        } else {
-            $device_id = $data['device_id'];
-            $fetch_cookie = DB::select("SELECT COUNT(*) FROM devices WHERE device_token = '$device_id' ");
-            if ($fetch_cookie[0]->count == 0) {
+            if ($data['fingerprint'] !== $currentFingerprint) {
                 $status[0] = 4;
-                $cookie_checker = 1;
 
+            } else {
+
+                $device_id = $data['device_id'];
+                error_log($device_id);
+
+                $fetch_cookie = DB::select("SELECT COUNT(*) AS count FROM devices WHERE device_token = '$device_id' ");
+                if ($fetch_cookie[0]->count > 0) {
+                    $cookie_checker = 0;
+
+                }else{
+                    $status[0] = 4;
+
+                }
             }
         }
 
-        //
 
-        // DB::select("SELECT * FROM ")
 
-        //return 1;
 
 
         $id_plan_arr = array();/**arr pro id vcerejsi smeny   */
@@ -705,6 +603,7 @@ $id = Auth::id();/** id uzivatele*/
 
 
         /**kontroluje zda-li je komentar dostatecne dlouhy */
+
         if (strlen($text) > 2) {
             $status[1] = 0;
         } else {
@@ -714,44 +613,23 @@ $id = Auth::id();/** id uzivatele*/
 
         $have = 0;/** promena udava zdal-li existuje validni smena co zacala vcera */
 
-        /** Ziskani IP adres z databaze */
-        /*$sqlip = "SELECT * FROM IPS";
-        $fetchip = mysqli_query($conn, $sqlip);
-        while ($rowip = mysqli_fetch_assoc($fetchip)) {
-            array_push($ip_list, $rowip['ip_address']);
-        }
-        $cookie_list = array();
-        $sqlcookie = "SELECT * FROM cookie_list";
-        $fetchcookie = mysqli_query($conn, $sqlcookie);
-        while ($rowcookie = mysqli_fetch_assoc($fetchcookie)) {
-            array_push($cookie_list, $rowcookie['cookie_code']);
-        }*/
+
 
         /** SQL prikaz na vyhledani vcerejsich smen */
-        //$fetchy_count = DB::select("SELECT COUNT(*) AS count FROM shift_active_data WHERE (shift_active_data.saved_at='$y' AND shift_active_data.id='$id' AND shift_active_data.id_active NOT IN (SELECT id_planned FROM attendance ))");
 
         $fetchy_count = DB::select("SELECT COUNT(*) AS count FROM shift_active_data WHERE (shift_active_data.saved_at='$y' AND shift_active_data.id='$id' AND NOT EXISTS (SELECT 1 FROM attendance WHERE attendance.id_shift=shift_active_data.id_shift AND attendance.id='$id' AND attendance.saved_at='$y'))");
 
-        //$fetchy = DB::select("SELECT * FROM shift_active_data WHERE (shift_active_data.saved_at='$y' AND shift_active_data.id='$id' AND shift_active_data.id_active NOT IN (SELECT id_planned FROM attendance ))");
 
         $fetchy = DB::select("SELECT * , shift_active_data.saved_from AS p_from, shift_active_data.saved_to AS p_to, shift_active_data.comments AS com, shift_active_data.id_shift AS shi, shift_active_data.saved_at AS dates FROM shift_active_data WHERE (shift_active_data.saved_at='$y' AND shift_active_data.id='$id' AND NOT EXISTS (SELECT 1 FROM attendance WHERE attendance.id_shift=shift_active_data.id_shift AND attendance.id='$id' AND attendance.saved_at='$y'))");
 
-        //$sqly = "SELECT * FROM shift_active_data WHERE (shift_active_data.saved_date='$y' AND shift_active_data.id_user='$id' AND shift_active_data.id_saved NOT IN (SELECT planned_id FROM attendance /*WHERE log_from IS NULL*/))";
-/*$fetchy = mysqli_query($conn, $sqly);
 /** SQL prikaz na vyhledani dnesnich smen */
-        //$sqltd = "SELECT * FROM shift_active_data WHERE (shift_active_data.saved_date='$td' AND shift_active_data.id_user='$id' AND shift_active_data.id_saved NOT IN (SELECT planned_id FROM attendance /*WHERE log_from IS NULL*///))";
-        //$fetchtd_count = DB::select("SELECT COUNT(*) AS count FROM shift_active_data WHERE (shift_active_data.saved_at='$td' AND shift_active_data.id='$id' AND shift_active_data.id_active NOT IN (SELECT id_planned FROM attendance ))");
         $fetchtd_count = DB::select("SELECT COUNT(*) AS count FROM shift_active_data WHERE (shift_active_data.saved_at='$td' AND shift_active_data.id='$id') AND NOT EXISTS (SELECT 1 FROM attendance WHERE attendance.id_shift=shift_active_data.id_shift AND attendance.id='$id' AND attendance.saved_at='$td')");
-        // DB::select("SELECT * , shift_active_data.saved_from AS p_from, shift_active_data.saved_to AS p_to, shift_active_data.comments AS com, shift_active_data.id_shift AS shi, shift_active_data.saved_at AS dates FROM shift_active_data WHERE (shift_active_data.saved_at='2025-02-07' AND shift_active_data.id=1) AND NOT EXISTS (SELECT 1 FROM attendance WHERE attendance.id_shift=shift_active_data.id_shift AND attendance.id=1 AND attendance.saved_at='2025-02-07')");
 
         $fetchtd = DB::select("SELECT * , shift_active_data.saved_from AS p_from, shift_active_data.saved_to AS p_to, shift_active_data.comments AS com, shift_active_data.id_shift AS shi, shift_active_data.saved_at AS dates FROM shift_active_data WHERE (shift_active_data.saved_at='$td' AND shift_active_data.id='$id') AND NOT EXISTS (SELECT 1 FROM attendance WHERE attendance.id_shift=shift_active_data.id_shift AND attendance.id='$id' AND attendance.saved_at='$td')");
-        // $fetchtd = DB::select("SELECT * FROM shift_active_data WHERE (shift_active_data.saved_at='$td' AND shift_active_data.id='$id' AND shift_active_data.id_active NOT IN (SELECT id_planned FROM attendance ))");
-        // $fetchtd = DB::select("SELECT * , shift_active_data.saved_from AS p_from, shift_active_data.saved_to AS p_to, shift_active_data.comments AS com, shift_active_data.id_shift AS shi, shift_active_data.saved_at AS dates FROM shift_active_data WHERE (shift_active_data.saved_at='$td' AND shift_active_data.id='$id') AND NOT EXISTS (SELECT 1 FROM attendance WHERE attendance.id_shift=shift_active_data.id_shift AND attendance.id='$id' AND attendance.saved_at='$td')");
-        /*$fetchtd = mysqli_query($conn, $sqltd);
 
-        /** nalezeni pouze jedne validni vcerejsi smeny */
 
         if ($fetchy_count[0]->count > 0 && $fetchy_count[0]->count == 1) {
+
             foreach ($fetchy as $row_y) {
                 $id_plan = $row_y->id_active;
                 $st = $row_y->saved_from;
@@ -774,26 +652,21 @@ $id = Auth::id();/** id uzivatele*/
 
             if ($have == 1) {
                 if ($status[1] == 0) {
-                    $status[0] = 0;
-                    //$sqlinsert = "INSERT INTO attendance (id_planned,log_from,id,com_from,delay_arr) VALUES ($id_plan,'$currentTime',$id,'$text',1)";
-                    // checkip($ip_address,$cookie);
-                    //checkcookie($cookie);
+       
                     if ($cookie_checker != 1) {
+                        $status[0] = 0;
+
                         DB::insert("INSERT INTO attendance (id_planned,log_from,id,com_from,delay_arr, planned_from, planned_to, comment_on, id_shift, saved_at ) VALUES ($id_plan,'$currentTime',$id,'$text',1, '$p_froms', '$p_tos', '$coms', '$shis', '$datess')");
 
-                        /*if (!mysqli_query($conn, $sqlinsert)) {
-                            $status[0] = 5;
-                        }*/
+                   
+                    }else{
+                        $status[0] = 4;
                     }
                     return response()->json(['status' => $status[0], 'comment' => $status[1]]);
 
-                    //echo json_encode($status);
                 } else {
                     $status[0] = 1;
-                    //checkip($ip_address,$cookie);
-                    //checkcookie($cookie);
-
-                    //echo json_encode($status);
+            
                     return response()->json(['status' => $status[0], 'comment' => $status[1]]);
 
                 }
@@ -828,26 +701,19 @@ $id = Auth::id();/** id uzivatele*/
                 for ($i = 0; $i < count($id_plan_arr); $i++) {
                     if ($st_arr[$i] == $closest) {
                         if ($status[1] == 0) {
-                            $status[0] = 0;
-                            //$sqlinsert_arr = "INSERT INTO attendance (planned_id,log_from,user_id,com_from,delay_arr) VALUES ($id_plan_arr[$i],'$currentTime',$id,'$text',1)";
                             if ($cookie_checker != 1) {
+                                $status[0] = 0;
+
                                 DB::insert("INSERT INTO attendance (id_planned,log_from,id,com_from,delay_arr, planned_from, planned_to, comment_on, id_shift, saved_at ) VALUES ($id_plan_arr[$i],'$currentTime',$id,'$text',1, '$p_froms', '$p_tos', '$coms', '$shis', '$datess')");
+                            }else{
+                                $status[0] = 4;
                             }
-                            // checkip($ip_address,$cookie);
-                            //checkcookie($cookie);
-                            /* if($status[0] != 4){
-                             if (!mysqli_query($conn, $sqlinsert_arr)) {
-                                 $status[0] = 5;
-                             }
-                         }
-                             echo json_encode($status);*/
+           
                             return response()->json(['status' => $status[0], 'comment' => $status[1]]);
 
                         } else {
                             $status[0] = 1;
-                            //checkip($ip_address,$cookie);
-                            //checkcookie($cookie);
-                            //echo json_encode($status);
+                        
                             return response()->json(['status' => $status[0], 'comment' => $status[1]]);
 
                         }
@@ -885,74 +751,58 @@ $id = Auth::id();/** id uzivatele*/
 
                     if (strtotime($st_td) < strtotime($currentTime)) {
                         $status[0] = 1;
-
                         if ($status[1] == 0) {
-                            $status[0] = 0;
-                            //$sqlinsert_td = "INSERT INTO attendance (planned_id,log_from,user_id,com_from,delay_arr) VALUES ($id_plan_td,'$currentTime',$id,'$text',0)";
                             if ($cookie_checker != 1) {
-                                DB::insert("INSERT INTO attendance (id_planned,log_from,id,com_from,delay_arr, planned_from, planned_to, comment_on, id_shift, saved_at ) VALUES ($id_plan_td,'$currentTime',$id,'$text',0, '$p_froms', '$p_tos', '$coms', '$shis', '$datess')");
-                            }
-                            //return response()->json([ 'cookie' => "INSERT INTO attendance (id_planned,log_from,id,com_from,delay_arr) VALUES ($id_plan_td,'$currentTime',$id,'$text',0)"]); 
-                            /*checkip($ip_address,$cookie);
-                            //checkcookie($cookie);
-                            if($status[0] != 4){
-                            if (!mysqli_query($conn, $sqlinsert_td)) {
-                                $status[0] = 5;
+                                $status[0] = 0;
 
-                            }*/
+                                DB::insert("INSERT INTO attendance (id_planned,log_from,id,com_from,delay_arr, planned_from, planned_to, comment_on, id_shift, saved_at ) VALUES ($id_plan_td,'$currentTime',$id,'$text',0, '$p_froms', '$p_tos', '$coms', '$shis', '$datess')");
+                            }else{
+                                $status[0] = 4;
+                            }
+                    
                         }
+                        
+                         
 
                     }
                     return response()->json(['status' => $status[0], 'comment' => $status[1]]);
 
 
-                    // echo json_encode($status);
 
                 } else if (strtotime($st_td) > strtotime($currentTime) && strtotime($st_td) - 600 > strtotime($currentTime)) {
                     $status[0] = 2;
                     if ($status[1] == 0) {
-                        $status[0] = 0;
-                        //$sqlinsert_td = "INSERT INTO attendance (planned_id,log_from,user_id,com_from,delay_arr) VALUES ($id_plan_td,'$currentTime',$id,'$text',0)";
                         if ($cookie_checker != 1) {
+                            $status[0] = 0;
+
                             DB::insert("INSERT INTO attendance (id_planned,log_from,id,com_from,delay_arr, planned_from, planned_to, comment_on, id_shift, saved_at) VALUES ($id_plan_td,'$currentTime',$id,'$text',0, '$p_froms', '$p_tos', '$coms', '$shis', '$datess')");
+                        }else{
+                            $status[0] = 4;
                         }
 
-                        /*checkip($ip_address,$cookie);
-                        //checkcookie($cookie);
-                        if($status[0] != 4){
-                        if (!mysqli_query($conn, $sqlinsert_td)) {
-                            $status[0] = 5;
-                        }
-                    }*/
+                    
 
                     }
                     return response()->json(['status' => $status[0], 'comment' => $status[1]]);
 
-                    // echo json_encode($status);
 
                 } else {
-                    $status[0] = 0;
-                    //$sqlinsert_td = "INSERT INTO attendance (planned_id,log_from,user_id,com_from,delay_arr) VALUES ($id_plan_td,'$currentTime',$id,'$text',0)";
                     if ($cookie_checker != 1) {
+                        $status[0] = 0;
+
                         DB::insert("INSERT INTO attendance (id_planned,log_from,id,com_from,delay_arr, planned_from, planned_to, comment_on, id_shift, saved_at) VALUES ($id_plan_td,'$currentTime',$id,'$text',0 ,'$p_froms', '$p_tos', '$coms', '$shis', '$datess')");
+                    }else{
+                        $status[0] = 4;
                     }
-                    // checkip($ip_address,$cookie);
-                    //checkcookie($cookie);
-                    /* if($status[0] != 4){
-                     if (!mysqli_query($conn, $sqlinsert_td)) {
-                         $status[0] = 5;
-                     }
-                 }*/
+                
                     return response()->json(['status' => $status[0], 'comment' => $status[1]]);
 
-                    //echo json_encode($status);
 
                 }
 
             }
             /** nalezeni vicero validnich dnesnich smen */ else if ($fetchtd_count[0]->count > 1) {
 
-                //return response()->json([ 'cookie' => $data['device_id']]);
                 foreach ($fetchtd as $row_td2) {
                     $id_plan_td2 = $row_td2->id_active;
                     $st_td2 = $row_td2->saved_from;
@@ -978,64 +828,47 @@ $id = Auth::id();/** id uzivatele*/
                     $n_td = sizeof($st_arr_td);
                     $closest_td = $this->findClosest($st_arr_td, $n_td, strtotime(date('H:i:s')));
                     for ($i = 0; $i < count($id_plan_arr_td); $i++) {
-                        // echo " dsa";
                         if ($st_arr_td[$i] == $closest_td) {
                             if ($st_arr_td[$i] < strtotime($currentTime)) {
                                 $status[0] = 1;
                                 if ($status[1] == 0) {
-                                    $status[0] = 0;
-                                    //$sqlinsert_td = "INSERT INTO attendance (planned_id,log_from,user_id,com_from,delay_arr) VALUES ($id_plan_arr_td[$i] ,'$currentTime',$id,'$text',0)";
                                     if ($cookie_checker != 1) {
+                                        $status[0] = 0;
                                         DB::insert("INSERT INTO attendance (id_planned,log_from,id,com_from,delay_arr, planned_from, planned_to, comment_on, id_shift, saved_at) VALUES ($id_plan_arr_td[$i] ,'$currentTime',$id,'$text',0, '$p_from[$i]', '$p_to[$i]', '$com[$i]', '$shi[$i]', '$dates[$i]' )");
+                                    }else{
+                                        $status[0] = 4;
                                     }
-                                    //checkip($ip_address,$cookie);
-                                    //checkcookie($cookie);
-                                    /* if($status[0] != 4){
-                                     if (!mysqli_query($conn, $sqlinsert_td)) {
-                                         $status[0] = 5;
-                                     }
-                                 }*/
+                                  
 
                                 }
                                 return response()->json(['status' => $status[0], 'comment' => $status[1]]);
 
-                                // echo json_encode($status);
 
                             } else if ($st_arr_td[$i] > strtotime($currentTime) && $st_arr_td[$i] - 600 > strtotime($currentTime)) {
                                 $status[0] = 2;
                                 if ($status[1] == 0) {
-                                    $status[0] = 0;
-                                    //$sqlinsert_td = "INSERT INTO attendance (planned_id,log_from,user_id,com_from,delay_arr) VALUES ($id_plan_arr_td[$i] ,'$currentTime',$id,'$text',0)";
                                     if ($cookie_checker != 1) {
+                                        $status[0] = 0;
+
                                         DB::insert("INSERT INTO attendance (id_planned,log_from,id,com_from,delay_arr, planned_from, planned_to, comment_on, id_shift, saved_at) VALUES ($id_plan_arr_td[$i] ,'$currentTime',$id,'$text',0, '$p_from[$i]', '$p_to[$i]', '$com[$i]', '$shi[$i]', '$dates[$i]' )");
+                                    }else{
+                                        $status[0] = 4;
                                     }
-                                    //checkip($ip_address,$cookie);
-                                    //checkcookie($cookie);
-                                    /* if($status[0] != 4){
-                                     if (!mysqli_query($conn, $sqlinsert_td)) {
-                                         $status[0] = 5;
-                                     }
-                                 }*/
+                                
 
                                 }
-                                // echo json_encode($status);
                                 return response()->json(['status' => $status[0], 'comment' => $status[1]]);
 
 
                             } else {
-                                $status[0] = 0;
-                                //$sqlinsert_td = "INSERT INTO attendance (planned_id,log_from,user_id,com_from,delay_arr) VALUES ($id_plan_arr_td[$i] ,'$currentTime',$id,'$text',0)";
                                 if ($cookie_checker != 1) {
+                                    $status[0] = 0;
+
                                     DB::insert("INSERT INTO attendance (id_planned,log_from,id,com_from,delay_arr, planned_from, planned_to, comment_on, id_shift, saved_at) VALUES ($id_plan_arr_td[$i] ,'$currentTime',$id,'$text',0, '$p_from[$i]', '$p_to[$i]', '$com[$i]', '$shi[$i]', '$dates[$i]' )");
+                                }else{
+                                    $status[0] = 4;
                                 }
-                                //checkip($ip_address,$cookie);
-                                //checkcookie($cookie);
-                                /* if($status[0] != 4){
-                                 if (!mysqli_query($conn, $sqlinsert_td)) {
-                                     $status[0] = 5;
-                                 }
-                             }*/
-                                //  echo json_encode($status);
+        
                                 return response()->json(['status' => $status[0], 'comment' => $status[1]]);
 
 
@@ -1141,15 +974,7 @@ $id = Auth::id();/** id uzivatele*/
             $status[0] = 4;
         }
     }
-    /*function checkcookie($cookie_search)
-    {
-        global $cookie_list;
-        global $status;
-        if (in_array($cookie_search, $cookie_list)) {
-        } else {
-            $status[0] = 4;
-        }
-    }*/
+
 
 }
 function validateSecureCookie(Request $request)
@@ -1161,12 +986,11 @@ function validateSecureCookie(Request $request)
     }
 
     $data = decrypt($encryptedCookie); // Dešifrujeme cookie
-    $currentFingerprint = hash('sha256', $request->userAgent() . $request->ip());
+    $currentFingerprint = hash('sha256', $request->userAgent() . "127.0.0.1");
 
     if ($data['fingerprint'] !== $currentFingerprint) {
         return 0;
     }
-    // DB::select("SELECT * FROM ")
 
     return 1;
 }

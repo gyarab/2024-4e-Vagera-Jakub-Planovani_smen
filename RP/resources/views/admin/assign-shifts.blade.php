@@ -81,8 +81,8 @@
 
 }
     </style>
-    @include('vendor.Chatify.pages.header')
-    @include('vendor.Chatify.pages.sidebar')
+    @include('vendor.Chatify.pages.header-admin')
+    @include('vendor.Chatify.pages.sidebar-admin')
     @include('admin.scripts')
     <div class="height-100 bg-light">
 

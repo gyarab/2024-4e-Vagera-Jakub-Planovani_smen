@@ -31,7 +31,6 @@
     <script src="https://unpkg.com/tippy.js@6"></script>
 
 
-    <!-- <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>-->
 </head>
 
 <body id="body-pd">
@@ -89,13 +88,7 @@
     @include('admin.sidebar')
     @include('admin.scripts')
 
-    <div class="bg-light">
-
-
-        <!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
-        </script>-->
-
+    <div class="border-start bg-light">
 
 
         <div class="h-100 bg-light">
@@ -108,11 +101,9 @@
 
                 function clicker() {
                     document.getElementById("links").classList.remove("d-none");
-                    // alert("ds");
                 }
             </script>
             <div class="container-fluid mt-1">
-                <!--<div class="col py-3">-->
                 <script>
                     var hoursContainer = document.querySelector('.hours')
                     var minutesContainer = document.querySelector('.minutes')
@@ -122,7 +113,6 @@
                     var last = new Date(0)
                     last.setUTCHours(-1)
 
-                    //var tickState = true
 
                     function updateTime() {
                         var now = new Date
@@ -142,7 +132,6 @@
                         var lastSeconds = last.getSeconds().toString()
                         var nowSeconds = now.getSeconds().toString()
                         if (lastSeconds !== nowSeconds) {
-                            //tick()
                             updateContainer(secondsContainer, nowSeconds)
                         }
 
@@ -150,7 +139,6 @@
                     }
 
                     function tick() {
-                        //tickElements.forEach(t => t.classList.toggle('tick-hidden'))
                     }
 
                     function updateContainer(container, newTime) {
@@ -173,7 +161,6 @@
                     }
 
                     function updateNumber(element, number) {
-                        //element.lastElementChild.textContent = number
                         var second = element.lastElementChild.cloneNode(true)
                         second.textContent = number
 
@@ -190,10 +177,10 @@
 
                     setInterval(updateTime, 100)
                 </script>
-                <div class="row mx-2" style="margin-right:1%">
-                    <div class="col-12 col-md-6 ">
+                <div class="row mx-2" style="margin-right:1%; ">
+                    <div class="col-12 col-md-6 mt-2" >
                         <div class="row">
-                            <div class="col-12 col-lg-6  ">
+                            <div class="col-12 col-lg-6">
                                 <div class="row ">
                                     <div class="card p-3 mb-2">
                                         <div class="row ">
@@ -247,7 +234,6 @@
                                                 </script>
 
 
-                                                <!--<textarea class="form-control" id="txtfield" name="txtfield" rows="3" cols="18"></textarea>-->
                                             </div>
 
                                             <div class="col-5">
@@ -382,7 +368,6 @@
 
                                                                             },
                                                                             success: function(response) {
-                                                                                //alert(response);
                                                                                 document.getElementById("pause_start").style.display = "none";
                                                                                 document.getElementById("pause_end").style.display = "";
                                                                                 break_alert("Your break has begun");
@@ -390,7 +375,7 @@
 
                                                                             },
                                                                             error: function(xhr, status, error) {
-                                                                                alert('Error fetching image renders: -- ', error);
+                                                                                error_sweet_alert('Error fetching image renders: -- ');
                                                                             }
                                                                         });
                                                                     }
@@ -405,7 +390,6 @@
 
                                                                             },
                                                                             success: function(response) {
-                                                                                //alert(response);
                                                                                 document.getElementById("pause_start").style.display = "";
                                                                                 document.getElementById("pause_end").style.display = "none";
                                                                                 break_alert("Your break has ended");
@@ -413,7 +397,7 @@
 
                                                                             },
                                                                             error: function(xhr, status, error) {
-                                                                                alert('Error fetching image renders: -- ', error);
+                                                                                error_sweet_alert('Error fetching image renders: -- ');
                                                                             }
                                                                         });
                                                                     }
@@ -541,7 +525,6 @@
                                                                         </h4>
                                                                     </div>
                                                                 </div>
-                                                                <!--<p class="mb-0 font-13">+2.5% from last week</p>-->
                                                             </div>
 
                                                         </div>
@@ -595,7 +578,6 @@
                                                                         </h4>
                                                                     </div>
                                                                 </div>
-                                                                <!--<p class="mb-0 font-13">+2.5% from last week</p>-->
                                                             </div>
 
                                                         </div>
@@ -649,7 +631,6 @@
                                                                         </h4>
                                                                     </div>
                                                                 </div>
-                                                                <!--<p class="mb-0 font-13">+2.5% from last week</p>-->
                                                             </div>
 
                                                         </div>
@@ -662,15 +643,15 @@
                                                     @foreach ($planned2 as $p2)
                                                         <div class="progress mt-2">
                                                             <?php $r = 5; 
-                                                if($w == 0 || ($p1+ $p2) == 0 ){ ?>
+                                                if($w == 0 || ($p1) == 0 ){ ?>
                                                             <div class="progress-bar" role="progressbar"
                                                                 style="width: 0%" aria-valuenow="{{ $w }}"
                                                                 aria-valuemin="0"
-                                                                aria-valuemax="{{ $p1 + $p2 }}">
+                                                                aria-valuemax="{{ $p1  }}">
                                                             </div>
                                                             <?php }else{ ?>
                                                             <div class="progress-bar" role="progressbar"
-                                                                style="width: {{ ($w / $p1 + $p2) * 100 }}%"
+                                                                style="width: {{ ($w / $p1 ) * 100 }}%"
                                                                 aria-valuenow="{{ $w }}" aria-valuemin="0"
                                                                 aria-valuemax="10"></div>
                                                             <?php } ?>
@@ -688,7 +669,7 @@
                                                     <span class="text2" style="float: right">of
                                                         @foreach ($planned1 as $p1)
                                                             @foreach ($planned2 as $p2)
-                                                                {{ $p2 }}
+                                                                {{ $p1 }}
                                                             @endforeach
                                                         @endforeach
                                                         planned
@@ -705,7 +686,7 @@
 
 
                     </div>
-                    <div class="col-12 col-md-6">
+                    <div class="col-12 col-md-6  mt-2">
                         <div class="row ">
                             <div class="card p-3 mb-2" style="height: 650px">
                                 <div class="row">
@@ -731,7 +712,6 @@
 
                             </div>
                             <script>
-                                //loadOrganizationTable
                                 renderObjectSelect();
 
                                 function renderOrganization() {
@@ -745,14 +725,12 @@
                                             input: input_id
                                         },
                                         success: function(response) {
-                                            //alert(response);
                                             document.getElementById("organization_load").innerHTML = response;
-                                            // document.getElementById("select_obj_history").innerHTML = response;
-                                            // alert(response);
+       
 
                                         },
                                         error: function(xhr, status, error) {
-                                            alert('Error fetching image renders: -- ', error);
+                                            error_sweet_alert('Error fetching image renders: -- ');
                                         }
                                     });
                                 }
@@ -766,12 +744,11 @@
                                         },
                                         success: function(response) {
                                             document.getElementById("select_obj").innerHTML = response;
-                                            // document.getElementById("select_obj_history").innerHTML = response;
                                             renderOrganization();
 
                                         },
                                         error: function(xhr, status, error) {
-                                            alert('Error fetching image render: 22 ', error);
+                                            error_sweet_alert('Error fetching image render: 22 ');
                                         }
                                     });
                                 }
@@ -815,17 +792,7 @@
 
 
                                                     </select>
-                                                    <!--<button class="btn btn-secondary dropdown-toggle" type="button"
-                                                id="dropdownMenuButton" data-bs-toggle="dropdown"
-                                                data-bs-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" style=" width: 80px;"
-                                                aria-expanded="false">
-                                                2024
-                                            </button>
-                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <a class="dropdown-item" href="#">2021</a>
-                                                <a class="dropdown-item" href="#"></a>
-                                                <a class="dropdown-item" href="#">Something else here</a>
-                                            </div>-->
+                                        
                                                 </div>
                                             </div>
                                         </div>
@@ -867,7 +834,6 @@
                                         <li style="font-size:15px; margin-top:-5px;">Sat</li>
                                     </ul>
                                     <ul id="graph_square" class="px-0 squares" style="overflow: hidden">
-                                        <!-- added via javascript -->
                                     </ul>
                                 </div>
                             </div>
@@ -877,14 +843,14 @@
                                 <div class="col-12">
                                     <h5>This week statistics</h5>
                                     <hr>
-                                    <div>
-                                        <canvas id="myChart" style="width: 100%"></canvas>
+                                    <div id="div_can">
+                                        <canvas id="weekChart" style="width: 100%"></canvas>
                                     </div>
 
                                     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
                                     <script>
-                                        const ctx = document.getElementById('myChart');
+                                        const ctx = document.getElementById('weekChart');
 
                                         new Chart(ctx, {
                                             type: 'bar',
@@ -910,23 +876,6 @@
                                             }
                                         });
 
-
-
-
-                                        /*                   $.ajax({
-                                                        url: '{{ route('today_offer') }}',
-                                                        type: 'POST',
-                                                        data: {
-                                                            _token: '{{ csrf_token() }}',
-                                                        },
-                                                        success: function(response) {
-                                                            alert(response);
-                                                            //$("#MultiCarouselInsert").html(response);
-                                                        },
-                                                        error: function(response) {
-                                                            alert("dsad");
-                                                        }
-                                                    });*/
                                     </script>
 
                                 </div>
@@ -1003,15 +952,11 @@
                                                             </script>
                                                         @endif
                                                         <script>
-                                                            /*tippy("#cm-23", {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                content: '<strong><span style="color: aqua;"></span>dsa </strong>',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 allowHTML: true,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                });*/
+                                              
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
                                                             rowText = @json($tdof->comments);
                                                         </script>
-                                                        <!--<button class="mt-2 mx-2 btn btn-sm btn-outline-primary"
-                                                       
-                                                        style="float:right">Request</button>-->
+                          
                                                         @if ($tdof->accepted_at == null)
                                                             @if ($tdof->request_status == '1')
                                                             @else
@@ -1115,9 +1060,9 @@
                                                         @endif
                                                         <script>
                                                             /*tippy("#cm-23", {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    content: '<strong><span style="color: aqua;"></span>dsa </strong>',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     allowHTML: true,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    });*/
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            content: '<strong><span style="color: aqua;"></span>dsa </strong>',
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             allowHTML: true,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            });*/
                                                         </script>
                                                         <!--<button class="mt-2 mx-2 btn btn-sm btn-outline-primary"
                                                             style="float:right">Request</button>-->
@@ -1175,16 +1120,6 @@
 
                                             <h6>Tommorow + </h6>
 
-
-                                            <!--<div class="d-flex h-100" style="height: 100%">
-                                                    <div class="vr h-100" style="height: 100%"></div>
-                                                </div>-->
-                                            <!--<div class="d-flex bd-h-32 text-primary">
-                                                    <div class="vr border-4 opacity-75"></div>
-                                                </div>
-                                                <div class="d-flex bd-h-32 text-primary">
-                                                    <div class="vr border-4 opacity-50"></div>
-                                                </div>-->
                                             <?php $is_tommorow_offer_plus = 0; ?>
                                             @foreach ($tommorow_offer2 as $tm2of)
                                                 <?php $is_tommorow_offer_plus++; ?>
@@ -1238,13 +1173,9 @@
                                                             </script>
                                                         @endif
                                                         <script>
-                                                            /*tippy("#cm-23", {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                content: '<strong><span style="color: aqua;"></span>dsa </strong>',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 allowHTML: true,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                });*/
+
                                                         </script>
-                                                        <!--<button class="mt-2 mx-2 btn btn-sm btn-outline-primary"
-                                                        style="float:right">Request</button>-->
+                                            
                                                         @if ($tm2of->accepted_at == null)
                                                             @if ($tm2of->request_status == '1')
                                                             @else
@@ -1300,7 +1231,6 @@
                         </div>
                     </div>
                 </div>
-                <!--<script></script>-->
                 <div class="row">
 
                     <div id="MultiCarouselInsert">
@@ -1366,10 +1296,10 @@
                                                             <div class="col-12">
 
 
-                                                                <button type="button"
+                                                                <button id="{{ Crypt::encrypt($b->id_board) }}" type="button"
                                                                     class="btn btn-outline-primary btn-sm "
                                                                     style="float: left" data-bs-toggle="modal"
-                                                                    data-bs-target="#modalVer">Details</button>
+                                                                    data-bs-target="#modalVer" onclick="editLoader(this.id)">Details</button>
                                                                 <small class="mt-1"
                                                                     style="float:right">{{ substr($b->created_at, 0, -8) }}</small>
                                                             </div>
@@ -1392,16 +1322,17 @@
 
                         </div>
 
-                        <a class="carousel-control-prev bg-transparent text-dark" href="#recipeCarousel"
-                            role="button" data-bs-slide="prev" style="max-height: 250px">
-                            <span class="text-light bg-primary rounded-circle px-3" style="font-size: 35px"
-                                aria-hidden="true">
-                                < </span>
+                        <a class="carousel-control-prev bg-transparent" href="#recipeCarousel" role="button"
+                            data-bs-slide="prev" style="max-height: 250px">
+                            <span class="text-light rounded-circle px-3" aria-hidden="true">
+                                <i class="bi bi-arrow-left-circle " style="font-size: 35px; color:#0d6efd"></i>
+                            </span>
                         </a>
-                        <a class="carousel-control-next bg-transparent text-dark" style="max-height: 250px"
+                        <a class="carousel-control-next bg-transparent" style="max-height: 250px"
                             href="#recipeCarousel" role="button" data-bs-slide="next">
-                            <span class="text-light bg-primary rounded-circle px-3" style="font-size: 35px"
-                                aria-hidden="true"> > </span>
+                            <span class="text-light rounded-circle px-3 " aria-hidden="true"> <i
+                                    class="bi bi-arrow-right-circle " style="font-size: 35px; color:#0d6efd"></i>
+                            </span>
                         </a>
 
                     </div>
@@ -1416,6 +1347,77 @@
             <br>
 
 
+            <!-- Modal -->
+            <script>
+                function editLoader(value) {
+                $.ajax({
+
+                    url: '{{ route('loadBoardData') }}',
+                    type: "POST",
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        id: value
+                    },
+                    success: function(response) {
+                        document.getElementById("caption_modal").innerHTML = response.caption;
+
+                        document.getElementById("modal_content").innerHTML = (response.content).replace(/\n/g, '<br>');
+                        document.getElementById("modal_header").style.backgroundColor = response.color;
+                        document.getElementById("modal_date").innerHTML = (response.date).substring(0,10);
+                        if(response.imageUrl == "https://www.rozbehamecesko.cz/repository/layout/noimage.png"){
+                            document.getElementById("modal_img").src = "";
+
+                        }else{
+                        document.getElementById("modal_img").src = response.imageUrl;
+                        }
+
+
+                    },
+                    error: function(response) {
+                        error_sweet_alert("dsad");
+                    }
+                });
+            }
+            </script>
+            <div class="modal fade w-100 modal-fullscreen" id="modalVer" tabindex="-1" data-bs-backdrop="false"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="container modal-dialog  modal-dialog-centered w-100 modal-xl">
+                    <div class="modal-content border border-secondary">
+                        <div id="modal_header" class="modal-header" style="background-color: #0d6efd">
+                            <center>
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">
+
+                                </h1>
+                            </center>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body py-0">
+                            <center>
+                            <img id="modal_img" class="object-fit-cover img_responsive mb-1" style="aspect-ratio: auto; white-space: nowrap; max-height: 350px; width:100%"  src="" alt="">
+                            
+                                <h1 id="caption_modal" class="modal-title fs-5">Verification code
+
+                                </h1>
+                            </center>
+                            <hr>
+                            <p id="modal_content">
+
+                            </p>
+    
+                        </div>
+                        <div class="modal-footer float-start">
+                            <p id="modal_date">Created at : 
+                            </p>
+                            <div class=" ">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
             <script>
                 $.ajax({
                     url: '{{ route('MultiCarouselInsert') }}',
@@ -1424,11 +1426,10 @@
                         _token: '{{ csrf_token() }}',
                     },
                     success: function(response) {
-                        //alert(response);
-                        //$("#MultiCarouselInsert").html(response);
+      
                     },
                     error: function(response) {
-                        alert("dsad");
+                        error_sweet_alert("dsad");
                     }
                 });
                 $.ajax({
@@ -1438,15 +1439,11 @@
                         _token: '{{ csrf_token() }}',
                     },
                     success: function(response) {
-                        //alert(response);
-                        // $("#content_i").html(response);
-                        //document.getElementById("content_i").innerText = response;
-                        // document.getElementById("content_i").innerText = "<div class='carousel-item active'><div class='col-md-3'><div class='card'><div class='card-img'><img src='https://via.placeholder.com/700x500.png/DDBEA9/333333?text=2' class='img-fluid'></div><div class='card-img-overlay'>Slide 1</div></div></div></div>       <div class='carousel-item'> <div class='col-md-3'><div class='card'><div class='card-img'> <img src='https://via.placeholder.com/700x500.png/DDBEA9/333333?text=2' class='img-fluid'> </div> <div class='card-img-overlay'>Slide 2</div>   </div> </div></div>";
-
+ 
 
                     },
                     error: function(response) {
-                        alert("dsad");
+                        error_sweet_alert("dsad");
                     }
                 });
             </script>
@@ -1465,10 +1462,7 @@
             const currentMonth = monthsArr[currentDateObj.getMonth()];
             const currentYear = currentDateObj.getFullYear();
         </script>
-        <!-- <button id="edit_opener" type="button" class="btn btn-info btn-lg w-100" data-bs-toggle="modal"
-        data-bs-target="#myModals">Open Modal</button>-->
 
-        <!-- Modal -->
 
         <script>
             var id_update = 0;
@@ -1494,7 +1488,6 @@
             let next = el.nextElementSibling
             for (var i = 1; i < minPerSlide; i++) {
                 if (!next) {
-                    // wrap carousel by using first child
                     next = items[0]
                 }
                 let cloneChild = next.cloneNode(true)
@@ -1522,7 +1515,6 @@
         var last = new Date(0)
         last.setUTCHours(-1)
 
-        //var tickState = true
 
         function updateTime() {
             var now = new Date
@@ -1542,7 +1534,6 @@
             var lastSeconds = last.getSeconds().toString()
             var nowSeconds = now.getSeconds().toString()
             if (lastSeconds !== nowSeconds) {
-                //tick()
                 updateContainer(secondsContainer, nowSeconds)
             }
 
@@ -1550,7 +1541,6 @@
         }
 
         function tick() {
-            //tickElements.forEach(t => t.classList.toggle('tick-hidden'))
         }
 
         function updateContainer(container, newTime) {
@@ -1573,7 +1563,6 @@
         }
 
         function updateNumber(element, number) {
-            //element.lastElementChild.textContent = number
             var second = element.lastElementChild.cloneNode(true)
             second.textContent = number
 
@@ -1625,14 +1614,12 @@
 
                 },
                 success: function(response) {
-                    alert(response.stat);
 
                     // Get the selected file
 
                     if ($('#file_picker')[0].files.length != 0) {
                         var file = document.getElementById('file_picker').files[0];
                         if (!file) {
-                            //alert('Please select an image file.');
                             return;
                         }
 
@@ -1649,46 +1636,27 @@
                             url: '{{ route('storeImageBoard') }}',
                             type: 'POST',
                             data: formData,
-                            processData: false, // Prevent jQuery from processing the data
-                            contentType: false, // Prevent jQuery from setting content-type
+                            processData: false, 
+                            contentType: false, 
                             headers: {
                                 'X-CSRF-TOKEN': csrfToken
                             },
                             success: function(response) {
-                                // alert(response.success);
-                                /*if (response.success) {
-                                  
-                                                $('#profileImage').attr('src', response.path);
-                                            } else {
-                                                document.getElementById('responseMessage').innerHTML = 'Upload failed!';
-                                            }*/
+
                             },
                             error: function(xhr, status, error) {
-                                alert("RRRRRRRRRRRR");
+                                error_sweet_alert("RRRRRRRRRRRR");
 
-                                /* document.getElementById('responseMessage').innerHTML =
-                                     'Error uploading image: ' + error;*/
                             }
                         });
                     }
 
                 },
                 error: function(response) {
-                    alert("dsad");
+                    error_sweet_alert("dsad");
                 }
             });
-            /*$.ajax({
 
-
-                url: "../board/add_board.php",
-                method: "POST",
-                data: {
-                    color: shex, man: man, part: part, full: full, text: te, caption: ca
-                },
-                success: function (data) {
-                    success_alert("Board was successfully added");
-                }
-            });*/
         }
     </script>
     <script>
@@ -1729,14 +1697,9 @@
                 data: {
                     _token: '{{ csrf_token() }}',
                 },
-                success: function(response) { // document.getElementById("select_obj_history").innerHTML = response;
-                    /*alert(response.pause);
-                    alert(response.checkform);
-                    alert(response.log_exists); 
-                    alert(response.dd)*/
-                    //alert(response);
+                success: function(response) { 
+
                     if (response.checkform == 1) {
-                        //document.getElementById("pause").style.display = "";
                         document.getElementById("confirm").style.display = "none";
                         document.getElementById("departure").style.display = "";
                         if (response.pause == 0) {
@@ -1755,7 +1718,6 @@
                         document.getElementById("no_shifts").style.display = "none";
                         document.getElementById("log_div").style.display = "";
 
-                        //alert("dsadsasdsdadddddddddd");
                     } else {
                         document.getElementById("no_shifts").style.display = "";
                         document.getElementById("log_div").style.display = "none";
@@ -1763,7 +1725,7 @@
 
                 },
                 error: function(xhr, status, error) {
-                    alert('Error fetching image render:', error);
+                    error_sweet_alert('Error fetching image render: condition');
                 }
             });
         }
@@ -1777,10 +1739,10 @@
                     _token: '{{ csrf_token() }}',
                     text: comment_text,
                 },
-                success: function(response) { // document.getElementById("select_obj_history").innerHTML = response;
+                success: function(response) { 
+        
 
                     if (response.status == 0) {
-                        //alert("Your arrival is confirm");
                         document.getElementById("pause_start").style.display = "";
                         document.getElementById("confirm").style.display = "none";
                         document.getElementById("departure").style.display = "";
@@ -1788,14 +1750,12 @@
                         arrival_alert();
 
                     } else if (response.status == 1) {
-                        //alert("Please enter comment why are you late");
                         var message = "Please enter comment why are you late";
                         arrival_error(message);
-
-                    } else if (response.status == 2) {
-                        //alert("Please enter comment why are you early");
+                    }else if (response.status == 2) {
                         var message = "Please enter comment why are you early";
                         arrival_error(message);
+
                     } else if (response.status == 4) {
                         var message = "Your current device is not register in the system";
                         arrival_error(message);
@@ -1811,7 +1771,7 @@
                     }
                 },
                 error: function(xhr, status, error) {
-                    alert('Error fetching image render:', error);
+                    error_sweet_alert('Error fetching image render confirm:');
                 }
             });
         }
@@ -1825,15 +1785,9 @@
                     _token: '{{ csrf_token() }}',
                     text: comment_text,
                 },
-                success: function(response) { // document.getElementById("select_obj_history").innerHTML = response;
-                    alert(response.left);
-                    //alert(response.status);
+                success: function(response) { 
                     if (response.left == 0) {
-                        //alert("Your departure is confirm");
-                        /*document.getElementById("pause_start").style.display = "none";
-                        document.getElementById("pause_end").style.display = "none";
-                        document.getElementById("confirm").style.display = "";
-                        document.getElementById("departure").style.display = "none";*/
+      
                         attendanceConditions();
                         departure_alert();
                     } else if (response.left == 1) {
@@ -1854,15 +1808,17 @@
                     }
                 },
                 error: function(xhr, status, error) {
-                    alert('Error fetching image render:', error);
+                    error_sweet_alert('Error fetching image render:');
                 }
             });
         }
-        //  confirmArrival
+  
     </script>
     <script>
-        ///alert(document.getElementById("year_button").value);
+    
         select_graph(document.getElementById("year_button").value);
+        var yearly_stats_arr = new Array();
+
 
         function select_graph(year_selected) {
             $.ajax({
@@ -1872,43 +1828,93 @@
                     _token: '{{ csrf_token() }}',
                     year: year_selected
                 },
-                success: function(response) { // document.getElementById("select_obj_history").innerHTML = response;
-                    //alert("dasdsa");
+                success: function(response) { 
+                    graph_data(year_selected, response.amount, response.status);
                 },
                 error: function(xhr, status, error) {
-                    alert('Error fetching image render:', error);
+                    error_sweet_alert('Error fetching image render:');
                 }
             });
-            //alert(year_selected);
+        }
+        week_graph();
+
+        function week_graph() {
+            $.ajax({
+                url: '{{ route('weekStats') }}',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                },
+                success: function(response) { 
+                    var xValues = new Array();
+                    xValues = response.amount;
+                    for (var d = 0; d < 7; d++) {
+                        xValues[d] = (xValues[d]) / 3600;
+                    }
+                    var div_can = document.getElementById("div_can");
+                    div_can.innerText = "";
+
+                    var canva = document.createElement("canvas");
+                    canva.id = "weekChart";
+                    canva.width = "100%";
+
+                    div_can.appendChild(canva);
+                    new Chart("weekChart", {
+                        type: 'bar',
+                        data: {
+                            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', ],
+                            datasets: [{
+                                label: '# Hours',
+                                data: xValues,
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false, 
+                            scales: {
+                                x: {
+                                    beginAtZero: true
+                                },
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                },
+                error: function(xhr, status, error) {
+                    error_sweet_alert('Error fetching image render:');
+                }
+            });
+        }
+
+        function graph_data(year_selected, amount, status) {
             var date_s = new Date(new Date().getFullYear(), 0, 1);
-            //const squares = document.querySelector('.squares');
-            //var ds = date("2025-01-01");
+
             document.getElementById("graph_square").innerHTML = "";
             const weekday_short = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
             let wday_short = weekday_short[new Date(year_selected).getDay()];
 
-            // alert((7+new Date(date_s).getDay())%7);
+
             var start_day = new Date(year_selected).getDay();
             var li_string = "";
             for (var t = 0; t < 7; t++) {
                 if ((t) % 2 == 1) {
-                    // alert("sd");
                     li_string += `<li style="font-size:15px; margin-top:-5px;"></li>`;
                 } else {
                     li_string += `<li style="font-size:15px; margin-top:-5px;">${weekday_short[(7+start_day+ t)%7]}</li>`;
 
-                    //  alert(((7+start_day+ t)%7));
 
                 }
             }
             document.getElementById("days_name").innerHTML = li_string;
-            //alert(li_string);
             const squares = document.querySelector('.squares');
             for (var i = 0; i < daysInYear(year_selected); i++) {
                 var someDate = new Date(year_selected);
                 var result = someDate.setDate(someDate.getDate() + i);
 
-                var month = new Date(result).getUTCMonth() + 1; // months from 1-12
+                var month = new Date(result).getUTCMonth() + 1; 
                 var day = new Date(result).getUTCDate();
 
                 var year = new Date(result).getUTCFullYear();
@@ -1918,20 +1924,34 @@
 
                 let wday = weekday[new Date(result).getDay()];
                 const newDate = year + "/" + month + "/" + day;
-                const level = Math.floor(Math.random() * 3);
-                squares.insertAdjacentHTML('beforeend', `<li id="stat-${i}" data-level="${level}"></li>`);
+                var data_hour = 0;
+                if (status[i] == 1) {
+                    data_hour = 4;
+                } else {
+                    if (parseInt((amount[i])) == 0) {
+                        data_hour = 0;
+                    } else if ((amount[i]) / 3600 <= 3) {
+                        data_hour = 1;
+                    } else if ((amount[i]) / 3600 <= 6) {
+                        data_hour = 2;
+                    } else {
+                        data_hour = 3;
+                    }
+                }
+                squares.insertAdjacentHTML('beforeend', `<li id="stat-${i}" data-level="${data_hour}"></li>`);
                 tippy(`#stat-${i}`, {
-                    content: `<strong>Date: ${newDate} <br> Day: <span style="color: aqua;">${wday}</span> <br> Hours:  <span style="color: aqua;"></span></strong>`,
+                    content: `<strong>Date: ${newDate} <br> Day: <span style="color: aqua;">${wday}</span> <br> Time: ${parseInt((amount[i])/3600)} H ${parseInt(((amount[i])%3600)/60)} Min<span style="color: aqua;"></span></strong>`,
                     allowHTML: true,
                 });
             }
         }
-        /* source: https://stackoverflow.com/questions/41068969/calculate-total-number-of-days-in-a-year*/
+        /* @source: https://stackoverflow.com/questions/41068969/calculate-total-number-of-days-in-a-year*/
         function daysInYear(year) {
             return ((year % 4 === 0 && year % 100 > 0) || year % 400 == 0) ? 366 : 365;
         }
     </script>
     <script>
+     
         function arrival_alert() {
             Swal.fire({
                 title: "Your arrival has been confirmed",
@@ -1975,6 +1995,14 @@
                 title: message,
                 text: "",
                 icon: "success"
+            });
+
+        }
+        function error_sweet_alert(message) {
+            Swal.fire({
+                title: "Connection failed",
+                text: "",
+                icon: "error"
             });
 
         }

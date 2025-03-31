@@ -25,13 +25,13 @@
                     <span class="badge badge-danger" style="position:absolute">10</span>
                     <ul class="dropdown-menu dropdown-menu-dark text-small shadow mt-2 "
                         aria-labelledby="dropdownMenu1">
-                        <li><a class="dropdown-item" href="#">New project...</a></li>
-                        <li><a class="dropdown-item" href="#">Settings</a></li>
-                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li><a class="dropdown-item" href="#">// TODO</a></li>
+                        <li><a class="dropdown-item" href="#">// TODO</a></li>
+                        <li><a class="dropdown-item" href="#">// TODO</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="#">Sign out</a></li>
+                        <li><a class="dropdown-item" href="#">// TODO</a></li>
                     </ul>
                 </div>
 
@@ -69,7 +69,6 @@
 
                                     $('#profileHeader').attr('src', response.url);
                                     $('#smallProfileHeader').attr('src', response.url);
-                                    //alert(response.url);
 
                                 },
                                 error: function(xhr, status, error) {
@@ -81,6 +80,7 @@
                                 type: 'POST',
                                 data: {
                                     _token: '{{ csrf_token() }}',
+                                    
                                 },
                                 success: function(response) {
                                     
@@ -153,7 +153,7 @@
 
                     <ul class="dropdown-menu" aria-labelledby="Dropdowns">
                         <li>
-                            <a class="dropdown-item" href="#"><span class="fi fi-gb"></span>&nbsp; English5
+                            <a class="dropdown-item" href="#"><span class="fi fi-gb"></span>&nbsp; English - TODO
                                 <i class="fa fa-check text-success ms-2"></i></a>
                         </li>
                         <li>
@@ -161,12 +161,12 @@
                         </li>
                         <li>
                             <a class="dropdown-item" href="#"><span class="fi fi-cz"></span>
-                                </i>&nbsp;Czech</a>
+                                </i>&nbsp;Czech - TODO</a>
                         </li>
 
                         <li>
                             <a class="dropdown-item" href="#"><span
-                                    class="fi fi-de"></span></i>&nbsp;Deutsch</a>
+                                    class="fi fi-de"></span></i>&nbsp;Deutsch - TODO</a>
                         </li>
 
                     </ul>

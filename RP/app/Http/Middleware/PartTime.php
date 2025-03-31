@@ -24,7 +24,7 @@ class PartTime
         $userRole = Auth::user()->role;
 
         if($userRole == 'admin'){
-            return redirect()->route('admin.dashboard');
+            return redirect()->route('admin.dashboard-main');
 
         }else if ($userRole == 'manager'){
             return redirect()->route('manager.dashboard');

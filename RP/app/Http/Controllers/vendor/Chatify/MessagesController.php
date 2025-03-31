@@ -50,6 +50,10 @@ class MessagesController extends Controller
             'id' => $id ?? 0,
             'messengerColor' => $messenger_color ? $messenger_color : Chatify::getFallbackColor(),
             'dark_mode' => Auth::user()->dark_mode < 1 ? 'light' : 'dark',
+            'first_name' => User::find($id)->first_name ?? "",
+            'middle_name' => User::find($id)->middle_name ?? "",
+            'last_name' => User::find($id)->last_name ?? "",
+
         ]);
     }
 
@@ -336,6 +340,8 @@ class MessagesController extends Controller
         $input = trim(filter_var($request['input']));
         $records = User::where('id','!=',Auth::user()->id)
                     ->where('first_name', 'LIKE', "%{$input}%")
+                    ->orwhere('middle_name', 'LIKE', "%{$input}%")
+                    ->orwhere('last_name', 'LIKE', "%{$input}%")
                     ->paginate($request->per_page ?? $this->perPage);
         foreach ($records->items() as $record) {
             $getRecords .= view('Chatify::layouts.listItem', [
@@ -344,7 +350,7 @@ class MessagesController extends Controller
             ])->render();
         }
         if($records->total() < 1){
-            $getRecords = '<p class="message-hint center-el"><span>Nothing to show2.</span></p>';
+            $getRecords = '<p class="message-hint center-el"><span>Nothing to show.</span></p>';
         }
         // send the response
         return Response::json([
@@ -374,7 +380,7 @@ class MessagesController extends Controller
         }
         // send the response
         return Response::json([
-            'shared' => count($shared) > 0 ? $sharedPhotos : '<p class="message-hint"><span>Nothing shared5 yet</span></p>',
+            'shared' => count($shared) > 0 ? $sharedPhotos : '<p class="message-hint"><span>Nothing shared yet</span></p>',
         ], 200);
     }
 

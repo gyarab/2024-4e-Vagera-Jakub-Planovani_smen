@@ -41,30 +41,30 @@
                       <div id="set_img" class="avatar av-l upload-avatar-preview chatify-d-flex"
                       {{--style="background-image: url('{{ Chatify::getUserWithAvatar(Auth::user())->avatar }}');--"--}}
                       ></div>
+                      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+                      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
                       <script>
                         //getURL();
-        
-                        function getURL(request) {
+                        var authId = "{{ Auth::id() }}";
+                        //function getURL(request) {
                             $.ajax({
                                 url: '{{ route('showProfileImageChat') }}',
                                 type: 'POST',
                                 data: {
                                     _token: '{{ csrf_token() }}',
-                                    id: request,
+                                    id: authId,
                                 },
                                 success: function(response) {
-        
-        
-                                    document.getElementById("set_img"+request).style.backgroundImage = "url(" + response.url +")";
-        
+                                    document.getElementById("set_img").style.backgroundImage = "url(" + response.url +")";
+
         
                                 },
                                 error: function(xhr, status, error) {
-        
                                 }
                             });
         
-                        }
+                        //}
                     </script>
                       <p class="upload-avatar-details"></p>
                       <label class="app-btn a-btn-primary update" style="background-color:{{$messengerColor}}">

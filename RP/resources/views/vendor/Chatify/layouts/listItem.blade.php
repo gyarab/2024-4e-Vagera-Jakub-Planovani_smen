@@ -45,12 +45,9 @@
                                 },
                                 success: function(response) {
 
-
                                     document.getElementById("avim" + request).style.backgroundImage = "url(" + response.url +
                                         ")";
                                     
-
-
                                 },
                                 error: function(xhr, status, error) {
 
@@ -64,7 +61,7 @@
             {{-- center side --}}
             <td>
                 <p data-id="{{ $user->id }}" data-type="user">
-                    {{ strlen($user->first_name) > 12 ? trim(substr($user->first_name, 0, 12)) . '..' : $user->first_name }}
+                    {{ strlen($user->first_name)+ strlen($user->middle_name) + strlen($user->last_name) > 20 ? trim(substr($user->first_name, 0, 12)) . '..' : $user->first_name ." ". $user->middle_name . " ".$user->last_name}}
                     <span class="contact-item-time"
                         data-time="{{ $lastMessage->created_at }}">{{ $lastMessage->timeAgo }}</span>
                 </p>
@@ -97,7 +94,7 @@
             {{-- center side --}}
             <td>
                 <p data-id="{{ $user->id }}" data-type="user">
-                    {{ strlen($user->first_name) > 12 ? trim(substr($user->first_name, 0, 12)) . '..' : $user->first_name }}
+                    {{ strlen($user->first_name)+ strlen($user->middle_name) + strlen($user->last_name) > 20 ? trim(substr($user->first_name, 0, 12)) . '..' : $user->first_name ." ". $user->middle_name . " ".$user->last_name }}
             </td>
             <script>
                 getURLSearch({{ $user->id }});

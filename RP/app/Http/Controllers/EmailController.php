@@ -9,40 +9,24 @@ class EmailController extends Controller{
 
 public function sendEmail()
 {
-    /*$details = [
-        'title' => 'Hello from Laravel!',
-        'body' => 'This is a test email sent using Mailtrap.'
-    ];*/
-    $verification_code = generateRandomString();
+    /**
+     * Testovani posilani souboru
+     */
+    $verification_code = generateRandomStringE();
     $details = [
         'title' => 'Hello from Laravel!',
         'body' => 'This is a test email sent using Mailtrap.',
         'verify' => $verification_code
     ];
 
-    //
-    $name ="das";
     
-    Mail::to('vageja5zs@gmail.com')->send(new VerificationEmail($details));
-    //return view('admin.email-verification');
-    //return view('email-verification',['details'=>$details]);
-    //return "Email sent successfully!";
-}
-/*function generateRandomString($length = 6) {
-
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    
-    $randomString = '';
-
-    for ($i = 0; $i < $length; $i++) {
-        $randomString .= $characters[rand(0, strlen($characters) - 1)];
-    }
-
-    return $randomString;
-}*/
+    Mail::to('vageja5zs@gmail.com')->send(mailable: new VerificationEmail($details));
 
 }
-function generateRandomString($length = 6) {
+
+
+}
+function generateRandomStringE($length = 6) {
 
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     

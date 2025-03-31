@@ -1,5 +1,7 @@
-@include('vendor.Chatify.pages.header')
-@include('vendor.Chatify.pages.sidebar')
+@if (Auth::user()->role == "admin")
+@include('vendor.Chatify.pages.header-admin')
+@include('vendor.Chatify.pages.sidebar-admin')
+@endif
 <body id="body-pd">
 @include('Chatify::layouts.headLinks')
 
@@ -74,7 +76,7 @@
                         <div class="avatar av-s header-avatar"
                             style="margin: 0px 10px; margin-top: -5px; margin-bottom: -5px;">
                         </div>
-                        <a href="#" class="user-name">{{ config('chatify.name') }}</a>
+                        <a href="#" class="user-name">{{ $first_name }} {{ $middle_name }} {{ $last_name }}</a>
                     </div>
                     {{-- header buttons --}}
                     <nav class="m-header-right">

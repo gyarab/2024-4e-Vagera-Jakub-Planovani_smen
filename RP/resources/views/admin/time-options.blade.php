@@ -540,6 +540,7 @@
         function paste_cell(paste_id) {
 
             paste_id = paste_id.substring(2);
+            alert("-----");
 
             if (from_paste != "") {
                 document.getElementById("fr" + paste_id).value = from_paste;

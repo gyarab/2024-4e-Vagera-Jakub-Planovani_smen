@@ -2,6 +2,9 @@
 <html lang="en">
 
 <head>
+    <title>Calendar editor</title>
+    <link rel="icon" type="image/x-icon" href="{{ URL('images/cropped_imageic.ico') }}">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -29,7 +32,8 @@
     <link href="{{ asset('CSS/select-button.css') }}" rel="stylesheet">
 
     <link href="{{ asset(path: 'CSS/timeline.css') }}" rel="stylesheet">
-
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
 
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@3.1.0/dist/css/multi-select-tag.css">
@@ -39,9 +43,13 @@
 </head>
 
 <body id="body-pd">
+    <script>
+
+        var doneChnages = false;
+    </script>
     <script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@3.1.0/dist/js/multi-select-tag.js"></script>
-    @include('vendor.Chatify.pages.header')
-    @include('vendor.Chatify.pages.sidebar')
+    @include('vendor.Chatify.pages.header-admin')
+    @include('vendor.Chatify.pages.sidebar-admin')
     @include('admin.scripts')
 
     <div class="height-100 bg-light">
@@ -62,11 +70,7 @@
 
 
             <div class="row mt-2">
-                <!--<button id="modalbtn" type="button"
-            class="btn btn-outline-info btn-rounded mt-1" data-bs-toggle="modal"
-            data-bs-target="#exampleModal">
-            Get my id
-        </button>-->
+
 
                 <!-- Modal -->
                 <div class="modal fade w-100" id="detailModal" tabindex="-1" data-bs-backdrop="false"
@@ -97,8 +101,7 @@
                                         </div>
 
                                         <script>
-
-                                    var offer_array = new Array();
+                                            var offer_array = new Array();
                                             $(function() {
                                                 $('#textModal').keyup(function() {
 
@@ -140,11 +143,11 @@
                                                 });
                                             });
                                             var details_id_global = 0;
+                                            var repeat_counter = 0;
 
                                             function openDetails(id_cell) {
-                                               // alert(id_cell);
-                                               document.getElementById("closeOffer").style.display = "none";
-                                               document.getElementById("offerShift").style.display = "none";
+                                                document.getElementById("closeOffer").style.display = "none";
+                                                document.getElementById("offerShift").style.display = "none";
                                                 var row_id = id_cell.substring(3);
                                                 details_id_global = row_id;
                                                 var text_content = $("#tx" + row_id).val();
@@ -196,8 +199,8 @@
 
                                                     },
                                                     success: function(response) {
-                                                     
-                                   
+
+
                                                         if (offer_array.includes(details_id_global) == false && response == 0) {
                                                             document.getElementById("closeOffer").style.display = "none";
                                                             document.getElementById("offerShift").style.display = "inline";
@@ -205,16 +208,14 @@
                                                             document.getElementById("closeOffer").style.display = "inline";
                                                             document.getElementById("offerShift").style.display = "none";
                                                         }
-                                              
+
 
                                                     },
                                                     error: function(xhr, status, error) {
-                                                        alert('Error fetching:', error);
+                                                        error_fetch_alert('Error fetching:');
                                                     }
                                                 });
-                                                //document.getElementById()
-
-                                                //alert(text_content);
+                                      
                                             }
 
                                             function getShiftCheck(inserted_id) {
@@ -236,18 +237,9 @@
 
                                                     },
                                                     success: function(response) {
-                                                        //alert(response);
-                                                        /*if (response == 0) {
-                                                            alert("false");
-                                                        } else {
-                                                            //alert("true");
-                                                            closeOffer();
-                                                        }*/
-                                                        //alert(response);
+                                              
                                                         if (offer_array.includes(selected_picker_cell) == true || response == 1) {
-                                                            //getShiftCheck(selected_picker_cell);
-                                                        cancel_offer(selected_picker_cell);
-                                                        //alert("55555");
+                                                            cancel_offer(selected_picker_cell);
                                                         } else {
                                                             document.getElementById("hn" + selected_picker_cell).value = picker_global_id;
                                                             document.getElementById("bn" + selected_picker_cell).value = document.getElementById(
@@ -258,7 +250,7 @@
 
                                                     },
                                                     error: function(xhr, status, error) {
-                                                        alert('Error fetching:', error);
+                                                        error_fetch_alert('Error fetching:');
                                                     }
                                                 });
 
@@ -282,13 +274,12 @@
                                 <div class=" ">
 
                                     <button onclick="saveDetails()" class="btn btn-primary" data-bs-dismiss="modal">
-                                        Save
+                                        Save comment
                                     </button>
                                 </div>
                                 <script>
                                     $('#detailModal').on('hidden.bs.modal', function() {
-                                        // do something…
-                                        //alert("255");
+                                      
                                         document.getElementById("closeOffer").style.display = "none";
                                         document.getElementById("offerShift").style.display = "none";
                                     });
@@ -296,7 +287,6 @@
                                     function saveDetails() {
 
                                         var modal_text = document.getElementById("textModal").value;
-                                        //alert(modal_text);
                                         document.getElementById("tx" + details_id_global).innerHTML = modal_text;
                                         if (modal_text == "" || modal_text == null) {
                                             document.getElementById("cdt-" + details_id_global).innerHTML =
@@ -327,44 +317,14 @@
                                         var main_cut = details_id_global.substring(2);
                                         var day_offer = details_id_global.substring(0, 2);
                                         var id_shift_check = document.getElementById('i00' + main_cut).value;
-                                        //alert(main_cut);
                                         document.getElementById("hn" + details_id_global).value = "";
                                         document.getElementById("bn" + details_id_global).value = "--vacant--";
                                         offer_array.push(details_id_global);
-                                        /*if(currMonth < 9){
-                                            var month_offer = "0" +  (currMonth+ 1);
-                                        }else{
-                                            var month_offer = (currMonth+ 1);
-                                        }*/
-                                        //offer_array_date.push(currYear + "-" + month_offer + "-" + day_offer);
+                                    
 
                                         document.getElementById("closeOffer").style.display = "inline";
                                         document.getElementById("offerShift").style.display = "none";
-                                        //alert(offer_array_date);
-                                        //document.getElementById()
-                                        /*$.ajax({
-                                            url: '{{ route('insertOffer') }}',
-                                            type: 'POST',
-                                            data: {
-                                                _token: '{{ csrf_token() }}',
-                                                shift: id_shift_check,
-                                                year: currYear,
-                                                month: currMonth,
-                                                day: day_offer
-
-                                            },
-                                            success: function(response) {
-                                                alert(response);
-
-                                                document.getElementById("closeOffer").style.display = "inline";
-                                                document.getElementById("offerShift").style.display = "none";
-
-
-                                            },
-                                            error: function(xhr, status, error) {
-                                                alert('Error fetching: s   s  s s ', error);
-                                            }
-                                        });*/
+                        
 
                                     }
 
@@ -373,7 +333,6 @@
                                         var day_offer = details_id_global.substring(0, 2);
                                         var id_shift_check = document.getElementById('i00' + main_cut).value;
 
-                                        //document.getElementById()
                                         $.ajax({
                                             url: '{{ route('deleteOffer') }}',
                                             type: 'POST',
@@ -386,7 +345,6 @@
 
                                             },
                                             success: function(response) {
-                                                alert(response);
 
                                                 document.getElementById("closeOffer").style.display = "none";
                                                 document.getElementById("offerShift").style.display = "inline";
@@ -394,15 +352,12 @@
 
                                             },
                                             error: function(xhr, status, error) {
-                                                alert('Error fetching:', error);
+                                                error_fetch_alert('Error fetching:');
                                             }
                                         });
                                     }
                                 </script>
-                                <!--<button type="button" class="btn btn-secondary"
-                            data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save
-                            changes</button>-->
+                      
                             </div>
                         </div>
                     </div>
@@ -421,11 +376,7 @@
                         detailInput.focus()
                     })
                 </script>
-                <!--<button id="modalbtn" type="button"
-            class="btn btn-outline-info btn-rounded mt-1" data-bs-toggle="modal"
-            data-bs-target="#exampleModal">
-            Get my id
-        </button>-->
+            
 
                 <!-- Modal -->
                 <div class="modal fade w-100" id="usersModal" tabindex="-1" data-bs-backdrop="false"
@@ -493,16 +444,14 @@
                                                             shift: id_shfft
                                                         },
                                                         success: function(response) {
-                                                            //alert(response.all_assign);
 
                                                             document.getElementById("assign_employees").innerHTML = response.asign_response;
 
                                                             document.getElementById("all_employees").innerHTML = response.all_response;
-                                                            //document.getElementById("select_obj").innerHTML = response;
 
                                                         },
                                                         error: function(xhr, status, error) {
-                                                            alert('Error fetching:', error);
+                                                            error_fetch_alert('Error fetching:');
                                                         }
                                                     });
                                                 });
@@ -520,12 +469,10 @@
                                                     bgColor: '#f7f7f7',
                                                 },
                                                 onChange: function(values) {
-                                                    //alert(values.lenght);
                                                     role_picker = [];
                                                     console.log(values)
 
                                                     values.forEach(item => {
-                                                        //alert(`${item.value}`);
                                                         role_picker.push(`${item.value}`);
 
                                                     });
@@ -539,17 +486,15 @@
                                                             shift: id_shfft
                                                         },
                                                         success: function(response) {
-                                                            //alert(response.all_assign);
 
                                                             document.getElementById("assign_employees").innerHTML = response
                                                                 .asign_response;
 
                                                             document.getElementById("all_employees").innerHTML = response.all_response;
-                                                            //document.getElementById("select_obj").innerHTML = response;
 
                                                         },
                                                         error: function(xhr, status, error) {
-                                                            alert('Error fetching:', error);
+                                                            error_fetch_alert('Error fetching:');
                                                         }
                                                     });
 
@@ -558,16 +503,13 @@
 
 
                                             function userSelector(element_value) {
-                                                //alert(role_picker);
-                                                //alert(element_value.substring(2));
+                                 
                                                 selected_picker_cell = element_value.substring(2);
                                                 var id_user = document.getElementById("hn" + element_value.substring(2)).value;
                                                 search_text = document.getElementById("searchUser").value;
                                                 id_shfft = document.getElementById("i00-" + element_value.substring(5)).value;
-                                                //alert(id_shfft);
-                                                //alert(search_text);
-                                                //idbtn = clicked_id;
-                                                //shfft = document.getElementById("i00-" + clicked_id.substring(5)).value;
+                                     
+                                            
                                                 if (id_user == 0 || id_user == null || id_user == "") {
                                                     document.getElementById("modalName").innerHTML = "Name: <strong id='name_selected'> Vacant </strong>";
                                                     document.getElementById("modalRole").innerHTML = "Position: //";
@@ -585,14 +527,11 @@
                                                             id: id_user,
                                                         },
                                                         success: function(response) {
-                                                            // Set the response (image data) as the source for the image element
-                                                            //alert(response.name);
                                                             document.getElementById("modalName").innerHTML = "Name: <strong id='name_selected'>" +
                                                                 response.name +
                                                                 "</strong>";
                                                             document.getElementById("modalRole").innerHTML = "Position: " + response.role;
 
-                                                            // $('#modalName').attr('src', response.url);
 
                                                         },
                                                         error: function(xhr, status, error) {
@@ -607,25 +546,20 @@
                                                             id: id_user,
                                                         },
                                                         success: function(response) {
-                                                            // Set the response (image data) as the source for the image element
-                                                            //alert(response.url);
                                                             $('#modalImage').attr('src', response.url);
 
                                                         },
                                                         error: function(xhr, status, error) {
-                                                            alert('Error fetching image:', error);
+                                                            error_fetch_alert('Error fetching image:');
                                                         }
                                                     });
                                                 }
-                                                // Get the <span> element that closes the modal
-                                                /*document.getElementById("modalName").innerHTML = "Name: <strong>" + response.name+"</strong>";
-                                                    document.getElementById("modalRole").innerHTML = "Position: " + response.role;*/
+                                           
                                                 var myElem3 = document.getElementById("time-" + id_user);
 
                                                 if (myElem3 != null) {
                                                     var comtents1 = document.getElementById("time-" + id_user).innerHTML;
-                                                    //alert(document.getElementById("time-" + id_user).innerHTML);
-                                                    //alert(comtents1);
+                                        
                                                     document.getElementById("modalHours").innerHTML = "Hours: " + comtents1;
 
                                                 } else {
@@ -636,7 +570,6 @@
                                                 var myElem2 = document.getElementById("count-" + id_user);
                                                 if (myElem2 != null) {
                                                     var comtents2 = document.getElementById("count-" + id_user).innerHTML;
-                                                    ///alert("count-" + id_user);
                                                     document.getElementById("modalAmount").innerHTML = "Amount: " + comtents2;
 
                                                 } else {
@@ -654,22 +587,19 @@
                                                         shift: id_shfft
                                                     },
                                                     success: function(response) {
-                                                        //alert(response.all_assign);
 
                                                         document.getElementById("assign_employees").innerHTML = response.asign_response;
 
                                                         document.getElementById("all_employees").innerHTML = response.all_response;
-                                                        //document.getElementById("select_obj").innerHTML = response;
 
                                                     },
                                                     error: function(xhr, status, error) {
-                                                        alert('Error fetching:', error);
+                                                        error_fetch_alert('Error fetching:');
                                                     }
                                                 });
                                             }
 
                                             function pickUser(id_user) {
-                                                //  alert(id_user.substring(4));
                                                 picker_global_id = id_user.substring(4);
                                                 $.ajax({
                                                     url: '{{ route('showImagePersonal') }}',
@@ -679,13 +609,12 @@
                                                         id: id_user.substring(4),
                                                     },
                                                     success: function(response) {
-                                                        // Set the response (image data) as the source for the image element
-                                                        //alert(response.url);
+                                             
                                                         $('#modalImage').attr('src', response.url);
 
                                                     },
                                                     error: function(xhr, status, error) {
-                                                        alert('Error fetching image:', error);
+                                                        error_fetch_alert('Error fetching image:');
                                                     }
                                                 });
                                                 $.ajax({
@@ -696,8 +625,7 @@
                                                         id: id_user.substring(4),
                                                     },
                                                     success: function(response) {
-                                                        // Set the response (image data) as the source for the image element
-                                                        //alert(response.name);
+                                                    
                                                         document.getElementById("modalName").innerHTML = "Name: <strong id='name_selected'>" +
                                                             response.name +
                                                             "</strong>";
@@ -724,7 +652,7 @@
 
                                                     },
                                                     error: function(xhr, status, error) {
-                                                        alert('Error fetching image:', error);
+                                                        error_fetch_alert('Error fetching image:');
                                                     }
                                                 });
                                             }
@@ -800,30 +728,17 @@
                                     </button>
                                     <script>
                                         function saveUser() {
-                                            //alert(picker_global_id);
                                             if (picker_global_id == 0) {
                                                 document.getElementById("hn" + selected_picker_cell).value = "";
                                                 document.getElementById("bn" + selected_picker_cell).value = "--vacant--";
                                             } else {
-                                                //alert(selected_picker_cell);
                                                 getShiftCheck(selected_picker_cell);
-                                                //alert(getShiftCheck(selected_picker_cell));
-                                                /*if(offer_array.includes(selected_picker_cell) == true || getShiftCheck(selected_picker_cell) == true){
-                                                    getShiftCheck(selected_picker_cell);
-                                            cancel_offer();
-                                                }else{
-                                                document.getElementById("hn" + selected_picker_cell).value = picker_global_id;
-                                                document.getElementById("bn" + selected_picker_cell).value = document.getElementById('name_selected')
-                                                    .innerText;
-                                                }*/
+                                             
                                             }
                                             load_employee_table();
-                                            //alert(document.getElementById('name_selected').innerText);
                                         }
                                     </script>
-                                    <!--<button onclick="verifyUser()" class="btn btn-primary">
-                                    Veriffy
-                                </button>-->
+                     
                                 </div>
                             </div>
                         </div>
@@ -843,14 +758,9 @@
                     </div>
                 </div>
                 <div class="col-12 col-md-8">
-                    <!--<div id="object" style="display:inline;"></div>-->
                     <div id="objects_div">
                         <select name="objects" id="objects" multiple>
-                            <!--<option value="1">Afghanistan</option>
-                        <option value="2">Australia</option>
-                        <option value="3">Germany</option>
-                        <option value="4">Canada</option>
-                        <option value="5">Russia</option>-->
+          
                         </select>
                     </div>
                 </div>
@@ -867,7 +777,6 @@
                     </div>
                 </div>
                 <div class="col-12 col-md-10">
-                    <!--<div id="shi_load" style="display:inline;"></div>-->
                     <div id="shi_load_div">
                         <select name="shi_load" id="shi_load" multiple>
 
@@ -883,19 +792,36 @@
                     <div class="card p-2 mb-2">
                         <div class="row">
                             <div class="col-2">
-                                <h6>Controllers</h6>
+                                <h6 class="mt-1">Controllers:</h6>
 
                             </div>
-                            <!--<input type="button" class="btn btn-primary" style="float:left;font-size:20px" value="Filter"
-                            onclick="filter()" style="float:left;font-size: 16px;">-->
+                            <div class="col-2">
+                            <div class="form-check">
+                                <input class="form-check-input d-inline" type="checkbox" value="" onclick="deleteCheck()" id="flexCheckDefault" checked>
+                                <label class="form-check-label d-inline" for="flexCheckDefault">
+                                  Save deleting
+                                </label>
+                                <script>
+                                    var controlDelete = true;
+                                    function deleteCheck(){
+                                        if(controlDelete == true){
+                                            controlDelete = false;
+ 
+                                        }else{
+                                            controlDelete = true;
+                                        }
+                                    }
+                                </script>
+                              </div>
+                            </div>
 
-                            <div class="col-10">
+                            <div class="col-8">
 
                                 <input type="button" name="save" class="btn btn-success btn-sm"
                                     style="float:right" value="Save the shedule" id="butsave">
 
-                                <input type="button" name="algorithm" class="btn btn-warning btn-sm"
-                                    style="float:right" onclick="cell_selector()" value="Algorithm selection"
+                                <input type="button" name="algorithm" class="btn btn-warning btn-sm mx-3"
+                                    style="float:right" onclick="algorithm_alert()" value="Algorithm selection"
                                     id="btnalgorithm">
                             </div>
                         </div>
@@ -905,30 +831,7 @@
 
 
             <div class="row">
-                <!--<div class="col-12">
-                    <div class="row">
-                
-                        <div class="col-4">
-                            <div class="icons">
-                                <span id="prev" class="material-symbols-rounded" style="float:left"><i
-                                        class="bi bi-arrow-left-circle h4"></i></span>
-                                <h4 style="display:inline;float:left">&nbsp;&nbsp;Previous month</h4>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <center>
-                                <h2 id="current_date" style="display: inline" class="current-date"></h2>
-                            </center>
-                        </div>
-                        <div class="col-4">
-                            <div class="icons">
-                                <span id="next" class="material-symbols-rounded" style="float:right"><i
-                                        class="bi bi-arrow-right-circle h4"></i></span>
-                                <h4 style="display:inline;float:right">Next month&nbsp;&nbsp;</h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>-->
+        
 
                 <script></script>
 
@@ -953,33 +856,27 @@
 
                         },
                         error: function(xhr, status, error) {
-                            alert('Error fetching image render:', error);
+                            error_fetch_alert('Error fetching image render:');
                         }
                     });
                 }
 
-                //document.getElementById("main_object2").innerHTML = response;
 
 
                 var f_load = 0;
                 var obj_search = new Array();
                 var pos_search = new Array();
-
                 function cal_obj_load(input_obj) {
-                    //alert(input_obj);
-
-                    //alert(rr);
+           
                     $.ajax({
                         url: '{{ route('cal_obj_load') }}',
                         type: 'POST',
                         data: {
                             _token: '{{ csrf_token() }}',
                             input: input_obj,
-                            /*id: usid,
-                            type: type_obj*/
+                 
                         },
                         success: function(data) {
-                            //alert(data);
                             document.getElementById('shi_load_div').innerHTML =
                                 '<select name="shi_load" id="shi_load" multiple></select>';
                             document.getElementById("objects_div").innerHTML =
@@ -1002,15 +899,22 @@
                                     bgColor: '#eaffe6',
                                 },
                                 onChange: function(values) {
-                                    //alert(values.lenght);
-                                    obj_search = [];
-                                    console.log(values)
+                                    obj_search = new Array();
+                               
 
                                     values.forEach(item => {
-                                        //alert(`${item.value}`);
-                                        obj_search.push(`${item.value}`);
+                                        console.log(`${item.value}`);
+                               
+                                        if (!obj_search.includes(`${item.value}`)) {
+                                            obj_search.push(`${item.value}`);
+
+                                        }
+
+
 
                                     });
+                                    repeat_counter = 2;
+                                    filter(document.getElementById("select_obj").value);
                                 }
                             })
 
@@ -1024,94 +928,28 @@
                                     bgColor: '#eaffe6',
                                 },
                                 onChange: function(values) {
-                                    // console.log(values)
                                     shi_search = [];
                                     console.log(values)
 
                                     values.forEach(item => {
-                                        //alert(`${item.value}`);
                                         shi_search.push(`${item.value}`);
 
                                     });
+                                    repeat_counter = 2;
+                                    filter(document.getElementById("select_obj").value);
                                 }
+
                             })
-                            // $("#objects").html(data);
 
                         },
                         error: function(xhr, status, error) {
-                            alert('Error fetching image cal:', error);
+                            error_fetch_alert('Error fetching image cal:');
                         }
                     });
                 }
 
                 var type_obj = 504;
-                /* function cal_shi_load(){
-                                $.ajax({
-                                    url: '{{ route('cal_obj_load') }}',
-                                    type: 'POST',
-                                    data: {
-                                        _token: '{{ csrf_token() }}',
-                                        input: input_obj,
-                     
-                                    },
-                                    success: function(data) {
-                             
-                       
-                                        new MultiSelectTag('shi_load', {
-                                            rounded: true, // default true
-                                            shadow: false, // default false
-                                            placeholder: 'Search', // default Search...
-                                            tagColor: {
-                                                textColor: '#327b2c',
-                                                borderColor: '#92e681',
-                                                bgColor: '#eaffe6',
-                                            },
-                                            onChange: function(values) {
-                                                console.log(values)
-                                            }
-                                        })
-
-                                    },
-                                    error: function(xhr, status, error) {
-                                        alert('Error fetching image:', error);
-                                    }
-                                });
-                            }*/
-                /*$.ajax({
-                    url: "../calendar/cal_obj_load.php",
-                    method: "POST",
-                    data: {
-                        input: input_obj,
-                        id: usid,
-                        type: type_obj
-                    },
-                    success: function(data) {
-                        $("#object").html(data);
-
-                    }
-                });*/
-
-                /*$.ajax({
-                    url: "../calendar/cal_shi_load.php",
-                    method: "POST",
-                    data: {
-                        input: input_obj,
-                        id: usid,
-                        type: type_obj
-                    },
-                    success: function(data) {
-                        $("#shi_load").html(data);
-                    }
-                });
-                */
-
-                /*function getSelectedValues() {
-                    alert("--------");
-                    const selectElement = document.getElementById('objects');
-                    const selectedOptions = Array.from(selectElement.selectedOptions);
-                    const selectedValues = selectedOptions.map(option => option.value);
-                    //alert('Selected Fruits: ' + selectedValues.join(', '));
-                }*/
+       
 
 
 
@@ -1122,35 +960,9 @@
                     load_check1 = 0;
                     load_check2 = 0;
                     load_check3 = 0;
+                    repeat_counter = 1;
                     cal_obj_load($(this).val());
-                    /*inp = $(this).val();
-                    $.ajax({
-                        url: "../calendar/cal_obj_load.php",
-                        method: "POST",
-                        data: {
-                            input: inp,
-                            id: usid,
-                            type: type_obj
-                        },
-                        success: function(data) {
-                            $("#object").html(data);
-
-                        }
-                    });
-
-                    $.ajax({
-                        url: "../calendar/cal_shi_load.php",
-                        method: "POST",
-                        data: {
-                            input: inp,
-                            id: usid,
-                            type: type_obj
-                        },
-                        success: function(data) {
-                            $("#shi_load").html(data);
-
-                        }
-                    });*/
+                 
 
                 });
 
@@ -1159,142 +971,27 @@
                 var load_check2 = 0;
                 var load_check3 = 0;
                 var arridc = new Array();
-                var repeat_counter = 0;
+
 
                 $(document).on("ajaxComplete", function() {
                     var input_obj = document.getElementById("select_obj").value;
                     if (repeat_counter == 0) {
                         cal_obj_load(document.getElementById("select_obj").value);
-                        //cal_obj_load(document.getElementById("select_obj").value);
                         repeat_counter++;
-                        // renderCalendar();
                     } else if (repeat_counter == 1) {
                         repeat_counter++;
                         filter(document.getElementById("select_obj").value);
-                        //renderCalendar();
                     } else if (repeat_counter == 2) {
                         repeat_counter++;
                         dataLoader();
                     } else if (repeat_counter == 3) {
                         repeat_counter++;
-                        //load_employee_table();
-                        // renderCalendar();
+                 
                     }
 
-                    //alert(input_obj);
-                    /* let lshi = document.getElementsByName("nshi").length;
-                                          let elements = document.getElementsByName("nshi");
-                                          if (lshi != 0 && load_check1 == 0) {
-                                            load_check1 = 1;
-                                            for (var b = 0; b < lshi; b++) {
-                              
-                                              shi_search.push(elements[b].value);
-                                            }
-                                        
-                              
-                                          }
-                                          let lobj = document.getElementsByName("nobj").length;
-                                          let elements2 = document.getElementsByName("nobj");
-                                          if (lobj != 0 && load_check2 == 0) {
-                                            load_check2 = 1;
-                                            for (var b = 0; b < lobj; b++) {
-                              
-                                              obj_search.push(elements2[b].value);
-                                            }
-                                            
-                                          }
-                                          if (load_check1 == 1 && load_check2 == 1 && load_check3 == 0) {
-                              
-                                            load_check3 = 1;
-                                            f_load = 0;
-                                            filter();
-                              
-                                          }*/
                 });
 
-                /* var shiftall = 1;
-                                        var objectall = 1;
-                                        let lshi;
-                                        var shiftall_arr = new Array();
-                                        function shift_all() {
-                                          f_load = 0;
-                                          if (shiftall == 0) {
-                                            shiftall = 1;
-                                            shi_search = [];
-                                            lshi = document.getElementsByName("nshi").length;
-                                            let elements = document.getElementsByName("nshi");
-                                            if (lshi != 0) {
-                                              for (var b = 0; b < lshi; b++) {
-                              
-                                                shi_search.push(elements[b].value);
-                                              }
-                                            }
-                              
-                                          } else {
-                              
-                                            shiftall = 0;
-                                            shi_search = [];
-                                            lshi = document.getElementsByName("nshi").length;
-                                            let elements = document.getElementsByName("nshi");
-                                            if (lshi != 0) {
-                                              for (var b = 0; b < lshi; b++) {
-                                                if (elements[b].checked) {
-                                                  shi_search.push(elements[b].value);
-                                                }
-                                              }
-                                            }
-                              
-                                          }
-                              
-                              
-                              
-                                        }
-                                        var objectall = 1;
-                                        var objectall_arr = new Array();
-                                        function object_all() {
-                                          f_load = 0;
-                                          if (objectall == 0) {
-                                            objectall = 1;
-                                            obj_search = [];
-                                            lobj = document.getElementsByName("nobj").length;
-                                            let elements = document.getElementsByName("nobj");
-                                            if (lobj != 0) {
-                                              for (var b = 0; b < lobj; b++) {
-                              
-                                                obj_search.push(elements[b].value);
-                                              }
-                                            }
-                              
-                                          } else {
-                                            objectall = 0;
-                                            obj_search = [];
-                                            lobj = document.getElementsByName("nobj").length;
-                                            let elements = document.getElementsByName("nobj");
-                                            if (lobj != 0) {
-                                              for (var b = 0; b < lobj; b++) {
-                                                if (elements[b].checked) {
-                                                  obj_search.push(elements[b].value);
-                                                }
-                                              }
-                                            }
-                                          }
-                              
-                                        }
-                                        var shi_search = new Array();
-                              
-                                        function shift_search(clicked_val) {
-                                          f_load = 0;
-                                          if (shi_search.includes(clicked_val) == true && shiftall == 0) {
-                                            for (let i = 0; i < shi_search.length; i++) {
-                                              if (shi_search[i] === clicked_val) {
-                                                shi_search.splice(i, 1);
-                                              }
-                                            }
-                                          } else if (shiftall == 0) {
-                                            shi_search.push(clicked_val);
-                                          }
-                              
-                                        }*/
+            
                 var arrcols = new Array();
                 var arrcolor = new Array();
                 var arrwdw = new Array(7);
@@ -1302,22 +999,10 @@
                 var arrtish = new Array();
                 var arrobj = new Array();
                 var arrname = new Array();
+                var arrdescription = new Array();
+                var arricons = new Array();
 
 
-                /*var obj_search = new Array();
-                                        function object_search(clicked_val) {
-                                          f_load = 0;
-                                          if (obj_search.includes(clicked_val) == true && objectall == 0) {
-                                            for (let i = 0; i < obj_search.length; i++) {
-                                              if (obj_search[i] === clicked_val) {
-                                                obj_search.splice(i, 1);
-                                              }
-                                            }
-                                          } else if (objectall == 0) {
-                                            obj_search.push(clicked_val);
-                                          }
-                              
-                                        }*/
             </script>
 
 
@@ -1343,12 +1028,7 @@
 
                 </div>
                 <div class='col-12 col-md-10' style="padding-left: 0px">
-                    <!--<div class="p-2 mb-2" style="background: #4CAF50;color:#ffffff; font-size: 18px;">Schedule
-                    </div>
-                    <div class="card p-3 mb-2">
-                        <h5>Schedule</h5>
-                    
-                    </div>-->
+                
                     <div class="card p-3 mb-2 ">
                         <div class="col-12">
                             <div class="row">
@@ -1374,10 +1054,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="">
-                            <h5>Schedule</h5>
-                            <hr>
-                        </div>-->
+                 
                         <hr>
                         <div style="width: 100%;overflow: auto; max-height: 65;height: 65vh;">
 
@@ -1387,8 +1064,7 @@
                                     </tr>
                                     <table class="days" style="border-collapse:collapse;">
                                         <div class="hoverTable">
-                                            <!--<tr>
-                                            </tr>-->
+                                     
                                         </div>
                                     </table>
                                 </table>
@@ -1402,26 +1078,7 @@
 
 
             <script>
-                /** funkce co tesuje warning zpravy */
-                function tester() {
-                    /*$.ajax({
-                                url: "../calendar/cal_check_position.php",
-                                method: "POST",
-                                dataType: "json",
-                                cache: false,
-                                async: false,
-                                data: {
-                                  id: id, from: from, to: to, date: date, y_id: yesterday_id, y_from: yesterday_from, y_to: yesterday_to
-                                  , c_id: current_id, c_from: current_from, c_to: current_to, count_id: counter_al_id, count_number: counter_al_number
-                                },
-                                success: function (data) {
-                    
-                                  alert(data);
-                                  al_return = JSON.stringify(data);
-                    
-                                }
-                              });*/
-                }
+           
             </script>
             <script>
                 var modal = "";
@@ -1429,169 +1086,15 @@
                 var idbtn = "xcxcz";
                 var qkk = "alsd";
 
-                function Vacant() {
-                    /*var modal = document.getElementById("myModal");
-                    modal.style.display = "none";
+          
 
-                    let chch = document.getElementById(idbtn);
-                    let mj = idbtn.substring(1, 9);
-                    let vjvj = document.getElementById("h" + mj);
-                    vjvj.value = "";
-                    chch.value = "--vacant--";
-                    load_employee_table();*/
-
-
-                }
-                var shfft;
-
-                function Open_name(clicked_id) {
-                    /*var modal = document.getElementById("myModal");
-
-                    // Get the button that opens the modal
-                    var btn = document.getElementById(clicked_id);
-                    idbtn = clicked_id;
-                    shfft = document.getElementById("i00-" + clicked_id.substring(5)).value;
-
-                    // Get the <span> element that closes the modal
-                    var span = document.getElementsByClassName("close")[0];
-                    modal.style.display = "block";
-                    var input = document.getElementById("live_search").value;
-                    load_employee_table();
-
-                    if (input != "") {
-                        $.ajax({
-                            url: "../search/livesearch.php",
-                            method: "POST",
-                            data: {
-                                input: input,
-                                btns: idbtn
-                            },
-                            success: function(data) {
-                                $("#searchresult").css("display", "inline");
-                                $("#searchresult").html(data);
-                            }
-                        });
-                        $.ajax({
-                            url: "../rights_assignments/livesearch_assign.php",
-                            method: "POST",
-                            data: {
-                                input: input,
-                                btns: idbtn,
-                                id_sh: shfft
-                            },
-                            success: function(data) {
-                                $("#searchresult_assign").css("display", "inline");
-                                $("#searchresult_assign").html(data);
-                            }
-                        });
-                    } else {
-                        $("#searchresult").css("display", "none");
-                        $("#searchresult_assign").css("display", "none");
-                    }*/
-
-                }
-
-
-
-                $(document).ready(function() {
-
-                    /*$("#live_search").keyup(function() {
-
-                        var input = $(this).val();
-                        if (input != "") {
-                            $.ajax({
-                                url: "../search/livesearch.php",
-                                method: "POST",
-                                data: {
-                                    input: input,
-                                    btns: idbtn
-                                },
-                                success: function(data) {
-                                    $("#searchresult").css("display", "inline");
-                                    $("#searchresult").html(data);
-                                }
-                            });
-                            $.ajax({
-                                url: "../rights_assignments/livesearch_assign.php",
-                                method: "POST",
-                                data: {
-                                    input: input,
-                                    btns: idbtn,
-                                    id_sh: shfft
-                                },
-                                success: function(data) {
-                                    $("#searchresult_assign").css("display", "inline");
-                                    $("#searchresult_assign").html(data);
-                                }
-                            });
-                        } else {
-                            $("#searchresult").css("display", "none");
-                            $("#searchresult_assign").css("display", "none");
-                        }
-                    });*/
-                });
-
-                function closebtn(clicked_id, vallue) {
-                    /*modal.style.display = "none";
-                    let vva = clicked_id;
-                    let rr = vva.substring(1, 9);
-                    let mj = vva.substring(2, 9);
-                    var mjk = vva.substring(9);
-                    let chch = document.getElementById(rr);
-                    let vjvj = document.getElementById("h" + mj);
-
-
-
-                    var ttxx = document.getElementById(vva).innerText;
-                    chch.value = ttxx;
-                    vjvj.value = mjk;
-                    document.getElementById("searchresult").innerHTML = "";
-                    document.getElementById("searchresult_assign").innerHTML = "";*/
-                }
-
-
-                function Pick_em(cid, cvalue) {
-                    /*modal.style.display = "none";
-                    let vva = cid;
-                    let rr = vva.substring(1, 9);
-                    let mj = vva.substring(2, 9);
-                    var mjk = vva.substring(9);
-                    let chch = document.getElementById(rr);
-                    let vjvj = document.getElementById("h" + mj);
-
-
-                    var ttxx = document.getElementById(vva).innerText;
-                    var ttxx = cvalue;
-                    chch.value = ttxx;
-                    vjvj.value = mjk;
-                    document.getElementById("searchresult").innerHTML = "";
-                    document.getElementById("searchresult_assign").innerHTML = "";*/
-
-                }
             </script>
             <script>
                 $(document).ready(function() {
                     var id = 1;
-                    /*Assigning id and class for tr and td tags for separation.*/
-                    /*$("#butsend").click(function() {
-                        var newid = id++;
-                        $("#table1").append('<tr valign="top" id="' + newid + '">\n\
-                                                                    <td width="100px" >' + newid + '</td>\n\
-                                                                    <td width="100px" class="name' + newid + '">' + $("#name")
-                            .val() + '</td>\n\
-                                                                    <td width="100px" class="email' + newid + '">' + $("#email")
-                            .val() +
-                            '</td>\n\
-                                                                    <td width="100px"><a href="javascript:void(0);" class="remCF">Remove</a></td>\n\ </tr>'
-                            );
-                    });
-                    $("#table1").on('click', '.remCF', function() {
-                        $(this).parent().parent().remove();
-                    });
-                    /*crating new click event for save button*/
+                 
+                    /*creating new click event for save button*/
                     $("#butsave").click(function() {
-                        // alert("--7--");
-                        //var lastRowId = $('#table1 tr:last').attr("id"); /*finds id of the last row inside table*/
                         var from = new Array();
                         var to = new Array();
                         var date_simple = new Array();
@@ -1633,7 +1136,6 @@
                                     var ym = $("#current_load_date").val();
 
                                     let h = ym + "-" + q;
-                                    //alert(h);
                                     date_simple.push(h);
                                 }
 
@@ -1648,14 +1150,13 @@
                         var nameidArr = JSON.stringify(nameid);
                         var nameArr = JSON.stringify(name);
                         var areaArr = JSON.stringify(area);
-                        //var offerArr = JSON.stringify(offer);
                         var year_month = $("#current_load_date").val();
-                        // alert(area);
                         var offer_array_save = new Array();
-                        if(offer_array.length != null){
-                            for(var f = 0; f < offer_array.length; f++){
+                        if (offer_array.length != null) {
+                            for (var f = 0; f < offer_array.length; f++) {
                                 var cut = offer_array[f].substring(2);
-                                offer_array_save[f] = offer_array[f] +"-"+ document.getElementById('i00' + cut).value;
+                                offer_array_save[f] = offer_array[f] + "-" + document.getElementById('i00' + cut)
+                                    .value;
                             }
                         }
                         $.ajax({
@@ -1676,33 +1177,14 @@
 
                             },
                             success: function(data) {
-                                //text_return = JSON.stringify(data);
-
-                                alert(data);
+                                success_alert("Calendar successfully saved");
                             },
                             error: function(xhr, status, error) {
-                                alert('Error fetching image:', error);
+                                error_fetch_alert('Error fetching imagesss:');
                             }
 
                         });
-                        /*$.ajax({
-                            url: "../calendar/insert-ajax.php",
-                            type: "post",
-                            data: {
-                                from: fromTime,
-                                to: toTime,
-                                dateym: year_month,
-                                id_shift: idArr,
-                                date: dateArr,
-                                id_delete: deleteArr,
-                                namesid: nameidArr,
-                                name: nameArr,
-                                area: areaArr
-                            },
-                            success: function(data) {
-                                success_alert(data);
-                            }
-                        });*/
+        
                     });
                 });
 
@@ -1711,9 +1193,7 @@
                 var count_table = new Array();
                 var time_table = new Array();
 
-                //load_employee_table();
                 function load_employee_table() {
-                    //alert("---*-**-");
                     var from = new Array();
                     var to = new Array();
                     var nameid = new Array();
@@ -1753,32 +1233,14 @@
                     }
 
 
+
                     var fromTime = JSON.stringify(from);
                     var toTime = JSON.stringify(to);
                     var nameidArr = JSON.stringify(nameid);
                     var nameArr = JSON.stringify(name);
 
 
-                    /*$.ajax({
-                        url: "../search/load_employee_table2.php",
-                        method: "POST",
-                        data: {
-                            id: nameid,
-                            from: from,
-                            to: to,
-                            name: name
-                        },
-                        success: function(data) {
-                            $("#employee_table").html(data);
-
-                        }
-                    });*/
-                    //alert(nameid);
-                    /*alert(nameid);
-                    alert(from);
-                    alert(to);
-                    alert(name);
-                    alert(arridc.length);*/
+               
 
                     $.ajax({
                         url: '{{ route('loadEmployeeTableCalendar') }}',
@@ -1791,14 +1253,12 @@
                             name: name
                         },
                         success: function(response) {
-                            // alert("123456");
                             $("#employee_table").html(response);
 
-                            //document.getElementById("select_obj").innerHTML = response;
 
                         },
                         error: function(xhr, status, error) {
-                            alert('Error fetching image table:', error);
+                            error_fetch_alert('Error fetching image table:');
                         }
                     });
 
@@ -1816,14 +1276,70 @@
                 var mark_cell = new Array();
                 var mark_cell_nposition = new Array();
                 var mark_cell_xnext = new Array();
+                let combinationFromArr = new Array();
+                let combinationToArr = new Array();
+                var combinationIdArr = new Array();
+                var finalLongestCombination = new Array();
+
                 var posible_combination = new Array();
                 var final_posible_combination = new Array();
                 var count_solution_row = 0;
                 var count_solution_column = 0;
+                let filtered_users = new Array();
+                var inputCombinationInput = [];
 
-                function cell_selector() {
-                    //alert("789456123");
-                    /*for (var z = 0; z <= arridc.length; z++) {
+                function addArrayToCombination(newArray) {
+                    inputCombinationInput.push(newArray);
+                }
+
+                var firstCombinatoryGeneration = 0;
+                var lengthCombination = "";
+
+                function generateCombinations(arrCombination) {
+                    if (!arrCombination || arrCombination.length === 0) {
+                        return [
+                            []
+                        ]; // Return an array with an empty array if input is empty
+                    }
+                 
+
+                    const firstSubArray = arrCombination[0];
+                    const restCombinations = generateCombinations(arrCombination.slice(1));
+                    const result = [];
+
+
+                    for (const item of firstSubArray) {
+                        for (const combination of restCombinations) {
+                            result.push([item, ...combination]);
+                        }
+                    }
+
+                    return result;
+                }
+
+                function checkTimeOverlap(fromFirst, toFirst, fromSecond, toSecond) {
+                    // Convert time strings to minutes since midnight
+                    const fromFirstMinutes = timeToMinutes(fromFirst);
+                    const toFirstMinutes = timeToMinutes(toFirst);
+                    const fromSecondMinutes = timeToMinutes(fromSecond);
+                    const toSecondMinutes = timeToMinutes(toSecond);
+
+                    // Check for overlap
+                    if (fromFirstMinutes <= toSecondMinutes && fromSecondMinutes <= toFirstMinutes) {
+                        return true; // Overlap exists
+                    } else {
+                        return false; // No overlap
+                    }
+                }
+
+                function timeToMinutes(time) {
+                    const [hours, minutes] = time.split(':').map(Number);
+                    return hours * 60 + minutes;
+                }
+
+                async function cell_selector() {
+                    let ajax1Promises = [];
+                    for (var z = 0; z <= arridc.length; z++) {
                         if (z < 10) {
                             var p = "0" + "0" + z;
                         } else if (z < 100) {
@@ -1914,6 +1430,7 @@
                             current_id = [];
                             current_from = [];
                             current_to = [];
+                            ajax1Promises = [];
                             for (var a = 0; a <= arridc.length; a++) {
                                 if (a < 10) {
                                     var b = "0" + "0" + a;
@@ -1931,7 +1448,6 @@
                                 var curElem = document.getElementById(current_el);
                                 if (curElem != null) {
                                     if ($("#hn" + c + "-" + b).val() != "") {
-
                                         current_id.push($("#hn" + c + "-" + b).val());
                                         current_from.push($("#tf" + c + "-" + b).val());
                                         current_to.push($("#tt" + c + "-" + b).val());
@@ -1985,15 +1501,160 @@
                                     }
                                     var element_end = q + "-" + p;
 
-                                    algorithm(from_sel, to_sel, id_sel, date_sel, element_end, map1.get(marker));
-
-
+                                    ajax1Promises.push(algorithm(from_sel, to_sel, id_sel, date_sel, element_end, map1.get(
+                                        marker), current_id, current_from, current_to, mark_cell));
+                               
                                 }
                             }
 
 
                         }
                         var new_reload = 0;
+
+                        const combinations = generateCombinations(inputCombinationInput);
+                        inputCombinationInput = [];
+
+                        /*
+                         * Cyklus opravuje kombinace tak, aby v kombinaci nebyly uzivatle jejich smeny se prekryji 
+                         */
+                        for (let m = 0; m < combinations.length; m++) {
+                         
+                            combinationToArr = [];
+                            combinationFromArr = [];
+                            combinationIdArr = [];
+
+                            for (let n = 0; n < combinations[m].length; n++) {
+                                var combinationFrom = $("#tf" + mark_cell[n]).val();
+                                var combinationTo = $("#tt" + mark_cell[n]).val();
+                                combinationFromArr[n] = combinationFrom;
+                                combinationToArr[n] = combinationTo;
+                                combinationIdArr[n] = combinations[m][n];
+                                if (n != 0) {
+                                    for (let w = 0; w < combinationIdArr.length - 1; w++) {
+                                        if (combinations[m][n] == combinationIdArr[w]) {
+                                            if (checkTimeOverlap(combinationFrom, combinationTo, combinationFromArr[w],
+                                                    combinationToArr[w]) == true) {
+                                                combinations[m][n] = 0;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                             
+                            }
+                        }
+                        var longestCombinationMAX = 0;
+                        var longestCombinationCurrent = 0;
+                        finalLongestCombination = [];
+                        for (let m = 0; m < combinations.length; m++) {
+                            longestCombinationCurrent = 0;
+                            for (let n = 0; n < combinations[m].length; n++) {
+                                if (combinations[m][n] != 0) {
+                                    longestCombinationCurrent++;
+                                }
+                            }
+                            if (longestCombinationMAX < longestCombinationCurrent) {
+                                longestCombinationMAX = longestCombinationCurrent;
+                                finalLongestCombination = [];
+                                finalLongestCombination.push(combinations[m]);
+                            } else if (longestCombinationMAX == longestCombinationCurrent) {
+                                finalLongestCombination.push(combinations[m]);
+                            }
+                        }
+                        console.log('Final', finalLongestCombination);
+                        var idExistingCounter = new Array();
+                        var countExistingCounter = new Array();
+                        idExistingCounter = [];
+                        countExistingCounter = [];
+                        for (var xx = 1; xx <= arridc.length; xx++) {
+                            for (var ii = 1; ii <= 31; ii++) {
+
+                                if (ii < 10) {
+                                    var qq = "0" + ii;
+                                } else {
+                                    var qq = ii;
+                                }
+                                if (xx < 10) {
+                                    var pp = "0" + "0" + xx;
+                                } else if (xx < 100) {
+                                    var pp = "0" + xx;
+                                } else {
+                                    var pp = xx;
+                                }
+                                let hn_al = "hn" + qq + "-" + pp;
+                                var myElem_al = document.getElementById(hn_al);
+                                if (myElem_al != null) {
+                                    if (!idExistingCounter.includes(document.getElementById(hn_al).value) && document
+                                        .getElementById(hn_al).value != "") {
+
+                                            idExistingCounter.push(document.getElementById(hn_al).value);
+
+                                            countExistingCounter.push(1);
+                                    } else {
+                                        /**
+                                         * source : https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf */
+                                        var position_al = idExistingCounter.indexOf(document.getElementById(hn_al).value);
+                                        countExistingCounter[position_al] = countExistingCounter[position_al] + 1;
+                                    }
+
+                                }
+
+                            }
+                        }
+                        for (var dd = 1; dd <= idExistingCounter.length; dd++) {
+                            console.log('id', idExistingCounter[dd]);
+                            console.log('count', countExistingCounter[dd]);
+
+                        }
+                        $.ajax({
+                                url: '{{ route('algorithmBestCombination') }}',
+                                type: 'POST',
+                                cache: false,
+                                async: false,
+                                data: {
+                                    _token: '{{ csrf_token() }}',
+                                    combination: finalLongestCombination,
+                                    id: idExistingCounter,
+                                    count: countExistingCounter
+
+                                },
+                                success: function(response) {
+                                   
+                                    if (Array.isArray(response.idArr)) {
+                                        let returnedNames = [];
+                                        let returnedIds = [];
+                                        for(var k = 0; k < (response.idArr).length; k++ ){
+                                           
+                            
+
+                            
+                                            returnedNames.push(response.namesArr[k]);
+                                            returnedIds.push(response.idArr[k]);
+                                            document.getElementById("hn" + mark_cell[k]).value = (response.idArr)[k];
+                                            document.getElementById("bn" + mark_cell[k]).value = (response.namesArr)[k];
+                                        }
+                                        for(var k = 0; k < (response.idArr).length; k++ ){
+                                            document.getElementById("hn" + mark_cell[k]).value = returnedIds[k];
+                                            document.getElementById("bn" + mark_cell[k]).value = returnedNames[k];
+                                        }
+                              
+
+                                    }
+
+
+                                },
+                                error: function(xhr, status, error) {
+                                    error_fetch_alert('Error fetching:');
+                                }
+                            });
+                        
+                        try {
+                            await Promise.all(ajax1Promises); // Wait for all ajax1 to finish
+
+                        } catch (error) {
+                            console.error("Error in ajax1 or ajax2", error);
+
+                        }
                         if (mark_cell_xnext.length != 0) {
                             for (var jj = 0; jj < mark_cell_xnext.length; jj++) {
                                 if (mark_cell_xnext[jj] == 1) {
@@ -2012,225 +1673,138 @@
                                     break;
                                 }
                             }
-                            if (new_reload == 1) {
-                                mark_cell_xnext = [];
-                                for (var mm = 0; mm < mark_cell.length; mm++) {
-                                    document.getElementById("hn" + mark_cell[mm]).value = "";
-                                    document.getElementById("bn" + mark_cell[mm]).value = "--vacant--";
-                                    var arrstr = "";
-                                    if (posible_combination.length != 0) {
-                                        for (var mj = 0; mj < posible_combination.length; mj++) {
-                                            if (mj == 0) {
-                                                arrstr = posible_combination[mj];
-                                            } else {
-                                                arrstr = arrstr + "-" + posible_combination[mj];
-                                            }
-                                        }
-                                        final_posible_combination.push(arrstr);
-                                    }
-                                    posible_combination = [];
-
-                                }
-                                i--;
-                            } else {
-                                for (var mm = 0; mm < mark_cell.length; mm++) {
-                                    document.getElementById("hn" + mark_cell[mm]).value = "";
-                                    document.getElementById("bn" + mark_cell[mm]).value = "--vacant--";
-                                }
-                                mark_cell_xnext = [];
-                                var arrstr = "";
-                                if (posible_combination.length != 0) {
-                                    for (var mj = 0; mj < posible_combination.length; mj++) {
-                                        if (mj == 0) {
-                                            arrstr = posible_combination[mj];
-                                        } else {
-                                            arrstr = arrstr + "-" + posible_combination[mj];
-                                        }
-                                    }
-                                    final_posible_combination.push(arrstr);
-
-                                }
+                        
 
 
-                                posible_combination = [];
-                                var nameid_al = new Array();
-                                var count_al = new Array();
-                                nameid_al = [];
-                                count_al = [];
-                                for (var xx = 1; xx <= arridc.length; xx++) {
-                                    for (var ii = 1; ii <= (i - 1); ii++) {
+                            posible_combination = [];
+                            var nameid_al = new Array();
+                            var count_al = new Array();
+                            nameid_al = [];
+                            count_al = [];
+                            for (var xx = 1; xx <= arridc.length; xx++) {
+                                for (var ii = 1; ii <= (i - 1); ii++) {
 
-                                        if (ii < 10) {
-                                            var qq = "0" + ii;
-                                        } else {
-                                            var qq = ii;
-                                        }
-                                        if (xx < 10) {
-                                            var pp = "0" + "0" + xx;
-                                        } else if (xx < 100) {
-                                            var pp = "0" + xx;
-                                        } else {
-                                            var pp = xx;
-                                        }
-                                        let hn_al = "hn" + qq + "-" + pp;
-                                        var myElem_al = document.getElementById(hn_al);
-                                        if (myElem_al != null) {
-                                            if (!nameid_al.includes(document.getElementById(hn_al).value) && document
-                                                .getElementById(hn_al).value != "") {
-
-                                                nameid_al.push(document.getElementById(hn_al).value);
-
-                                                count_al.push(1);
-                                            } else {
-                                                /**source : https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf */
-                    /*var position_al = nameid_al.indexOf(document.getElementById(hn_al).value);
-                                                            count_al[position_al] = count_al[position_al] + 1;
-                                                        }
-
-                                                    }
-
-                                                }
-                                            }
-
-                                            test_combination = new Array();
-                                            test_combination[0] = "27-27-0-28";
-                                            test_combination[1] = "27-27-0-28";
-                                            var output_arr = new Array();
-                                            output_arr = [];
-                                            $.ajax({
-                                                url: "../calendar/algorithm_select_best.php",
-                                                method: "POST",
-                                                dataType: "json",
-                                                cache: false,
-                                                async: false,
-                                                data: {
-                                                    combination: final_posible_combination,
-                                                    id: nameid_al,
-                                                    count: count_al
-                                                },
-                                                success: function(data) {
-                                                    output_arr = data;
-
-                                                }
-                                            });
-                                            for (var aa = 0; aa < mark_cell.length; aa++) {
-                                                var output_name = "";
-                                                for (var bb = 0; bb < output_arr[aa].length; bb++) {
-                                                    var t = output_arr[aa];
-                                                    var number_output = t.substring(0, bb + 1);
-                                                    if (t.substring(0, 2) != "0|") {
-                                                        if (Number.isInteger(parseInt(number_output)) == true && number_output.includes("|") ==
-                                                            false) {
-                                                        } else {
-                                                            document.getElementById("hn" + mark_cell[aa]).value = t.substring(0, bb);
-                                                            document.getElementById("bn" + mark_cell[aa]).value = t.substring(bb + 2);
-                                                            alert
-                                                            break;
-                                               
-                                                        }
-                                                    } else {
-                                                        document.getElementById("hn" + mark_cell[aa]).value = "";
-                                                        document.getElementById("bn" + mark_cell[aa]).value = "--vacant--";
-                                                        break;
-
-                                                    }
-
-
-                                                }
-                                            }
-                                            mark_cell = [];
-                                            final_posible_combination = [];
-                                        }
+                                    if (ii < 10) {
+                                        var qq = "0" + ii;
                                     } else {
+                                        var qq = ii;
+                                    }
+                                    if (xx < 10) {
+                                        var pp = "0" + "0" + xx;
+                                    } else if (xx < 100) {
+                                        var pp = "0" + xx;
+                                    } else {
+                                        var pp = xx;
+                                    }
+                                    let hn_al = "hn" + qq + "-" + pp;
+                                    var myElem_al = document.getElementById(hn_al);
+                                    if (myElem_al != null) {
+                                        if (!nameid_al.includes(document.getElementById(hn_al).value) && document
+                                            .getElementById(hn_al).value != "") {
+
+                                            nameid_al.push(document.getElementById(hn_al).value);
+
+                                            count_al.push(1);
+                                        } else {
+                                            /**
+                                             * source : https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf */
+                                            var position_al = nameid_al.indexOf(document.getElementById(hn_al).value);
+                                            count_al[position_al] = count_al[position_al] + 1;
+                                        }
 
                                     }
 
                                 }
+                            }
 
-                                load_employee_table();*/
+                
+                            var output_arr = new Array();
+                            output_arr = [];
+                
+                            mark_cell = [];
+                            final_posible_combination = [];
+                        }
+                    }
+                    success_alert("Algorithm finished successfully");
+                    load_employee_table();
 
 
                 }
 
 
-                function algorithm(from, to, id, date, element, nposition) {
 
-                    /* var al_return;
-                     var create_unmber = "";
-                     let sub_name;
-                     $.ajax({
-                         url: "../calendar/algorithm_pick.php",
-                         method: "POST",
-                         dataType: "json",
-                         cache: false,
-                         async: false,
-                         data: {
-                             id: id,
-                             from: from,
-                             to: to,
-                             date: date,
-                             y_id: yesterday_id,
-                             y_from: yesterday_from,
-                             y_to: yesterday_to,
-                             c_id: current_id,
-                             c_from: current_from,
-                             c_to: current_to,
-                             count_id: counter_al_id,
-                             count_number: counter_al_number,
-                             nposition: nposition
-                         },
-                         success: function(data) {
-                             al_return = JSON.stringify(data);
-
-                         }
-                     });
-                     al_return = al_return.substring(1, al_return.length - 1);
-                     mark_cell_xnext.push(al_return.substring(0, 1));
-                     if (al_return.substring(3, 4) != 0) {
-
-                         for (var b = 3; b < al_return.length; b++) {
-                             var number_input = al_return.substring(b, b + 1);
-
-                             if (Number.isInteger(parseInt(number_input)) == true) {
-                                 create_unmber = create_unmber + number_input;
-
-                             } else {
-                                 sub_name = al_return.substring(b + 2);
-                                 break;
-                             }
-
-
-                         }
-                         posible_combination.push(create_unmber);
-                         document.getElementById("hn" + element).value = create_unmber;
-                         document.getElementById("bn" + element).value = sub_name;
-                         var is_in_arr = 0;
-                         if (counter_al_id.length != 0) {
-                             for (var t = 0; t < counter_al_id.length; t++) {
-                                 if (create_unmber == counter_al_id[t]) {
-                                     is_in_arr = 1;
-                                     counter_al_number[t] = counter_al_number[t] + 1;
-                                     break;
-                                 }
-                             }
-                             if (is_in_arr == 0) {
-                                 counter_al_id.push(create_unmber);
-                                 counter_al_number.push(1);
-                             }
-
-                         } else {
-                             counter_al_id.push(create_unmber);
-                             counter_al_number.push(1);
-
-                         }
-
-
-                     } else {
-                         posible_combination.push("0");
-                     }
-
-
+               
+                    /*
+                    * Prvni filtrace algoritmu
                      */
+
+                function algorithm(from, to, id, date, element, nposition, cur_id, cur_from, cur_to, mk_cell) {
+                    var al_return;
+                    var create_unmber = "";
+                    let sub_name;
+                    $.ajax({
+                        url: '{{ route('algorithmPick') }}',
+                        type: 'POST',
+                        cache: false,
+                        async: false,
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            id: id,
+                            from: from,
+                            to: to,
+                            date: date,
+                            y_id: yesterday_id,
+                            y_from: yesterday_from,
+                            y_to: yesterday_to,
+                            c_id: cur_id,
+                            c_from: cur_from,
+                            c_to: cur_to,
+                            count_id: counter_al_id,
+                            count_number: counter_al_number,
+                            nposition: nposition
+
+                        },
+                        success: function(response) {
+                            mark_cell_xnext.push(response.mark_cell_xnext);
+                            if (response.create_nunmber != 0) {
+                             
+                                if (Array.isArray(response.all_users)) {
+                                    addArrayToCombination(response.all_users);
+
+                                }
+                                posible_combination.push(response.create_nunmber);
+                         
+                                var is_in_arr = 0;
+                                if (counter_al_id.length != 0) {
+                                    for (var t = 0; t < counter_al_id.length; t++) {
+                                        if (create_unmber == counter_al_id[t]) {
+                                            is_in_arr = 1;
+                                            counter_al_number[t] = counter_al_number[t] + 1;
+                                            break;
+                                        }
+                                    }
+                                    if (is_in_arr == 0) {
+                                        counter_al_id.push(response.create_nunmber);
+                                        counter_al_number.push(1);
+                                    }
+
+                                } else {
+                                    counter_al_id.push(response.create_nunmber);
+                                    counter_al_number.push(1);
+
+                                }
+
+
+                            } else {
+                                posible_combination.push(0);
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            error_fetch_alert('Error alg:');
+                        }
+                    });
+
+                   ;
                 }
             </script>
             <script>
@@ -2243,26 +1817,7 @@
                 // Get the <span> element that closes the modal
                 var span = document.getElementsByClassName("close")[0];
 
-                // When the user clicks the button, open the modal 
-                /*btn.onclick = function() {
-                  modal.style.display = "block";
-                }*/
-
-                // When the user clicks on <span> (x), close the modal
-                /*span.onclick = function() {
-                    modal.style.display = "none";
-                    document.getElementById("searchresult").innerHTML = "";
-                    document.getElementById("searchresult_assign").innerHTML = "";
-
-                }*/
-
-                // When the user clicks anywhere outside of the modal, close it
-                /*window.onclick = function(event) {
-                    if (event.target == modal) {
-                        modal.style.display = "none";
-
-                    }
-                }*/
+          
             </script>
 
 
@@ -2331,9 +1886,7 @@
                     for (let i = 1; i <= lastDateofMonth; i++) {
 
                         if (i == 1) {
-                            /*alert("--49-");
-                            alert(arrwdw[3]);
-                            alert("--49-");*/
+                 
                             var col_code = "";
                             for (var ps = 0; ps < arrcols.length; ps++) {
 
@@ -2346,10 +1899,14 @@
                                 col_code = col_code + "<th id='00-" + ff +
                                     "' style='padding:5px;border: solid black; position: sticky; top: 0px;z-index: 1' bgcolor='white' >" +
                                     arrcols[
-                                        ps] + "</th><input type='hidden' id='h00-" + ff + "' value='" + arrcols[1] +
+                                        ps] + "&nbsp;&nbsp;<i id='ic00-" + ff +
+                                    "' class='bi bi-info-circle'></i></th><input type='hidden' id='h00-" +
+                                    ff + "' value='" + arrcols[1] +
                                     "'><input type='hidden' id='i00-" + ff + "' value='" + arridc[ps] + "'>";
 
+
                             }
+
                             let final_col_code =
                                 "<table><tr style='font-size: 15px;pading:10px;border: solid black; position: sticky;top: 0px;z-index: 1' >" +
                                 col_code +
@@ -2365,7 +1922,7 @@
                                 } else if (arrobj[ps] != sea_obj) {
                                     col_code_obj = col_code_obj +
                                         "<th style='padding:5px;border: solid black;' colspan='" +
-                                        cou_obj + "' >" + arrname[ps - 1] + "</th>";
+                                        cou_obj + "' ><i class='" + arricons[ps - 1] + "'></i>&nbsp;" + arrname[ps - 1] + "</th>";
                                     sea_obj = arrobj[ps];
                                     cou_obj = 1;
                                 } else {
@@ -2384,159 +1941,7 @@
                             liTag += `${final_col_code_obj}`;
                             liTag += `${final_col_code}`;
                             col_code = "<th id='00-000'>Date</th>" + col_code;
-                            //alert(col_code);
-                            //alert(final_arr);
-
-                            /*var count_number = arrcols.length;
-                                                    //alert(count_number);
-                                                    //alert(count_number);
-
-                                                    var col_code = "";
-                                                    for (var ps = 0; ps < count_number; ps++) {
-
-                                                        let ff = ps + 1;
-                                                        if (ff < 10) {
-                                                            ff = "0" + "0" + ff;
-                                                        } else if (ff < 100) {
-                                                            ff = "0" + ff;
-                                                        }
-                                                        col_code = col_code + "<th id='00-" + ff + "' style='padding:5px;border: solid black' >" + arrcols[
-                                                                ps] + "</th><input type='hidden' id='h00-" + ff + "' value='" + arrcols[i] +
-                                                            "'><input type='hidden' id='i00-" + ff + "' value='" + arridc[ps] + "'>";
-
-                                                    }
-                                                    let final_col_code = "<table><tr style='font-size: 15px;pading:10px;border: solid black'>" + col_code +
-                                                        "</tr><table>";
-                                                    var col_code_obj = "<th id='00-000' rowspan='2'>Date</th>";
-                                                    var sea_obj = 0;
-                                                    var cou_obj = 0;
-                                                    var prea = "";
-                                                    for (var ps = 0; ps < count_number; ps++) {
-                                                        if (sea_obj == 0) {
-                                                            sea_obj = arrobj[ps];
-                                                            cou_obj++;
-                                                        } else if (arrobj[ps] != sea_obj) {
-                                                            col_code_obj = col_code_obj + "<th style='padding:5px;border: solid black' colspan='" +
-                                                                cou_obj + "' >" + arrname[ps - 1] + "</th>";
-                                                            sea_obj = arrobj[ps];
-                                                            cou_obj = 1;
-                                                        } else {
-                                                            cou_obj++;
-                                                        }
-                                                        prea = arrname[ps];
-
-                                                    }
-                                                    col_code_obj = col_code_obj + "<th style='padding:5px;border: solid black' colspan='" + cou_obj +
-                                                        "' >" + prea + "</th>";
-                                                    let final_col_code_obj = "<table><tr style='font-size: 15px;pading:10px;border: solid black'>" +
-                                                        col_code_obj + "</tr><table>";
-
-                                                    //alert(final_col_code_obj);
-
-                                                    var passedID = arridc;
-                                                    //alert(arridc);
-                              
-
-
-                                                    var lena = count_number;
-                                                    var tsaas = "1";
-                                                    var idp = JSON.stringify(passedID);
-                                                    var Yp = JSON.parse(currYear);
-                                                    var Mp = JSON.stringify(currMonth);
-                                                    //var ChA = JSON.stringify(passedCh);
-                                                    var passedSavedata1 = Array();
-                                                    var tes;
-                                                    var FormatMonth = currMonth + 1;
-                                                    //var MPa = JSON.stringify(ssaz);
-                                                    var a1sa = new Array();
-                                                    var text_return = new Array();
-                                                    //alert(ssaz);
-                                                    $.ajax({
-                                                        url: '{{ route('getCommentCalendar') }}',
-                                                        type: 'POST',
-                                       
-                                                        data: {
-                                                            _token: '{{ csrf_token() }}',
-                                                            id: arridc,
-                                                            year: currYear,
-                                                            month: FormatMonth,
-
-                                                        },
-                                                        success: function(data) {
-                                                            //text_return = JSON.stringify(data);
-                                                            var middle_arr = new Array();
-                                                            var second_arr = new Array();
-                                                            final_arr = data;
-                                        
-
-                                                        },
-                                                        error: function(xhr, status, error) {
-                                                            alert('Error fetching image:', error);
-                                                        }
-
-                                                    });
-                                              
-                                                    $.ajax({
-                                                        url: '{{ route('getSavedCalendarData') }}',
-                                                        type: 'POST',  
-                                                        data: {
-                                                            _token: '{{ csrf_token() }}',
-                                                            id: arridc,
-                                                            year: currYear,
-                                                            month: FormatMonth,
-                                                        },
-                                                        success: function(response) {
-                                                            //document.getElementById("help2").value = data321;
-                                                            //alert(response);
-                                                           // a1sa = JSON.stringify(data321);
-                                                           passedSavedata = response;
-                                                           alert(passedSavedata);
-                                                        },
-                                                        error: function(xhr, status, error) {
-                                                            alert('Error fetching image:', error);
-                                                        }
-
-                                                    });
-                                           
-                                                    var ffgh;
-                                                    /**AJAX pro warning eventy */
-                            /*$.ajax({
-                                type: "POST",
-                                url: "../calendar/cal_check_position.php",
-                                dataType: "json",
-                                cache: false,
-                                async: false,
-                                data: {
-                                    id: idp,
-                                    year: Yp,
-                                    month: MPa,
-                                    cha: ChA
-                                },
-                                success: function(data321) {
-                                    //alert(JSON.stringify(data321));
-
-                                }
-
-                            });*/
-                            /*var hhha = new Array();
-                            var sks = new Array();
-                            var qpw = [];
-                            var bnm = arridc.length;
-                            hhha = a1sa.split("]");
-                            for (let i = 0; i < bnm; i++) {
-                                hhha[i] = hhha[i].substring(2);
-                                passedSavedata[i] = [];
-                                sks = hhha[i].split(",");
-                                for (let j = 0; j < 32; j++) {
-                                    passedSavedata[i][j] = sks[j].substring(1, sks[j].length - 1);
-                                }
-                            }*/
-                            /*let tet = "";
-
-                            liTag += `${final_col_code_obj}`;
-                            liTag += `${final_col_code}`;
-                            col_code = "<th id='00-000'>Date</th>" + col_code;*/
-
+                        
 
 
 
@@ -2553,7 +1958,6 @@
                         f.setDate(f.getDate() + 1)
                         let day = weekday[fr.getDay()];
                         const m = fr.getMonth();
-                        //var dayy = day;
 
 
                         for (let e = 0; e < items.length; e++) {
@@ -2633,8 +2037,6 @@
 
                         let td_start = '<td id="';
                         let td_body = '" style="width: 140px;height: 120px;border:solid black;background-color: ';
-                        //let td_end =
-                        //  '"><div style="margin: 5px;width: 140px"><div class="row"><div class="col-12"><div class="input-group mb-1"><div class="input-group-prepend"><span class="input-group-text text-align-center" style="font-size:13px;width:52px;" id="basic-addon1">From</span></div>';
                         let td_end =
                             '"><div id="pb-';
                         let progress_start =
@@ -2645,12 +2047,12 @@
                         let progress_end =
                             '" aria-valuemin="0" aria-valuemax="100"></div></div><div style="margin: 5px;width: 140px;"><div class="row"><div class="col-12"><div class="row mb-1" style="padding-left:12px; padding-right:12px;"><div class="col-4 p-0 bg-light d-flex justify-content-center text-align-center rounded-right"><span style="font-size:13px;margin-top: 6px" id="basic-addon1">From</span></div>';
                         let timepicker_first_start =
-                            '<div class="col-8 p-0"><input class="form-control" onkeyup="CalculateKey(this.id)" type="time" style="font-size:13px;border-radius: 0 !important;" title="Time selector" id="tf';
+                            '<div class="col-8 p-0"><input class="form-control" onkeyup="CalculateKey(this.id, event)" type="time" style="font-size:13px;border-radius: 0 !important;" title="Time selector" id="tf';
                         let timepicker_first_body = '" value="';
                         let timepicker_first_end =
                             '"></div></div></div></div><div class="row mb-1" style="padding-left:12px; padding-right:12px;"><div class="col-4 p-0 bg-light d-flex justify-content-center text-align-center rounded-right"><span style="font-size:13px;margin-top: 6px">To</span></div>';
                         let timepicker_second_start =
-                            '<div class="col-8 p-0"><input type="time" class="form-control" onkeyup="CalculateKey(this.id)" style="font-size:13px; border-radius: 0 !important;" title="Time selector" id="tt';
+                            '<div class="col-8 p-0"><input type="time" class="form-control" onkeyup="CalculateKey(this.id, event)" style="font-size:13px; border-radius: 0 !important;" title="Time selector" id="tt';
                         let timepicker_second_body = '" value="';
                         let timepicker_second_end =
                             '"</div></div></div><div class="row"><div class="col-12"><div class="text-center">';
@@ -2690,7 +2092,6 @@
                         if (day == "Monday") {
                             s = "background-color:#303030; color:white;";
                             for (let q = 0; q < sz; q++) {
-                                //alert(passedSavedata[q][0]);
                                 if (passedSavedata[q][0] == "1" && first == 0) {
                                     if (passedSavedata[q][i] == "empty") {
                                         let p = q + 1;
@@ -2718,8 +2119,6 @@
                                         } else {
                                             var comment_icon = details_end;
                                         }
-                                        //str3 = str3.substring(1, str3.length - 1);
-                                        //str3 = load_comment(i, currMonth, currYear, arridc[q]);
 
                                         let p = q + 1;
                                         if (p < 10) {
@@ -2745,7 +2144,6 @@
                                                 break;
                                             }
                                         }
-                                        //fromBarCalculator(str1);
 
                                         char = char + 2;
                                         let namen = passedSavedata[q][i].substring(char);
@@ -2773,7 +2171,6 @@
                                     } else {
                                         var comment_icon = details_end;
                                     }
-                                    //str3 = str3.substring(1, str3.length - 1);
 
 
                                     let p = q + 1;
@@ -2788,7 +2185,6 @@
                                     } else {
                                         ii = i;
                                     }
-                                    //fromBarCalculator(str1);
 
                                     dts = dts.concat(td_start, ii, xxx, p, td_body, passedColor[q], td_end, ii, xxx, p,
                                         progress_start, fromBarCalculator(str1),
@@ -2847,8 +2243,6 @@
                                         } else {
                                             var comment_icon = details_end;
                                         }
-                                        //str3 = str3.substring(1, str3.length - 1);
-                                        //str3 = load_comment(i, currMonth, currYear, arridc[q]);
                                         let p = q + 1;
                                         if (p < 10) {
                                             p = "0" + "0" + p;
@@ -2901,7 +2295,6 @@
                                     } else {
                                         var comment_icon = details_end;
                                     }
-                                    //str3 = str3.substring(1, str3.length - 1);
                                     let p = q + 1;
                                     if (p < 10) {
                                         p = "0" + "0" + p;
@@ -2968,8 +2361,6 @@
                                         let str2 = passedSavedata[q][i];
                                         str2 = str2.substring(10, 15);
                                         let str3 = final_arr[q][i - 1];
-                                        //str3 = str3.substring(1, str3.length - 1);
-                                        //str3 = load_comment(i, currMonth, currYear, arridc[q]);
                                         if (str3 == "" || str3 == null) {
                                             var comment_icon = details_end_empty;
                                         } else {
@@ -3020,7 +2411,6 @@
                                     let str2 = passedTime[5][q];
                                     str2 = str2.substring(0, str2.length - 3);
                                     let str3 = final_arr[q][i - 1];
-                                    //str3 = str3.substring(1, str3.length - 1);
                                     if (str3 == "" || str3 == null) {
                                         var comment_icon = details_end_empty;
                                     } else {
@@ -3099,8 +2489,6 @@
                                         } else {
                                             var comment_icon = details_end;
                                         }
-                                        //str3 = str3.substring(1, str3.length - 1);
-                                        //str3 = load_comment(i, currMonth, currYear, arridc[q]);
                                         let p = q + 1;
                                         if (p < 10) {
                                             p = "0" + "0" + p;
@@ -3152,7 +2540,6 @@
                                     } else {
                                         var comment_icon = details_end;
                                     }
-                                    //str3 = str3.substring(1, str3.length - 1);
                                     let p = q + 1;
                                     if (p < 10) {
                                         p = "0" + "0" + p;
@@ -3225,8 +2612,6 @@
                                         } else {
                                             var comment_icon = details_end;
                                         }
-                                        //str3 = str3.substring(1, str3.length - 1);
-                                        //str3 = load_comment(i, currMonth, currYear, arridc[q]);
                                         let p = q + 1;
                                         if (p < 10) {
                                             p = "0" + "0" + p;
@@ -3277,7 +2662,6 @@
                                     } else {
                                         var comment_icon = details_end;
                                     }
-                                    //str3 = str3.substring(1, str3.length - 1);
                                     let p = q + 1;
                                     if (p < 10) {
                                         p = "0" + "0" + p;
@@ -3350,8 +2734,6 @@
                                         } else {
                                             var comment_icon = details_end;
                                         }
-                                        //str3 = str3.substring(1, str3.length - 1);
-                                        //str3 = load_comment(i, currMonth, currYear, arridc[q]);
                                         let p = q + 1;
                                         if (p < 10) {
                                             p = "0" + "0" + p;
@@ -3403,7 +2785,6 @@
                                     } else {
                                         var comment_icon = details_end;
                                     }
-                                    //str3 = str3.substring(1, str3.length - 1);
                                     let p = q + 1;
                                     if (p < 10) {
                                         p = "0" + "0" + p;
@@ -3475,8 +2856,6 @@
                                         } else {
                                             var comment_icon = details_end;
                                         }
-                                        //str3 = str3.substring(1, str3.length - 1);
-                                        //str3 = load_comment(i, currMonth, currYear, arridc[q]);
                                         let p = q + 1;
                                         if (p < 10) {
                                             p = "0" + "0" + p;
@@ -3503,7 +2882,6 @@
                                         }
                                         char = char + 2;
                                         let namen = passedSavedata[q][i].substring(char);
-                                        //alert(str);
                                         dts = dts.concat(td_start, ii, xxx, p, td_body, passedColor[q], td_end, ii, xxx, p,
                                             progress_start, fromBarCalculator(
                                                 str1), progress_fill, fromBarCalculator(str1), progress_middle, toBarCalculator(
@@ -3529,7 +2907,6 @@
                                     } else {
                                         var comment_icon = details_end;
                                     }
-                                    //str3 = str3.substring(1, str3.length - 1);
                                     let p = q + 1;
                                     if (p < 10) {
                                         p = "0" + "0" + p;
@@ -3602,10 +2979,7 @@
 
                     currentDate.innerText = `${months[currMonth]} ${currYear}`; // passing current mon and yr as currentDate text
                     daysTag.innerHTML = liTag;
-                    //alert();
-                    /*f_load = 1;
-                    currentDate.innerText = `${months[currMonth]} ${currYear}`; // passing current mon and yr as currentDate text
-                    daysTag.innerHTML = liTag;*/
+                 
 
                     load_employee_table();
 
@@ -3628,7 +3002,7 @@
                         }
                         offer_array = [];
                         queryLoader(); // calling renderCalendar function
-                        //load_employee_table();
+                        
 
 
                     });
@@ -3637,38 +3011,7 @@
 
 
             <script>
-                function add_dat() {
-                    /* var newww = document.getElementById("current_load_date").value;
-                     var neww = newww.substring(0, 4);
-                     var news = newww.substring(5, 7);
-                     var passedIDB = "";
-                     var passedYY = "";
-                     var passedMM = "";
-                     var passedChCH = "";
-                     var tsaas = "1";
-                     var idb = JSON.stringify(passedIDB);
-                     var Ypb = JSON.parse(neww);
-                     var Mpb = JSON.stringify(news);
-                     var ChAb = JSON.stringify(passedChCH);
-                     var Cdsa = JSON.stringify(newww);
-                     var tess;
-                     $.ajax({
-                         type: "POST",
-                         url: "../calendar/get-ajax.php",
-                         dataType: "html",
-                         data: {
-                             id: idb,
-                             year: Ypb,
-                             month: Mpb,
-                             cha: ChAb,
-                             nn: Cdsa
-                         },
-                         success: function(data3211) {
-                             document.getElementById("help").value = data3211;
-                             vl();
-                         }
-                     });*/
-                }
+                
                 var r_type = 555;
 
                 function filter(main_obj) {
@@ -3678,11 +3021,15 @@
                     arridc = [];
                     arrcols = [];
                     arrcolor = [];
+                    arrcolordark = [];
                     arrwdw = [];
                     arrtish = [];
                     arrobj = [];
                     arrname = [];
+                    arricons = [];
+                    arrdescription = [];
                     f_load = 0;
+     
                     var results = new Array();
                     $.ajax({
                         url: '{{ route('pickLoaderCalendar') }}',
@@ -3696,15 +3043,12 @@
                             type: r_type
                         },
                         success: function(data) {
-                            //results = JSON.stringify(data);
-                            //alert(data.id_shift);
+
                             var counterRows = 0;
                             var ooot;
-                            //alert(data.length);
-                            //arrwdw[0][0] = "5555";
+                 
                             data.forEach(item => {
-                                //alert(`${item.monday}`);
-                                //shi_search.push(`${item.value}`);
+
                                 if (counterRows == 0) {
                                     for (let z = 0; z < 7; z++) {
                                         arrwdw[z] = [];
@@ -3724,7 +3068,7 @@
                                 arrcols.push(`${item.shift_name}`);
                                 arrcolor.push(`${item.color}`);
                                 arrcolordark.push(`${item.darkcolor}`);
-                                //arrwdw[0][counterRows] =
+
                                 arrwdw[0][counterRows] = `${item.monday}`;
                                 arrwdw[1][counterRows] = `${item.tuesday}`;
                                 arrwdw[2][counterRows] = `${item.wednesday}`;
@@ -3748,216 +3092,37 @@
                                 arrtish[13][counterRows] = `${item.sun_to}`;
                                 arrobj.push(`${item.id_object}`);
                                 arrname.push(`${item.object_name}`);
-                                // alert("----");
+                                arrdescription.push(`${item.description}`);
+                                arricons.push(`${item.object_icon}`);
                                 ooot = `${item.monday}`;
                                 counterRows++;
                             });
-
-                            /*var count_number = arrcols.length;
-                                                    alert("----");
-                                          
-
-                                                    var col_code = "";
-                                                    for (var ps = 0; ps < count_number; ps++) {
-
-                                                        let ff = ps + 1;
-                                                        if (ff < 10) {
-                                                            ff = "0" + "0" + ff;
-                                                        } else if (ff < 100) {
-                                                            ff = "0" + ff;
-                                                        }
-                                                        col_code = col_code + "<th id='00-" + ff + "' style='padding:5px;border: solid black' >" + arrcols[
-                                                                ps] + "</th><input type='hidden' id='h00-" + ff + "' value='" + arrcols[i] +
-                                                            "'><input type='hidden' id='i00-" + ff + "' value='" + arridc[ps] + "'>";
-
-                                                    }
-                                                    let final_col_code = "<table><tr style='font-size: 15px;pading:10px;border: solid black'>" + col_code +
-                                                        "</tr><table>";
-                                                    var col_code_obj = "<th id='00-000' rowspan='2'>Date</th>";
-                                                    var sea_obj = 0;
-                                                    var cou_obj = 0;
-                                                    var prea = "";
-                                                    for (var ps = 0; ps < count_number; ps++) {
-                                                        if (sea_obj == 0) {
-                                                            sea_obj = arrobj[ps];
-                                                            cou_obj++;
-                                                        } else if (arrobj[ps] != sea_obj) {
-                                                            col_code_obj = col_code_obj + "<th style='padding:5px;border: solid black' colspan='" +
-                                                                cou_obj + "' >" + arrname[ps - 1] + "</th>";
-                                                            sea_obj = arrobj[ps];
-                                                            cou_obj = 1;
-                                                        } else {
-                                                            cou_obj++;
-                                                        }
-                                                        prea = arrname[ps];
-
-                                                    }
-                                                    col_code_obj = col_code_obj + "<th style='padding:5px;border: solid black' colspan='" + cou_obj +
-                                                        "' >" + prea + "</th>";
-                                                    let final_col_code_obj = "<table><tr style='font-size: 15px;pading:10px;border: solid black'>" +
-                                                        col_code_obj + "</tr><table>";
-
-                                                    //alert(final_col_code_obj);
-
-                                                    var passedID = arridc;
-                                                    alert(arridc);
-                                       
-
-
-                                                    /*var lena = count_number;
-                                                    var tsaas = "1";
-                                                    var idp = JSON.stringify(passedID);
-                                                    var Yp = JSON.parse(currYear);
-                                                    var Mp = JSON.stringify(currMonth);
-                                                    //var ChA = JSON.stringify(passedCh);
-                                                    var passedSavedata1 = Array();
-                                                    var tes;
-                                                    var FormatMonth = currMonth + 1;
-                                                    //var MPa = JSON.stringify(ssaz);
-                                                    var a1sa = new Array();
-                                                    var text_return = new Array();
-                                                    //alert(ssaz);
-                                                    $.ajax({
-                                                        url: '{{ route('getCommentCalendar') }}',
-                                                        type: 'POST',
-                                                        data: {
-                                                            _token: '{{ csrf_token() }}',
-                                                            id: arridc,
-                                                            year: currYear,
-                                                            month: FormatMonth,
-
-                                                        },
-                                                        success: function(data) {
-                                                            //text_return = JSON.stringify(data);
-                                                            var middle_arr = new Array();
-                                                            var second_arr = new Array();
-                                                            final_arr = data;
-                                                       
-
-                                                        },
-                                                        error: function(xhr, status, error) {
-                                                            alert('Error fetching image:', error);
-                                                        }
-
-                                                    });
-                                         
-                                                    $.ajax({
-                                                        url: '{{ route('getSavedCalendarData') }}',
-                                                        type: 'POST',  
-                                                        data: {
-                                                            _token: '{{ csrf_token() }}',
-                                                            id: arridc,
-                                                            year: currYear,
-                                                            month: FormatMonth,
-                                                        },
-                                                        success: function(response) {
-
-                                                           passedSavedata = response;
-                                                           alert(passedSavedata);
-                                                        },
-                                                        error: function(xhr, status, error) {
-                                                            alert('Error fetching image:', error);
-                                                        }
-
-                                                    });*/
-                            //renderCalendar();
-                            // alert(arrobj[0]);
-                            //dataLoader();
                         },
                         error: function(xhr, status, error) {
-                            alert('Error fetching imageaa _ filter:', error);
+                            error_fetch_alert('Error fetching imageaa _ filter:');
                         }
                     });
-
-                    /*arridc = [];
-                    arrcols = [];
-                    arrcolor = [];
-                    arrwdw = [];
-                    arrcolordark = [];
-                    arrtish = [];
-                    arrobj = [];
-                    arrname = [];
-                    results = results.substring(1, results.length - 1);
-                    if (results.length > 7) {
-                        var hhha = new Array();
-                        var sks = new Array();
-                        var qpw = [];
-                        var bnm = lshi;
-                        hhha = results.split("]");
-                        var bnm = hhha.length;
-                        for (let i = 0; i < bnm; i++) {
-                            var tt = hhha[i].length;
-                            if (i == 0) {
-                                hhha[i] = hhha[i].substring(1, tt);
-
-                            } else {
-                                hhha[i] = hhha[i].substring(2, tt);
-                            }
-                            if (i == 0) {
-                                for (let z = 0; z < 7; z++) {
-                                    arrwdw[z] = [];
-                                    for (let j = 0; j < hhha.length; j++) {
-                                        arrwdw[z][j] = 0;
-                                    }
-                                }
-                                for (let z = 0; z < 14; z++) {
-                                    arrtish[z] = [];
-                                    for (let j = 0; j < hhha.length; j++) {
-                                        arrtish[z][j] = 0;
-                                    }
-                                }
-                            }
-
-                            sks = hhha[i].split(",");
-                            arridc[i] = sks[0].substring(1, sks[0].length - 1);
-                            arrcols[i] = sks[1].substring(1, sks[1].length - 1);
-                            arrcolor[i] = sks[2].substring(1, sks[2].length - 1);
-                            arrcolordark[i] = sks[3].substring(1, sks[3].length - 1);
-                            arrwdw[0][i] = sks[4].substring(1, sks[4].length - 1);
-                            arrwdw[1][i] = sks[5].substring(1, sks[5].length - 1);
-                            arrwdw[2][i] = sks[6].substring(1, sks[6].length - 1);
-                            arrwdw[3][i] = sks[7].substring(1, sks[7].length - 1);
-                            arrwdw[4][i] = sks[8].substring(1, sks[8].length - 1);
-                            arrwdw[5][i] = sks[9].substring(1, sks[9].length - 1);
-                            arrwdw[6][i] = sks[10].substring(1, sks[10].length - 1);
-                            arrtish[0][i] = sks[11].substring(1, sks[11].length - 1);
-                            arrtish[1][i] = sks[12].substring(1, sks[12].length - 1);
-                            arrtish[2][i] = sks[13].substring(1, sks[13].length - 1);
-                            arrtish[3][i] = sks[14].substring(1, sks[14].length - 1);
-                            arrtish[4][i] = sks[15].substring(1, sks[15].length - 1);
-                            arrtish[5][i] = sks[16].substring(1, sks[16].length - 1);
-                            arrtish[6][i] = sks[17].substring(1, sks[17].length - 1);
-                            arrtish[7][i] = sks[18].substring(1, sks[18].length - 1);
-                            arrtish[8][i] = sks[19].substring(1, sks[19].length - 1);
-                            arrtish[9][i] = sks[20].substring(1, sks[20].length - 1);
-                            arrtish[10][i] = sks[21].substring(1, sks[21].length - 1);
-                            arrtish[11][i] = sks[22].substring(1, sks[22].length - 1);
-                            arrtish[12][i] = sks[23].substring(1, sks[23].length - 1);
-                            arrtish[13][i] = sks[24].substring(1, sks[24].length - 1);
-                            arrobj[i] = sks[25].substring(1, sks[25].length - 1);
-                            arrname[i] = sks[26].substring(1, sks[26].length - 1);
-
-                            if (i == bnm - 2) {
-                                call_cal();
-                            }
-
-
-                        }
-
-
-                    } else {
-                        daysTag.innerHTML = "";
-                        Empty();
-                    }*/
 
                 }
                 var tst = 0;
 
-                function CalculateKey(id_selector) {
+
+
+                function CalculateKey(id_selector, event) {
+                    if (event.keyCode == 13) {
+                        var first_part = id_selector.substring(0, 2);
+                        var second_part = id_selector.substring(2);
+
+                        if (first_part == "tf") {
+                            document.getElementById("tt" + second_part).focus();
+                        } else if (first_part == "tt") {
+                            document.getElementById("bn" + second_part).click();
+
+                        }
+                    }
                     var id_cut = id_selector.substring(2);
                     var from_key = document.getElementById('tf' + id_cut).value;
                     var to_key = document.getElementById('tt' + id_cut).value;
-                    //alert(from_key);
                     let progress_start_key =
                         '<div class="progress-bar bg-light" role="progressbar" style="width: ';
                     let progress_fill_key = '%" aria-valuenow="';
@@ -4000,7 +3165,6 @@
 
 
                     var passedID = arridc;
-                    //alert(arridc);
 
 
 
@@ -4009,14 +3173,11 @@
                     var idp = JSON.stringify(passedID);
                     var Yp = JSON.parse(currYear);
                     var Mp = JSON.stringify(currMonth);
-                    //var ChA = JSON.stringify(passedCh);
 
                     var tes;
                     var FormatMonth = currMonth + 1;
-                    //var MPa = JSON.stringify(ssaz);
                     var a1sa = new Array();
                     var text_return = new Array();
-                    //alert(ssaz);
                     $.ajax({
                         url: '{{ route('getCommentCalendar') }}',
                         type: 'POST',
@@ -4028,7 +3189,6 @@
 
                         },
                         success: function(data) {
-                            //text_return = JSON.stringify(data);
                             var middle_arr = new Array();
                             var second_arr = new Array();
                             final_arr = data;
@@ -4042,217 +3202,59 @@
                                     month: FormatMonth,
                                 },
                                 success: function(response) {
-                                    //alert(response);
+
                                     passedSavedata = response;
-                                    //alert(passedSavedata);
-                                    //var ll = "sss";
+                              
+
                                     renderCalendar();
+                                    for (var ps = 0; ps < arrcols.length; ps++) {
+
+                                        let ff = ps + 1;
+                                        if (ff < 10) {
+                                            ff = "0" + "0" + ff;
+                                        } else if (ff < 100) {
+                                            ff = "0" + ff;
+                                        }
+                                        if (arrdescription[ps] != "null") {
+                                            var newDescription = arrdescription[ps].replace(/\n/g, '<br>');
+
+                                            tippy("#ic00-" + ff, {
+                                                content: '<strong><span style="color: aqua;">Description :<br></span>' +
+                                                    newDescription + '</strong>',
+                                                allowHTML: true,
+                                            });
+                                        } else {
+                                            tippy("#ic00-" + ff, {
+                                                content: '<strong><span style="color: aqua;">Description :<br></span>//</strong>',
+                                                allowHTML: true,
+                                            });
+                                        }
+
+                                    }
                                 },
                                 error: function(xhr, status, error) {
-                                    alert('Error fetching imagebb:', error);
+                                    error_fetch_alert('Error fetching image');
                                 }
 
                             });
 
                         },
                         error: function(xhr, status, error) {
-                            alert('Error fetching imagecc:', error);
+                            error_fetch_alert('Error fetching imagecc:');
                         }
 
                     });
-                    /*tttttt = 1;
-                    alert(tttttt);*/
-                    //alert(final_arr);
-
-                    /*$.ajax({
-                        url: '{{ route('getSavedCalendarData') }}',
-                        type: 'POST',  
-                        data: {
-                            _token: '{{ csrf_token() }}',
-                            id: arridc,
-                            year: currYear,
-                            month: FormatMonth,
-                        },
-                        success: function(response) {
-
-                           passedSavedata = response;
-                           //alert(passedSavedata);
-                        },
-                        error: function(xhr, status, error) {
-                            alert('Error fetching image:', error);
-                        }
-
-                    });*/
+                  
                 }
 
-                function call_cal() {
-                    /*renderCalendar();
-                    load_employee_table();*/
-
-
-                }
-
-                function Empty() {
-                    /*let head = "<table><tr style='font-size: 15px;pading:10px;border: solid black'><th>" + lastDateofMonth +
-                        "</th></tr><table>";
-                    let Tac = head;
-                    daysTag.innerHTML = head;*/
-                }
-
-                function load_comment(day, month, year, id) {
-                    /*var return_com;
-                    if (day < 10) {
-                        day = "0" + day;
-                    }
-                    month = month + 1;
-                    if (month < 10) {
-                        month = "0" + month;
-                    }
-                    var date_comment = year + "" + month + "" + day;
-
-                    $.ajax({
-
-
-                        url: "../calendar/load_calendar_comment.php",
-                        method: "POST",
-                        dataType: "json",
-                        cache: false,
-                        async: false,
-                        data: {
-                            id: id,
-                            date: date_comment
-                        },
-                        success: function(data) {
-                            return_com = data;
-                        }
-
-                    });
-                    return return_com;*/
-                }
-
-
-
-                function vl() {
-                    /* tess = document.getElementById("help").textContent;
-                     var a1 = JSON.parse(document.getElementById("help").value);
-                     for (let x = 0; x < a1.length + 1; x++) {
-
-                         for (let i = 1; i < 32; i++) {
-                             if (a1[x][0] == "0") {
-
-                             } else {
-                                 if (a1[x][i] == "empty") {
-                                     if (x < 10) {
-                                         var mr = "0" + "0" + (x + 1);
-                                     } else if (x < 100) {
-                                         var mr = "0" + (x + 1);
-                                     } else {
-                                         var mr = (x + 1);
-                                     }
-                                     if (i < 10) {
-                                         var mrs = "0" + i;
-                                     } else {
-                                         var mrs = i;
-                                     }
-                                     let fa = mrs + "-" + mr;
-                                     let end = "";
-                                     let chq = document.getElementById(fa);
-                                     if (chq !== null) {
-                                         let can = "";
-                                         let mmm = '<center><button onClick="reply_click(this.id)" id="b';
-                                         let nnn = '">V</button></center>';
-                                         can = mmm + fa + nnn;
-                                         chq.innerHTML = can;
-                                     }
-                                 } else {
-                                     if (x < 10) {
-                                         var mr = "0" + "0" + (x + 1);
-                                     } else if (x < 100) {
-                                         var mr = "0" + (x + 1);
-                                     } else {
-                                         var mr = (x + 1);
-                                     }
-                                     if (i < 10) {
-                                         var mrs = "0" + i;
-                                     } else {
-                                         var mrs = i;
-                                     }
-                                     let fa = mrs + "-" + mr;
-                                     let end = " ";
-                                     let chp = document.getElementById(fa);
-                                     if (chp !== null) {
-                                         let final = "";
-                                         let btn1 =
-                                             '<button align="right" style="position:absolute;top: 0px;right: 0px;font-size: 8px;" onClick="canceled(this.id)" id="x';
-                                         let btn2 = '">V</button><br><br><br><br><br><input type="button" id="bn';
-                                         let b2 = '">X</button><br><input type="button" id="bn';
-                                         let btn3 = '" onClick="Open_name(this.id)" value="'
-                                         let btn6 = '"><input type="hidden" id="hn';
+           
 
 
 
 
-                                         let btn4 = '" value="';
-                                         let btn5 = '"></center></div>';
-                                         let val = a1[x][i];
-                                         let val1 = val.substring(0, 5);
-                                         let val2 = val.substring(10, 15);
-                                         let val3 = "";
-                                         var count = 0;
-                                         var char = 20;
-                                         for (;;) {
-                                             let result = val.charAt(char);
-                                             if (result != "/") {
-                                                 val3 = val3 + result;
-                                                 char++;
-                                             } else {
-                                                 break;
-                                             }
-                                         }
-                                         char = char + 2;
-                                         let namen = val.substring(char);
-                                         let brr = "<br>";
-                                         let tm1 =
-                                             '<div class="form-group"><center><p class="text-light" style="display:inline;font-size:17px;float:left;margin-top:5px;margin-bottom:5px">FROM:</p><input type="time" style="height: 38px;width: 75px;font-size:10px;display:inline;float:right;clear: right;" class="form-control" id="tf';
-                                         let tm2 =
-                                             '<p class="text-light" style="display:inline;font-size:17px;float:left;margin-top:7px;margin-bottom:10px;clear: left;">TO:</p><input type="time" style="height: 38px;width: 75px;font-size:10px;display:inline;float:right;clear: right;margin-bottom:5px" class="form-control" id="tt';
-                                         let tmv = '" value="';
-                                         let tmc = '">';
-                                         let asz = '<input type="time" id="tp01-001" value="00:00">';
-                                         let bt =
-                                             '<button class="btn btn-danger" style="position:relative;border: 1px solid black;font-size:12px;padding-bottom 10px:" onClick="canceled(this.id)" id="x';
-                                         let bt2 = '"><i class="bi bi-trash"></i></button>';
-                                         final = bt + fa + bt2 + tm1 + fa + tmv + val1 + tmc + brr + tm2 + fa + tmv + val2 + tmc +
-                                             btn1 + fa + btn2 + fa + btn3 + namen + btn6 + fa + btn4 + val3 + btn5;
-                                         chp.innerHTML = "";
-                                         chp.innerHTML = final;
-                                         load_employee_table();
-                                     }
-                                 }
-                             }
-                         }
-                     }*/
-                }
             </script>
             <script>
-                function FFF() {
-                    /*  let r = 10;
-                      let nulls = 0;
-                      if (r < 10) {
-                          r = "0" + r;
-                      }
-                      labelElement.innerHTML =
-                          r;*/
-                }
-
-
-                function prependZero(number) {
-                    /*if (number < 9)
-                        return "0" + number;
-                    else
-                        return number;*/
-                }
-
+                
 
                 function reply_click(clicked_id) {
                     let result123 = clicked_id.substring(1, 7);
@@ -4291,12 +3293,12 @@
                     let new_start =
                         '<div style="margin: 5px;width: 140px"><div class="row"><div class="col-12"><div class="row mb-1" style="padding-left:12px; padding-right:12px;"><div class="col-4 p-0 bg-light d-flex justify-content-center text-align-center rounded-right"><span style="font-size:13px;margin-top: 6px" id="basic-addon1">From</span></div>';
                     let timepicker_first_start =
-                        '<div class="col-8 p-0"><input class="form-control" type="time" style="font-size:13px;border-radius: 0 !important;" title="Time selector" id="tf';
+                        '<div class="col-8 p-0"><input class="form-control" type="time" onkeyup="CalculateKey(this.id, event)" style="font-size:13px;border-radius: 0 !important;" title="Time selector" id="tf';
                     let timepicker_first_body = '" value="';
                     let timepicker_first_end =
-                        '"></div></div></div></div><div class="row"><div class="col-12"><div class="row mb-1" style="padding-left:12px; padding-right:12px;"><div class="col-4 p-0 bg-light d-flex justify-content-center text-align-center rounded-right"><span style="font-size:13px;margin-top: 6px" id="basic-addon1">From</span></div>';
+                        '"></div></div></div></div><div class="row"><div class="col-12"><div class="row mb-1" style="padding-left:12px; padding-right:12px;"><div class="col-4 p-0 bg-light d-flex justify-content-center text-align-center rounded-right"><span style="font-size:13px;margin-top: 6px" id="basic-addon1">To</span></div>';
                     let timepicker_second_start =
-                        '<div class="col-8 p-0"><input type="time" class="form-control" style="font-size:13px;border-radius: 0 !important;" title="Time selector" id="tt';
+                        '<div class="col-8 p-0"><input type="time" class="form-control" onkeyup="CalculateKey(this.id, event)" style="font-size:13px;border-radius: 0 !important;" title="Time selector" id="tt';
                     let timepicker_second_body = '" value="';
                     let timepicker_second_end =
                         '"></div></div></div></div><div class="row"><div class="col-12"><div class="text-center">';
@@ -4330,6 +3332,7 @@
 
                     let str1 = "00:00:00";
                     let str2 = "00:00:00";
+                    doneChnages = true;
 
                     final = progress_start1 + result123 + progress_start2 + fromBarCalculator(str1) + progress_fill +
                         fromBarCalculator(str1) + progress_middle + toBarCalculator(str1, str2) + progress_fill + toBarCalculator(
@@ -4343,12 +3346,22 @@
                         result123 + copy_end;
 
                     cha.innerHTML = final;
-                    //load_employee_table();
+                    load_employee_table();
                 }
 
 
 
                 function canceled(clicked_id) {
+                    if(controlDelete == true ){
+                        question_delete_alert(clicked_id);
+
+                    }else{
+                        
+                        deleteCell(clicked_id);
+                    }
+               
+                }
+                function deleteCell(clicked_id){
                     let result123 = clicked_id.substring(1, 7);
                     let cha = document.getElementById(result123);
                     let can = "";
@@ -4357,21 +3370,28 @@
                     let nnn = '"><i class="bi bi-plus fa-10x"></i></button></center>';
                     can = mmm + result123 + nnn;
                     cha.innerHTML = can;
-                    load_employee_table();
+                    doneChnages = true;
+                    load_employee_table();  
                 }
                 var from_paste = "";
                 var to_paste = "";
+                var bar_content = "";
+
                 var exist_arr = new Array()
                 var from_paste_arr = new Array();
                 var to_paste_arr = new Array();
+                var bar_content_arr = new Array();
+
 
                 function paste_cell(paste_id) {
-
+                    doneChnages = true;
                     paste_id = paste_id.substring(2);
 
                     if (from_paste != "") {
                         document.getElementById("tf" + paste_id).value = from_paste;
-                        document.getElementById("tt" + paste_id).value = to_paste
+                        document.getElementById("tt" + paste_id).value = to_paste;
+                        document.getElementById("pb-" + paste_id).innerHTML = bar_content;
+
                     }
                 }
 
@@ -4380,7 +3400,7 @@
 
                     from_paste = document.getElementById("tf" + copy_id).value;
                     to_paste = document.getElementById("tt" + copy_id).value;
-
+                    bar_content = document.getElementById("pb-" + copy_id).innerHTML;
 
                 }
 
@@ -4405,11 +3425,14 @@
                         if (document.getElementById('tf' + copy_id + "-" + col_id) != null) {
                             exist_arr[i - 1] = 1;
                             from_paste_arr[i - 1] = document.getElementById("tf" + copy_id + "-" + col_id).value;
-                            to_paste_arr[i - 1] = to_paste = document.getElementById("tt" + copy_id + "-" + col_id).value;
+                            to_paste_arr[i - 1] = document.getElementById("tt" + copy_id + "-" + col_id).value;
+                            bar_content_arr[i - 1] = document.getElementById("pb-" + copy_id + "-" + col_id).innerHTML;
                         } else {
                             exist_arr[i - 1] = 0;
                             from_paste_arr[i - 1] = "00:00";
                             to_paste_arr[i - 1] = "00:00";
+                            bar_content_arr[i - 1] = "----";
+
                         }
 
                     }
@@ -4417,6 +3440,7 @@
                 }
 
                 function paste_row(paste_id) {
+                    doneChnages = true;
                     paste_id = paste_id.substring(2);
                     if (paste_id < 10) {
                         paste_id = "0" + paste_id;
@@ -4444,9 +3468,13 @@
                                     reply_click(r_id);
                                     document.getElementById("tf" + paste_id + "-" + col_id).value = from_paste_arr[i - 1];
                                     document.getElementById("tt" + paste_id + "-" + col_id).value = to_paste_arr[i - 1];
+                                    document.getElementById("pb-" + paste_id + "-" + col_id).innerHTML = bar_content_arr[i - 1];
+
                                 } else {
                                     document.getElementById("tf" + paste_id + "-" + col_id).value = from_paste_arr[i - 1];
                                     document.getElementById("tt" + paste_id + "-" + col_id).value = to_paste_arr[i - 1];
+                                    document.getElementById("pb-" + paste_id + "-" + col_id).innerHTML = bar_content_arr[i - 1];
+
                                 }
                             }
 
@@ -4487,7 +3515,30 @@
                     });
 
                 }
+                function error_fetch_alert(message) {
+                    Swal.fire({
+                        title: "Error fetching data",
+                        text: "",
+                        icon: "error"
+                    });
 
+                }
+                function question_delete_alert(clicked_id) {
+                    Swal.fire({
+                        title: "Do you want to delete this shift?",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Confirm"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            deleteCell(clicked_id);
+                      
+                        }
+
+                    });
+                }
                 function question_alert(message) {
                     Swal.fire({
                         title: "Are you sure you want to offer the shift ?",
@@ -4501,11 +3552,25 @@
                         if (result.isConfirmed) {
 
                             insertOffer();
-                            /*Swal.fire({
-                                title: "Success",
-                                text: "T",
-                                icon: "success"
-                            });*/
+                        
+                        }
+
+                    });
+                }
+                function algorithm_alert() {
+                    Swal.fire({
+                        title: "Do you want to start algorithm ?",
+                        text: "It will fill vacant shifts",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Confirm"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+
+                            cell_selector();
+                        
                         }
 
                     });
@@ -4522,21 +3587,15 @@
                         confirmButtonText: "Confirm"
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            //alert(selected_picker_cell);
                             document.getElementById("hn" + selected_picker_cell).value = picker_global_id;
-                            document.getElementById("bn" + selected_picker_cell).value = document.getElementById('name_selected').innerHTML;
-                            if (offer_array.includes(selected_picker_cell) == true){
+                            document.getElementById("bn" + selected_picker_cell).value = document.getElementById(
+                                'name_selected').innerHTML;
+                            if (offer_array.includes(selected_picker_cell) == true) {
                                 offer_array = offer_array.filter(number => number !== selected_picker_cell);
                                 load_employee_table();
-                               // alert(offer_array);
 
                             }
-                            //insertOffer();
-                            /*Swal.fire({
-                                title: "Success",
-                                text: "T",
-                                icon: "success"
-                            });*/
+                     
                         }
 
                     });

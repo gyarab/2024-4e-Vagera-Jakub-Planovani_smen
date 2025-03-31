@@ -81,7 +81,6 @@
                                 }
                                 $(document).on("ajaxComplete", function() {
                                     var input_obj = document.getElementById("select_obj_waiting").value;
-                                    // alert(input_obj);
                                     if (repeat_counter == 0) {
                                         repeat_counter++;
                                         $.ajax({
@@ -107,13 +106,11 @@
 
                                     } else if (repeat_counter == 2) {
                                         repeat_counter++;
-                                        //  renderHistory();
                                     }
                                 });
 
 
                                 $('#select_obj_waiting').change(function() {
-                                    //alert("56554s");
                                     $.ajax({
                                         url: '{{ route('loadRequestWaiting') }}',
                                         type: 'POST',
@@ -131,62 +128,8 @@
 
                                 });
                             </script>
-                            <!--<ul  class="list-group">
 
-                                <div class="row pt-2 mx-1 ">
-                                    <div class="col-7">
-                                        <h6>Name</h6>
-                                    </div>
-                                    <div class="col-2">
-                                        <h6>Users</h6>
-
-                                    </div>
-                                    <div class="col-1">
-                                        <center>
-                                            <h6>Status</h6>
-                                        </center>
-                                    </div>
-                                    <div class="col-2">
-                                        <center>
-                                            <h6>Action</h6>
-                                        </center>
-                                    </div>
-                                </div>
-                                <li class="list-group-item p-0 m-0">
-                                    <div class="row p-0 m-0">
-
-
-                                        <div class="col-7 p-0 m-0">
-                                            <div class="card rounded-0 border-top-0 border-bottom-0 border-end-0"
-                                                style="border-width: 10px; border-color: blue;">
-                                                <p class="py-2 mx-2 my-0 ">
-                                                    HJsdhjsa - dsakjhdsak
-                                                </p>
-
-                                            </div>
-                                        </div>
-                                        <div class="col-2 ">
-                                            <p class="py-2 my-0"> 0 users</p>
-                                        </div>
-                                        <div class="col-1 ">
-                                            <center>
-                                                <p class="py-2 my-0"><i class="bi bi-hourglass-split"></i></p>
-                                            </center>
-                                        </div>
-
-                                        <div class="col-2">
-                                            <center>
-                                                <p class="py-2 my-0"><i class="bi bi-three-dots-vertical"></i></p>
-                                            </center>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item">Dapibus ac facilisis in</li>
-                                <li class="list-group-item">Morbi leo risus</li>
-                                <li class="list-group-item">Porta ac consectetur ac</li>
-                                <li class="list-group-item">Vestibulum at eros</li>
-                            </ul>-->
-                            <ul id="waitting_list" class="list-group">
+                            <ul id="waitting_list" class="list-group mb-5">
 
 
 
@@ -230,22 +173,8 @@
                                 </div>
                             </div>
 
-                            <!-- <div class="calendart">
-                            <div class='row'>
-                                    <div class='col-12'>
-                                        <ul class="history" style="padding-left:0px"></ul>
-                                    </div>
 
-                                </div>
-                            </div>-->
-                            <!--<ul class="list-group">
-                                <li class="list-group-item">Cras justo odio</li>
-                                <li class="list-group-item">Dapibus ac facilisis in</li>
-                                <li class="list-group-item">Morbi leo risus</li>
-                                <li class="list-group-item">Porta ac consectetur ac</li>
-                                <li class="list-group-item">Vestibulum at eros</li>
-                            </ul>-->
-                            <ul id="history_list" class="list-group">
+                            <ul id="history_list" class="list-group mb-5">
 
 
 
@@ -263,8 +192,7 @@
                 const daysTag = document.querySelector(".days"),
                     currentDate = document.querySelector(".current-date"),
                     prevNextIcon = document.querySelectorAll(".icons span");
-              //  const daysTagt = document.querySelector(".history");
-                // getting new date, current year and month
+
                 let date = new Date(),
                     currYear = date.getFullYear(),
                     currMonth = date.getMonth(),
@@ -299,117 +227,16 @@
                     } else {
                         currMonthNull = currMonth + 1;
                     }
-                    for (let i = firstDayofMonth; i > 0; i--) { // creating li of previous month last days
-                        //liTag += `<li class="inactive"><div class='row'><div class='col-12'>${lastDateofLastMonth - i + 1}</div></div></li>`;
-                    }
-                    //renderHistory();
+
+
 
                     var counter = 0;
-                   /* liTag += `<ul class="list-group">
-                                <li class="list-group-item">Cras justo odio</li>
-                                <li class="list-group-item">Dapibus ac facilisis in</li>
-                                <li class="list-group-item">Morbi leo risus</li>
-                                <li class="list-group-item">Porta ac consectetur ac</li>
-                                <li class="list-group-item">Vestibulum at eros</li>
-                            </ul>`;*/
-                    /*for (let i = 1; i <= lastDateofMonth; i++) {
-                                                                                        liTag +=
-                                                                                            `<input type='hidden' id='current_load_date' name='current_load_date' value='${currYear}-${currMonthNull}'>`;
-                                                                            
 
-                                                                                        let isToday = i === date.getDate() && currMonth === new Date().getMonth() &&
-                                                                                            currYear === new Date().getFullYear() ? "active" : "";
-                                                                               
-                                                                                        liTag += ` <div class="row mx-1 gx-2 mb-1">
-                        <div class="col-2 col-md-2 px-0 ">
-                            <div class="card rounded-0 p-2 h-100">
-                                <div class="row">
-                                    <div class="col-12 ">
-                                        <center>
-                                        <h5 class="mb-3 "  style="display: inline">${i}.</h5><small class="mb-1 " style="display: inline">${currMonth +1}.</small>
-                                        <br>
-                                        <p>Jan</p>
-                                    </center>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <hr class="mx-2 mt-0">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12 col-md-4  d-flex justify-content-center">
-                                        <i class="bi bi-sunglasses " style="font-size: 25px; display:inline"></i>
-                                    </div>
-                                    <div class="col-12 col-md-4 d-flex justify-content-center">`;
-                                                                                        if (i < 9) {
-                                                                                            var dayNull = "0" + (i);
-                                                                                        } else {
-                                                                                            var dayNull = (i);
-                                                                                        }
-
-                                                                                        var complete_date = currYear + "-" + currMonthNull + "-" + dayNull;
-                                                                                        if (shift_month.includes(complete_date)) {
-                                                                                            liTag += `  <i class="bi bi-suitcase-lg-fill mt-1"
-                                            style="font-size: 20px; display:inline; color:#0d6efd ;"></i>`;
-                                                                                        } else {
-                                                                                            liTag += `  <i class="bi bi-suitcase-lg-fill mt-1"
-                                            style="font-size: 20px; display:inline"></i> `;
-                                                                                        }
-                                                                                        liTag += `
-
-                                    </div>`;
-                                                                                        if (holidays.includes(currMonthNull + "-" + dayNull)) {
-                                                                                            liTag += ` <div class="col-12 col-md-4 d-flex justify-content-center">
-                                        <i class="bi bi-flag-fill mt-3  mt-md-1" style="font-size: 20px;color:#0d6efd ;"></i>
-                                    </div>`;
-                                                                                        } else {
-                                                                                            liTag += ` <div class="col-12 col-md-4 d-flex justify-content-center">
-                                        <i class="bi bi-flag-fill mt-3  mt-md-1" style="font-size: 20px;"></i>
-                                    </div>`;
-                                                                                        }
-
-                                                                                        liTag += ` </div>
-
-                            </div>
-                        </div>
-                        <div class="col-10 col-md-10 p-0 ">
-                            <div class="card h-100 rounded-0" >
-                              ${offer_arr[i-1]}
-                            </div>
-                        </div>
-                    </div>
-
-          `;
-
-                                                                                    }*/
 
 
                     currentDate.innerText =
                         `${months[currMonth]} ${currYear}`; // passing current mon and yr as currentDate text
-                   /* daysTagt.innerHTML = liTag;
-                    if (tooltip_arr.length != null) {
-                        for (var o = 0; o < tooltip_arr.length; o++) {
-                            /*tippy("#c-" + tooltip_arr[o], {
-                                content: '<strong>Main: <br> Offered by: <span style="color: aqua;">' +
-                                    tooltip_user_arr[o] +
-                                    '</span> <br> Offered at:  <span style="color: aqua;">content</span></strong>',
-                                allowHTML: true,
-                            });*/
-                     /*   }
 
-                        if (comments_id.length != null) {
-
-                            /*for (var o = 0; o < comments_id.length; o++) {
-                                var newText = tooltip_comments[o].replace(/\n/g, '<br>');
-                                tippy("#cm-" + comments_id[o], {
-                                    content: '<strong><span style="color: aqua;">' + newText + '</span> </strong>',
-                                    allowHTML: true,
-                                });
-                            }*/
-
-                       /* }
-                    }*/
                 }
                 renderTable();
                 prevNextIcon.forEach(icon => { // getting prev and next icons
@@ -435,36 +262,8 @@
                 var input_obj_history;
 
                 $('#select_obj_history').change(function() {
-                                    //alert("56554s");
-                                    input_obj_history = $(this).val();
+                    input_obj_history = $(this).val();
 
-                                    $.ajax({
-                        url: '{{ route('loadRequestHistory') }}',
-                        type: 'POST',
-                        data: {
-                            _token: '{{ csrf_token() }}',
-                            main_obj: input_obj_history,
-                            year: currYear,
-                            month: currMonthNull,
-                        },
-                        success: function(response) {
-                            document.getElementById("history_list").innerHTML = response.returns;
-                            //alert(response.returns);
-
-                        },
-                        error: function(xhr, status, error) {
-                            alert('Error fetching image render dsdds:', error);
-                        }
-                    });
-
-                                });
-
-
-                function renderHistory() {
-                    input_obj_history = document.getElementById("select_obj_history").value;
-                    /*alert(currYear);
-                    alert(currMonthNull);*/
-                    // alert(input_obj_history);
                     $.ajax({
                         url: '{{ route('loadRequestHistory') }}',
                         type: 'POST',
@@ -476,7 +275,29 @@
                         },
                         success: function(response) {
                             document.getElementById("history_list").innerHTML = response.returns;
-                            //alert(response.returns);
+
+                        },
+                        error: function(xhr, status, error) {
+                            alert('Error fetching image render dsdds:', error);
+                        }
+                    });
+
+                });
+
+
+                function renderHistory() {
+                    input_obj_history = document.getElementById("select_obj_history").value;
+                    $.ajax({
+                        url: '{{ route('loadRequestHistory') }}',
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            main_obj: input_obj_history,
+                            year: currYear,
+                            month: currMonthNull,
+                        },
+                        success: function(response) {
+                            document.getElementById("history_list").innerHTML = response.returns;
 
                         },
                         error: function(xhr, status, error) {

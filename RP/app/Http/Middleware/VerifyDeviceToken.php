@@ -9,6 +9,9 @@ use App\Models\Device;
 
 class VerifyDeviceToken
 {
+    protected $except = [
+        '/chatify/api/chat/auth', // Add your exact URL
+    ];
     /**
      * Handle an incoming request.
      *
@@ -16,6 +19,7 @@ class VerifyDeviceToken
      */
     public function handle(Request $request, Closure $next): Response
     {
+        
         $deviceToken = $request->header('Device-Token'); // Get the token from headers
 
         // Check if the token exists in the database

@@ -11,13 +11,35 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Storage;
 
 
 class ShiftController extends Controller
 {
+    public function deleteShift(Request $request)
+    {
+
+        $shift_id = $request->input('shift_id');
+        $id_decrypted = Crypt::decrypt($shift_id);
+        DB::delete("DELETE FROM shift_model WHERE id_shift='$id_decrypted' " );
+        DB::delete("DELETE FROM shift_assignment WHERE id_shift='$id_decrypted' " );
+        DB::delete("DELETE FROM shift_check WHERE id_shift='$id_decrypted' " );
+        DB::delete("DELETE FROM shift_offer WHERE id_shift='$id_decrypted' " );
+        DB::delete("DELETE FROM shift_active_data WHERE id_shift='$id_decrypted' " );
+
+    }
+    public function enableShift(Request $request)
+    {
+
+        $shift_id = $request->input('shift_id');
+        $status = $request->input('status');
+        $id_decrypted = Crypt::decrypt($shift_id);
+        DB::update("UPDATE shift_model SET rep_non='$status' WHERE id_shift='$id_decrypted' ");
+
+    }
     public function loadExistingObjects(Request $request)
     {
-        $fetch = DB::select("SELECT * FROM object_model");
+        $fetch = DB::select("SELECT * FROM object_model ");
         $data1 = array();
         $data2 = array();
         $data4 = array();
@@ -67,33 +89,33 @@ class ShiftController extends Controller
         $sun_t = $request->input('sut');
         $sun = $request->input('sund');
 
+        $repeat = $request->input('repeat');
+
         $jobname = $request->input('jobname');
         $color = $request->input('color');
         $update = $request->input('update');
+        $description = $request->input('description');
 
         $shift_id = $request->input('shift_id');
         $shift_id_decrypted = Crypt::decrypt($shift_id);
-        echo $shift_id_decrypted;
 
 
         $start = date("Y-m-d");
-        $rep = 1;
 
         $id = Auth::id();
-        
+
         $object = $request->input('object');
         $object_decrypted = Crypt::decrypt($object);
-        DB::update("UPDATE shift_model SET rep_non='$rep', monday='$mon', mon_from='$mon_f', mon_to='$mon_t', tuesday='$tue', tue_from='$tue_f', tue_to='$tue_t', wednesday='$wed', wed_from='$wed_f', wed_to='$wed_t', thursday='$thu', thu_from='$thu_f', thu_to='$thu_t', friday='$fri', fri_from='$fri_f', fri_to='$fri_t', saturday='$sat', sat_from='$sat_f', sat_to='$sat_t', sunday='$sun', sun_from='$sun_f', sun_to='$sun_t', shift_name='$jobname', color='$color', id_object='$object_decrypted' WHERE id_shift='$shift_id_decrypted' ");
-        //DB::insert(",'$rep','$mon','$mon_f','$mon_t','$tue','$tue_f','$tue_t','$wed','$wed_f','$wed_t','$thu','$thu_f','$thu_t','$fri','$fri_f','$fri_t','$sat','$sat_f','$sat_t','$sun','$sun_f','$sun_t','$jobname','$color','$object_decrypted', '$id')");
+        DB::update("UPDATE shift_model SET rep_non='$repeat', monday='$mon', mon_from='$mon_f', mon_to='$mon_t', tuesday='$tue', tue_from='$tue_f', tue_to='$tue_t', wednesday='$wed', wed_from='$wed_f', wed_to='$wed_t', thursday='$thu', thu_from='$thu_f', thu_to='$thu_t', friday='$fri', fri_from='$fri_f', fri_to='$fri_t', saturday='$sat', sat_from='$sat_f', sat_to='$sat_t', sunday='$sun', sun_from='$sun_f', sun_to='$sun_t', shift_name='$jobname', color='$color', id_object='$object_decrypted', description='$description' WHERE id_shift='$shift_id_decrypted' ");
 
     }
     public function loadExistingShiftParametrs(Request $request)
     {
         $id = $request->input('id');
         $id_decrypted = Crypt::decrypt($id);
-        // echo $id_decrypted;
         $fetch = DB::select("SELECT * FROM shift_model WHERE id_shift='$id_decrypted' ");
         foreach ($fetch as $result) {
+            $repeat = $result->rep_non;
             $shift_id = $result->id_shift;
             $monday = $result->monday;
             $mon_from = $result->mon_from;
@@ -119,6 +141,8 @@ class ShiftController extends Controller
             $shift_name = $result->shift_name;
             $color = $result->color;
             $id_object = $result->id_object;
+            $description = $result->description;
+
 
         }
         $obj_id = array();
@@ -127,7 +151,7 @@ class ShiftController extends Controller
         $final_id = array();
         $local_id = array();
 
-        $fetch_object = DB::select("SELECT * FROM object_model");
+        $fetch_object = DB::select("SELECT * FROM object_model ");
         foreach ($fetch_object as $result_obj) {
             $obj_id[] = $result_obj->id_object;
             $obj_name[] = $result_obj->object_name;
@@ -136,17 +160,10 @@ class ShiftController extends Controller
         for ($x = 0; $x < count($obj_id); $x++) {
 
             if ($obj_superior[$x] == 0) {
-                //$final_id 
-                //array_push($final_id, $obj_id[$x]  );
                 $shift_arr = array();
-                $fetch_shifts = DB::select("SELECT * FROM shift_model WHERE id_object='$obj_id[$x]' ");
+                $fetch_shifts = DB::select("SELECT * FROM shift_model WHERE id_object='$obj_id[$x]'  ");
                 foreach ($fetch_shifts as $result_shift) {
-
-                    //$shift_arr[] = $result_shift->id_shift;
-                    //$final_id[] = $result_shift->id_shift; 
                     array_push($shift_arr, $result_shift->id_shift);
-                    //array_push($final_id,  $result_shift->id_shift);
-                    //array_push($shi_id,  $result->id_shift);
                 }
 
                 if (in_array($shift_id, $shift_arr) && count($shift_arr) != null) {
@@ -169,8 +186,6 @@ class ShiftController extends Controller
         $main_object = Crypt::encrypt($final_id[0]);
         $sub_object = Crypt::encrypt($local_id[0]);
         $shift_id_decrypted = Crypt::encrypt($shift_id);
-        //$main_object2 = "drop{$main_object}";
-        //return $final_id;
 
 
         return response()->json([
@@ -202,58 +217,42 @@ class ShiftController extends Controller
             'id_object' => $id_object,
             'main_object' => $main_object,
             'sub_object' => $sub_object,
-            'shift_id' => $shift_id_decrypted
+            'shift_id' => $shift_id_decrypted,
+            'repeat' => $repeat,
+            'description' => $description,
 
         ]);
     }
     public function shiftSave(Request $request)
     {
-        //$mysqli = require ("../database.php");
-
-        //$conn = new mysqli($host, $username, $password, $dbname);
-
-
+ 
 
         $mon_f = $request->input('mf');
-        //$mon_f = substr($mon_f, 1, -1);
         $mon_t = $request->input('mt');
-        //$mon_t = substr($mon_t, 1, -1);
         $mon = $request->input('mond');
 
         $tue_f = $request->input('tuf');
-        //$tue_f = substr($tue_f, 1, -1);
         $tue_t = $request->input('tut');
-        //$tue_t = substr($tue_t, 1, -1);
         $tue = $request->input('tued');
 
         $wed_f = $request->input('wf');
-        //$wed_f = substr($wed_f, 1, -1);
         $wed_t = $request->input('wt');
-        //$wed_t = substr($wed_t, 1, -1);
         $wed = $request->input('wedd');
 
         $thu_f = $request->input('thf');
-        //$thu_f = substr($thu_f, 1, -1);
         $thu_t = $request->input('tht');
-        //$thu_t = substr($thu_t, 1, -1);
         $thu = $request->input('thud');
 
         $fri_f = $request->input('ff');
-        //$fri_f = substr($fri_f, 1, -1);
         $fri_t = $request->input('ft');
-        //$fri_t = substr($fri_t, 1, -1);
         $fri = $request->input('frid');
 
         $sat_f = $request->input('saf');
-        //$sat_f = substr($sat_f, 1, -1);
         $sat_t = $request->input('sat');
-        //$sat_t = substr($sat_t, 1, -1);
         $sat = $request->input('satd');
 
         $sun_f = $request->input('suf');
-        //$sun_f = substr($sun_f, 1, -1);
         $sun_t = $request->input('sut');
-        //$sun_t = substr($sun_t, 1, -1);
         $sun = $request->input('sund');
 
         $jobname = $request->input('jobname');
@@ -263,14 +262,11 @@ class ShiftController extends Controller
 
         $start = date("Y-m-d");
         $rep = 1;
-        /*$object = "test";
-        $object = $_POST['object_name'];*/
+    
 
         $id = Auth::id();
         $object = $request->input('object');
         $object_decrypted = Crypt::decrypt($object);
-        //DB::insert();
-//echo "INSERT INTO shift_model (start_shift, rep_non, monday, mon_from, mon_to, tuesday, tue_from, tue_to, wednesday, wed_from, wed_to, thursday, thu_from, thu_to, friday, fri_from, fri_to, saturday, sat_from, sat_to, sunday, sun_from, sun_to, shift_name, color, id_object, created_by) VALUES ('$start','$rep','$mon','$mon_f','$mon_t','$tue','$tue_f','$tue_t','$wed','$wed_f','$wed_t','$thu','$thu_f','$thu_t','$fri','$fri_f','$fri_t','$sat','$sat_f','$sat_t','$sun','$sun_f','$sun_t','$jobname','$color','$object_decrypted', '$id') ";
         DB::insert("INSERT INTO shift_model (start_shift, rep_non, monday, mon_from, mon_to, tuesday, tue_from, tue_to, wednesday, wed_from, wed_to, thursday, thu_from, thu_to, friday, fri_from, fri_to, saturday, sat_from, sat_to, sunday, sun_from, sun_to, shift_name, color, id_object, created_by) VALUES ('$start','$rep','$mon','$mon_f','$mon_t','$tue','$tue_f','$tue_t','$wed','$wed_f','$wed_t','$thu','$thu_f','$thu_t','$fri','$fri_f','$fri_t','$sat','$sat_f','$sat_t','$sun','$sun_f','$sun_t','$jobname','$color','$object_decrypted', '$id')");
 
     }
@@ -308,7 +304,7 @@ class ShiftController extends Controller
         $data2 = array();
 
         $data4 = array();
-
+        $icons = array();
         $encrytion = array();
         $previous = 0;
 
@@ -319,6 +315,7 @@ class ShiftController extends Controller
 
 
             $data4[] = $result->superior_object_id;
+            $icons[] = $result->object_icon;
         }
         $encrytion = array();
         foreach ($data1 as $d) {
@@ -339,9 +336,7 @@ class ShiftController extends Controller
             $search_main = $encrytion[$object_decrypted];
         }
 
-        // array_multisort($data2, $data1, $data4);
         $search = "";
-
 
 
 
@@ -357,11 +352,10 @@ class ShiftController extends Controller
 
                 echo "<div class='accordion w-100' id='$data1[$x]'>";
 
-                echo "<button data-mdb-dropdown-init class='dropdown-toggle btn btn-primary' id='menu' role='button' data-mdb-toggle='dropdown' data-bs-toggle='dropdown' aria-expanded='false' clicked='true'>";
+                echo "<button data-mdb-dropdown-init class='dropdown-toggle btn btn-primary' id='menu' role='button' data-mdb-toggle='dropdown' data-bs-toggle='dropdown' style='min-width:230px' aria-expanded='false' clicked='true'><i class='$icons[$x]'></i>&nbsp;";
                 echo $data2[$x];
                 echo "</button><ul class='dropdown-menu' id='drop_menu' aria-labelledby='menu'>";
-                echo "" . objectDropdown($encrytion) . "</ul>";
-                //$dd = Crypt::decrypt($data1[$x]);
+                echo "" . objectDropdownShift($encrytion, $sub_object) . "</ul>";
                 if ($is_sub_encrypte == 0 && $object_sub_decrypted == Crypt::decrypt($data1[$x])) {
                     echo "<div style='float: right' class='mt-2'><input id='" . $data1[$x] . "' type='radio' name='accept-offers' onclick='radiocheck(this.id)'  class='hidden radio-label' checked >";
                 } else {
@@ -372,12 +366,10 @@ class ShiftController extends Controller
 
                 $dd++;
 
-                $row = 0;
 
                 for ($h = 0; $h < count($data2); $h++) {
                     if ($search == $data4[$h]) {
-                        sub_object_model($search, $data1, $data2, $data4, $previous, $object_sub_decrypted, $is_sub_encrypte);
-                        //$row++;
+                        sub_object_model($search, $data1, $data2, $data4, $previous, $object_sub_decrypted, $is_sub_encrypte, $icons);
                         break;
                     }
                 }
@@ -406,7 +398,7 @@ class ShiftController extends Controller
 
 
 
-        $fetch = DB::select("SELECT * FROM object_model");
+        $fetch = DB::select("SELECT * FROM object_model ");
         $data2 = array();
         $data3 = array();
         $data1 = array();
@@ -427,13 +419,11 @@ class ShiftController extends Controller
         $shi_help = array();
 
         $object = $request->input('object');
-        //echo $object;
         $is_encrypted = 0;
         $object_decrypted = -1;
 
         if ($object == "0") {
             $is_encrypted = 1;
-            //echo "<h6>dsa</h6>";
         } else {
             $object_decrypted = Crypt::decrypt($object);
         }
@@ -443,7 +433,6 @@ class ShiftController extends Controller
             $data2[] = $result->object_name;
             $data4[] = $result->superior_object_id;
         }
-        //array_multisort( $data2,  $data1,  $data4);
 
         $count = 0;
         $dd = 1;
@@ -466,23 +455,13 @@ class ShiftController extends Controller
                     array_push($shi_name, $result->shift_name);
                     array_push($shi_id, $result->id_shift);
                 }
-                /*
-                if (mysqli_num_rows($fetch_sh) > 0) {
-                    while ($rows = mysqli_fetch_assoc($fetch_sh)) {
-
-                        array_push($shi_name, $rows['shift_name']);
-                        array_push($shi_id, $rows['id_shift']);
-
-                    }
-
-                }*/
+        
 
 
 
                 for ($h = 0; $h < count($data2); $h++) {
                     if ($search == $data4[$h]) {
                         $this->sub_object_list($search, $data1, $data2, $data4, $get_id, $count, $get_object, $get_name, $sm, $shi_name, $shi_id);
-                        //$row++;
                         break;
                     }
                 }
@@ -513,13 +492,13 @@ class ShiftController extends Controller
     public function loadExistingShifts(Request $request)
     {
         $object = $request->input('object');
-        //echo $object;
+        $search_text = $request->input('search_text');
+
         $is_encrypted = 0;
         $object_decrypted = -1;
 
         if ($object == "0") {
             $is_encrypted = 1;
-            //echo "<h6>dsa</h6>";
         } else {
             $object_decrypted = Crypt::decrypt($object);
         }
@@ -530,6 +509,8 @@ class ShiftController extends Controller
         $data2 = array();
         $data3 = array();
         $data4 = array();
+        $icons_obj = array();
+
         $arr_obj = array();
         $arr_sort = array();
         $shi = $request->input('shift_list');
@@ -537,13 +518,26 @@ class ShiftController extends Controller
         $shii = "";
         $obji = "";
         $type = 1;
-        /*global $arr_obj;
-        global $arr_sort;*/
+        $id_user = Auth::id();
+        $admin = false;
+        $fetch_position = DB::select("SELECT role AS r FROM  users WHERE id='$id_user'");
+        $rights = array();
+        
+        $role = $fetch_position[0]->r;
+        if($role == "admin"){
+            $admin = true;
+        }
+        $fetch_rights = DB::select("SELECT * FROM management_rights WHERE id='$id_user'");
+        foreach ($fetch_rights as $result_rights) {
+            array_push($rights, $result_rights->id_object);
+
+        } 
 
         foreach ($fetch as $result) {
             $data1[] = $result->id_object;
             $data2[] = $result->object_name;
             $data4[] = $result->superior_object_id;
+            $icons_obj[] = $result->object_icon;
         }
 
 
@@ -551,20 +545,14 @@ class ShiftController extends Controller
             if (($data4[$x] == 0 && $is_encrypted == 1) || ($data1[$x] == $object_decrypted && $is_encrypted == 0)) {
                 static $dd = 1;
 
-
-
-                //array_push($arr_obj, "asd");
-                //array_push($arr_sort, $data2[$x]);
-                /*$dd++;*/
                 array_push($arr_obj, $data1[$x]);
                 array_push($arr_sort, $data2[$x]);
 
-                //$result = $this->doubleValue(10);
                 $row = 0;
                 $search = $data1[$x] . "";
                 for ($h = 0; $h < count($data2); $h++) {
                     if ($search == $data4[$h]) {
-                        $this->sub_object($search, $data1, $data2, $data4, $arr_obj, $arr_sort);
+                        $this->sub_object($search, $data1, $data2, $data4, $arr_obj, $arr_sort, $icons_obj);
                         $row++;
                         break;
                     }
@@ -574,11 +562,7 @@ class ShiftController extends Controller
             }
 
         }
-        /*echo $is_encrypted;
-        for($x = 0; $x < count($arr_sort); $x++){
-            echo $arr_obj[0];
 
-        }*/
 
         if ($arr_obj != null) {
 
@@ -613,17 +597,14 @@ class ShiftController extends Controller
             $color = array();
             $id_object = array();
             $object_name = array();
+            $object_icon = array();
+            $description = array();
 
             for ($i = 0; $i < count($arr_obj); $i++) {
                 $ID_object = $arr_obj[$i];
-                //global $type;
-                //$mysqli = require("../database.php");
-
-                //$conn = new mysqli($host, $username, $password, $dbname);
-                //$fetch = mysqli_query($conn, "SELECT * FROM create_shift WHERE object_id='$dat' ORDER BY shift_name /*ORDER BY object_name, shift_name*/ /*");*/
+         
                 $fetch_shift = DB::select("SELECT * FROM shift_model, object_model WHERE shift_model.id_object='$ID_object' AND object_model.id_object='$ID_object' ORDER BY shift_model.shift_name");
 
-                /**Sorting data alphabetically */
                 foreach ($fetch_shift as $result) {
 
 
@@ -655,9 +636,9 @@ class ShiftController extends Controller
                     $color[] = $result->color;
                     $id_object[] = $result->id_object;
                     $object_name[] = $result->object_name;
-
+                    $object_icon[] = $result->object_icon;
+                    $description[] = $result->description;
                 }
-                // }
             }
 
             $dd = 2;
@@ -685,22 +666,13 @@ class ShiftController extends Controller
                     }
                     if ($ok == True) {
                         /**source : https://stackoverflow.com/questions/2790899/how-to-check-if-a-string-starts-with-a-specified-string */
-                        //search_fit = false;
-                        //if ($idisadmin == true || in_array($id_object[$x], $man_rights)) {
+      
                         $strshi = strtolower($shift_name[$x]);
                         $strobj = strtolower($object_name[$x]);
 
                         if ($shii == "" && $obji == "") {
                             $search_fit = true;
                         } else if ($shii == "" && $obji != "") {
-
-                            //if (str_starts_with($shift_name[$x], $shii)) {
-                            //echo "<p>123</p>";
-                            //echo "<p>".substr($shift_name[$x], 0, strlen($shii)) ."--". $shii ."</p>";
-                            ///if(substr($shift_name[$x], 0, strlen($shii)) == $shii){
-                            //$search_fit = true;
-
-                            //}
                             if (substr($strobj, 0, strlen($obji)) == $obji) {
                                 $search_fit = true;
 
@@ -716,18 +688,19 @@ class ShiftController extends Controller
                                 $search_fit = true;
                             }
                         }
+                        if(str_starts_with($object_name[$x], $search_text) == false && str_starts_with($shift_name[$x], $search_text) == false){
+                            $search_fit = false;
+                        }
                         if ($search_fit == true) {
+                            if ($admin == true || in_array($id_object[$x], $rights) == true) {
                             $id_encrypted = Crypt::encrypt($id_shift[$x]);
                             echo "<div class='col-12 col-md-3 col-sm-6 p-2 lg  mb-3  '>";
                             echo "<div class='card p-2' >";
                             echo "<div class='row' >";
                             echo "<div class='col-8'>";
                             echo "<div style='padding-top: 5px' ><h5 class='px-2 py-1 text-light' id='h_shi-" . $id_encrypted . "' style='margin-top: 10px;height: 50px;background: " . $color[$x] . ";border-radius: 25px;display:inline;text-overflow: ellipsis;white-space: nowrap;overflow: hidden' title='" . $shift_name[$x] . "'>" . $shift_name[$x] . "</h5></div>";
-                            echo "<div class='py-2' ><h6 id='h_obj-" . $id_encrypted . "' style='border-radius: 25px;display:inline;text-overflow: ellipsis;white-space: nowrap;overflow: hidden' title='" . $object_name[$x] . "'>" . $object_name[$x] . " </h6></div>";
+                            echo "<div class='py-2' ><h6 id='h_obj-" . $id_encrypted . "' style='border-radius: 25px;display:inline;text-overflow: ellipsis;white-space: nowrap;overflow: hidden' title='" . $object_name[$x] . "'><i class='$object_icon[$x]'></i>&nbsp;" . $object_name[$x] . " </h6></div>";
 
-
-
-                            //echo "<div  ><h6 id='h_obj-" . $id_shift[$x] . "' style='background: #73AD21;height:35px;border-radius: 25px;display:inline;text-overflow: ellipsis;white-space: nowrap;overflow: hidden' title='" . $object_name[$x] . "'>" . $object_name[$x] . " - </h6><h6 id='h_shi-" . $id_shift[$x] . "' style='background: #73AD21;border-radius: 25px;display:inline;text-overflow: ellipsis;white-space: nowrap;overflow: hidden' title='" . $shift_name[$x] . "'>" . $shift_name[$x] . "</h6></div>";
 
                             echo "</div>";
 
@@ -736,15 +709,14 @@ class ShiftController extends Controller
 
                             echo "<div class='text-end'>";
                             echo "<p style='margin-right: 10px;display: inline'>Enable</p>";
-                            //echo "<input class='in' style='background-color: " . $color[$x] . "'>";
 
                             echo "<label class='switch '>";
                             if ($rep_non[$x] == 1) {
-                                echo "<input type='checkbox' class='primary' checked>";
+                                echo "<input id='enable_$id_encrypted' type='checkbox' class='primary' onclick='enableShift(this.id)' checked>";
                             } else {
-                                echo "<input type='checkbox' class='primary' >";
+                                echo "<input id='enable_$id_encrypted' type='checkbox' class='primary' onclick='enableShift(this.id)' >";
                             }
-                            echo "<span class='slider round'></span>";
+                            echo "<span class='slider round' ></span>";
                             echo "</label>";
                             echo "</div>";
                             echo "</div>";
@@ -798,56 +770,74 @@ class ShiftController extends Controller
                             echo "</div>";
                             echo "<div class='row' >";
                             echo "<div class='col-12 mt-3'>";
-                            echo "<div style='height:80px'>";
+                            echo "<div>";
                             echo "<h6>Descripriction:</h6>";
+                            echo "<div style='height:50px; overflow: auto'>";
+                            echo "<p>".nl2br($description[$x])."</p>";
                             echo "</div>";
+                            echo "</div>";
+                            echo "<hr>";
                             echo "</div>";
                             echo "</div>";
 
-                            //echo "<center>";
-
-                            /*echo "<p style='text-overflow: ellipsis;white-space: nowrap;overflow: hidden'>";
-                            if ($monday[$x] == 1) {
-                                echo "Monday: " . substr($mon_from[$x], 0, -3) . " - " . substr($mon_to[$x], 0, -3) . "<br><br>";
-                            }
-                            if ($tuesday[$x] == 1) {
-                                echo "Tuesday: " . substr($tue_from[$x], 0, -3) . " - " . substr($tue_to[$x], 0, -3) . "<br><br>";
-                            }
-                            if ($wednesday[$x] == 1) {
-                                echo "Wednesday: " . substr($wed_from[$x], 0, -3) . " - " . substr($wed_to[$x], 0, -3) . "<br><br>";
-                            }
-                            if ($thursday[$x] == 1) {
-                                echo "Thursday: " . substr($thu_from[$x], 0, -3) . " - " . substr($thu_to[$x], 0, -3) . "<br><br>";
-                            }
-                            if ($friday[$x] == 1) {
-                                echo "Friday: " . substr($fri_from[$x], 0, -3) . " - " . substr($fri_to[$x], 0, -3) . "<br><br>";
-                            }
-                            if ($saturday[$x] == 1) {
-                                echo "Saturday: " . substr($sat_from[$x], 0, -3) . " - " . substr($sat_to[$x], 0, -3) . "<br><br>";
-                            }
-                            if ($sunday[$x] == 1) {
-                                echo "Sunday: " . substr($sun_from[$x], 0, -3) . " - " . substr($sun_to[$x], 0, -3) . "<br><br>";
-                            }
-                            echo "</p>";*/
-                            /*if ($type == 1) {
-                                echo "<input type='button' class='btn btn-primary' id='edit-" . $id_shift[$x] . "' onclick='Open_edit(this.id)' value='EDIT'>";
-                            } else {
-                                echo "<input type='button' class='btn btn-primary' id='edit-" . $id_shift[$x] . "' onclick='Select_sh(this.id)' value='SELECT'>";
-                            }*/
+                  
                             echo "<div class='row mb-2' >";
-                            echo "<div class='col-6 '>";
+                            echo "<div class='col-8 '>";
+                            $fetch_img_count = DB::select("SELECT COUNT(*) AS count FROM shift_assignment, users WHERE shift_assignment.id_shift='$id_shift[$x]' AND users.id=shift_assignment.id ORDER BY shift_assignment.updated_at");
+
+                            $fetch_img = DB::select("SELECT * FROM shift_assignment, users WHERE shift_assignment.id_shift='$id_shift[$x]' AND users.id=shift_assignment.id ORDER BY shift_assignment.updated_at");
+                            echo '<div class="flex-grow-1 align-items-start">
+                            <div class="avatar-group float-start flex-grow-1">';
+                            $img_counter = 0;
+                            foreach ($fetch_img as $result_img) {
+                                $fetch_img_count = DB::select("SELECT COUNT(*) AS count FROM profile_pictures WHERE id='$result_img->id' ");
+
+                                if ($fetch_img_count[0]->count > 0) {
+                                    $fetch_link = DB::select("SELECT * FROM profile_pictures WHERE id='$result_img->id' ");
+                                    $link_image = "";
+                                    foreach ($fetch_link as $result_link) {
+                                        $link_image = $result_link->image_link;
+                                    }
+                                    $imageUrl = Storage::url($link_image);
+                                } else {
+                                    $imageUrl = Storage::url('profile-images/avatar_blank2.jpg');
+                                }
+                                if( $fetch_img_count[0]->count >6 ||  $img_counter == 5){
+                                    echo '<div class="avatar-group-item" >
+                                 <div class="text-light d-flex justify-content-center align-items-center rounded-circle avatar-sm" style="height:50px;width:50px; background-color: #A9A9A9">
+                                 <p class=m-0>'.($fetch_img_count[0]->count -4).'+</p>
+                                 </div>
+                                     <!--<a href="javascript: void(0);" class="d-inline-block" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="456">
+                                         <img src="" alt="" class="rounded-circle avatar-sm">
+                                     </a>-->
+                                 </div>';
+                                 break;
+                                }else{
+                                    
+                                
+                                echo '<div class="avatar-group-item">
+                            <a href="javascript: void(0);" class="d-inline-block" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="Terrell Soto">
+                                <img src="' . $imageUrl . '" alt="" class="rounded-circle avatar-sm">
+                            </a>
+                        </div>';
+                                }
+                                $img_counter++;
+
+                            
+                            }
+                            echo '</div></div>';
+                   
                             echo "</div>";
-                            echo "<div class='col-6 '>";
+                            echo "<div class='col-4 '>";
                             echo "<i id='edit-" . $id_encrypted . "' class='fa fa-edit bg-dark p-2 text-white' style='margin-right:5px;font-size:34px;border-radius: 50%;float: right' data-bs-toggle='modal' onclick='load_existing_data(this.id)' data-bs-target='#myModals' ></i>";
                             echo "</div>";
                             echo "</div>";
-                            //echo "</center>";
                             echo "<br>";
                             echo "</div>";
                             echo "</div>";
+                        }
 
                         }
-                        //}
 
                     }
                 }
@@ -864,16 +854,15 @@ class ShiftController extends Controller
 
         return $value * 2;
     }
-    private function sub_object($searching, $dat1, $dat2, $dat4, array &$arr_obj, array &$arr_sort)
+    private function sub_object($searching, $dat1, $dat2, $dat4, array &$arr_obj, array &$arr_sort, $icons_obj)
     {
-        /*global $arr_obj;
-        global $arr_sort;*/
+  
         $find = 0;
         for ($i = 0; $i < count($dat2); $i++) {
             if ($searching == $dat4[$i]) {
                 array_push($arr_obj, $dat1[$i]);
                 array_push($arr_sort, $dat2[$i]);
-                //echo "dddd";
+              
 
 
 
@@ -881,7 +870,7 @@ class ShiftController extends Controller
                 if ($sea != null) {
                     for ($h = 0; $h < count($dat2); $h++) {
                         if ($sea == $dat4[$h]) {
-                            $this->sub_object($sea, $dat1, $dat2, $dat4, $arr_obj, $arr_sort);
+                            $this->sub_object($sea, $dat1, $dat2, $dat4, $arr_obj, $arr_sort, $icons_obj);
                             break;
                         }
                     }
@@ -893,30 +882,22 @@ class ShiftController extends Controller
     }
     private function sub_object_list($searching, $dat1, $dat2, $dat4, $id, $co, $object, $name, $s, array &$shi_name, array &$shi_id)
     {
-        /*global $arr_obj;
-        global $arr_sort;*/
 
-        //tatic $dd = 1;
         $find = 0;
         $push = 1;
         for ($i = 0; $i < count($dat1); $i++) {
             if ($searching == $dat4[$i]) {
 
-                $fetch_shift_sub = DB::select("SELECT * FROM shift_model WHERE id_object='$dat1[$i]' ");
+                $fetch_shift_sub = DB::select("SELECT * FROM shift_model WHERE id_object='$dat1[$i]'  ");
                 foreach ($fetch_shift_sub as $result) {
 
                     array_push($shi_name, $result->shift_name);
                     array_push($shi_id, $result->id_shift);
                 }
-                /*if (mysqli_num_rows($fetch_shi) > 0) {
-                    while ($rowsh = mysqli_fetch_assoc($fetch_shi)) {
-                        array_push($shi_name, $rowsh['shift_name']);
-                        array_push($shi_id, $rowsh['id_shift']);
-                    }
-                }*/
 
 
-                //$dd++;
+
+       
                 $row = 0;
                 $sea = $dat1[$i] . "";
                 if ($sea != null) {
@@ -933,19 +914,15 @@ class ShiftController extends Controller
 
     private function search_shift($search, $obj_id, $obj_name, $obj_superior, $shift_id, array &$final_id, $main_obj, array &$local_id)
     {
-        //return 0;
         $shift_arr = array();
         $finding = 0;
         for ($i = 0; $i < count($obj_id); $i++) {
             if ($search == $obj_superior[$i]) {
-                $fetch_shifts = DB::select("SELECT * FROM shift_model WHERE id_object='$obj_id[$i]' ");
+                $fetch_shifts = DB::select("SELECT * FROM shift_model WHERE id_object='$obj_id[$i]'   ");
                 foreach ($fetch_shifts as $result_shift) {
 
-                    //$shift_arr[] = $result_shift->id_shift;
-                    //$final_id[] = $result_shift->id_shift; 
                     array_push($shift_arr, $result_shift->id_shift);
-                    //array_push($final_id,  $result_shift->id_shift);
-                    //array_push($shi_id,  $result->id_shift);
+          
                 }
 
                 if (in_array($shift_id, $shift_arr) && count($shift_arr) != null) {
@@ -962,8 +939,7 @@ class ShiftController extends Controller
                                 $finding = 1;
                                 $this->search_shift($obj_id[$i], $obj_id, $obj_name, $obj_superior, $shift_id, $final_id, $main_obj, $local_id);
                                 break;
-                                //break;
-                                //echo "sda";
+                     
                             }
                         }
                     }
@@ -980,234 +956,19 @@ class ShiftController extends Controller
 }
 
 
-/*function sub_object($searching, $dat1, $dat2, $dat3, $dat4)
+function objectDropdownShift($encrytion, $sub_object)
 {
-    global $arr_obj;
-    global $arr_sort;
-    static $dd = 1;
-    $find = 0;
-    for ($i = 0; $i < count($dat2); $i++) {
-        if ($searching == $dat4[$i]) {
-            array_push($arr_obj, $dat1[$i]);
-            array_push($arr_sort, $dat2[$i]);
-
-            $dd++;
-            $row = 0;
-            $sea = $dat1[$i] . "";
-            if ($sea != null) {
-                for ($h = 0; $h < count($dat2); $h++) {
-                    if ($sea == $dat4[$h]) {
-                        sub_object($sea, $dat1, $dat2, $dat3, $dat4);
-                        break;
-                    }
-                }
-            }
-
-
-        }
-    }
-
-}
-
-if ($arr_obj != null) {*/
-
-/*array_multisort($arr_sort, $arr_obj);
-
-echo "<div class='row' >";
-$id_shift = array();
-$start_shift = array();
-$rep_non = array();
-$monday = array();
-$mon_from = array();
-$mon_to = array();
-$tuesday = array();
-$tue_from = array();
-$tue_to = array();
-$wednesday = array();
-$wed_from = array();
-$wed_to = array();
-$thursday = array();
-$thu_from = array();
-$thu_to = array();
-$friday = array();
-$fri_from = array();
-$fri_to = array();
-$saturday = array();
-$sat_from = array();
-$sat_to = array();
-$sunday = array();
-$sun_from = array();
-$sun_to = array();
-$shift_name = array();
-$color = array();
-for ($i = 0; $i < count($arr_obj); $i++) {
-    $dat = $arr_obj[$i];
-    global $type;
-    $mysqli = require("../database.php");
-
-    //$conn = new mysqli($host, $username, $password, $dbname);
-    //$fetch = mysqli_query($conn, "SELECT * FROM create_shift WHERE object_id='$dat' ORDER BY shift_name /*ORDER BY object_name, shift_name*/ /*");*/
-
-/*if (mysqli_num_rows($fetch) > 0) {
-    /**Sorting data alphabetically */
-/*while ($rows_dat = mysqli_fetch_assoc($fetch)) {
-    $id_shift[] = $rows_dat['id_shift'];
-    $start_shift[] = $rows_dat['start_shif'];
-    $rep_non[] = $rows_dat['rep_no'];
-    $monday[] = $rows_dat['monday'];
-    $mon_from[] = $rows_dat['mon_from'];
-    $mon_to[] = $rows_dat['mon_to'];
-    $tuesday[] = $rows_dat['tuesday'];
-    $tue_from[] = $rows_dat['tue_from'];
-    $tue_to[] = $rows_dat['tue_to'];
-    $wednesday[] = $rows_dat['wednesday'];
-    $wed_from[] = $rows_dat['wed_from'];
-    $wed_to[] = $rows_dat['wed_to'];
-    $thursday[] = $rows_dat['thursday'];
-    $thu_from[] = $rows_dat['thu_from'];
-    $thu_to[] = $rows_dat['thu_to'];
-    $friday[] = $rows_dat['friday'];
-    $fri_from[] = $rows_dat['fri_from'];
-    $fri_to[] = $rows_dat['fri_to'];
-    $saturday[] = $rows_dat['saturday'];
-    $sat_from[] = $rows_dat['sat_from'];
-    $sat_to[] = $rows_dat['sat_to'];
-    $sunday[] = $rows_dat['sunday'];
-    $sun_from[] = $rows_dat['sun_from'];
-    $sun_to[] = $rows_dat['sun_to'];
-    $shift_name[] = $rows_dat['shift_name'];
-    $color[] = $rows_dat['color'];
-    $object_id[] = $rows_dat['object_id'];
-    $object_name[] = $rows_dat['object_name'];
-
-}
-}*/
-/* }
-
- /*$dd = 2;
-
- if (count($id_shift) > 0) {
-     for ($x = 0; $x < count($id_shift); $x++) {
-         $ok = False;
-         if ($shi == null && $obj == null) {
-             $ok = True;
-         } else if (count($shi) == 0 && count($obj) != 0) {
-             if (in_array($object_id[$x], $obj)) {
-                 $ok = True;
-             }
-         } else if (count($shi) != 0 && count($obj) == 0) {
-
-             if (in_array($shift_name[$x], $shi)) {
-
-                 $ok = True;
-
-             }
-         } else {
-             if (in_array($shift_name[$x], $shi) || in_array($object_id[$x], $obj)) {
-                 $ok = True;
-             }
-         }
-         if ($ok == True) {
-             /**source : https://stackoverflow.com/questions/2790899/how-to-check-if-a-string-starts-with-a-specified-string */
-/*$search_fit = false;
-if ($idisadmin == true || in_array($object_id[$x], $man_rights)) {
-    $strshi = strtolower($shift_name[$x]);
-    $strobj = strtolower($object_name[$x]);
-
-    if ($shii == "" && $obji == "") {
-        $search_fit = true;
-    } else if ($shii == "" && $obji != "") {
-
-        //if (str_starts_with($shift_name[$x], $shii)) {
-        //echo "<p>123</p>";
-        //echo "<p>".substr($shift_name[$x], 0, strlen($shii)) ."--". $shii ."</p>";
-        ///if(substr($shift_name[$x], 0, strlen($shii)) == $shii){
-        //$search_fit = true;
-
-        //}
-        if (substr($strobj, 0, strlen($obji)) == $obji) {
-            $search_fit = true;
-
-        }
-    } else if ($shii != "" && $obji == "") {
-        if (substr($strshi, 0, strlen($shii)) == $shii) {
-            $search_fit = true;
-
-        }
-
-    } else if ($shii != "" && $obji != "") {
-        if (substr($strshi, 0, strlen($shii)) == $shii && substr($strobj, 0, strlen($obji)) == $obji) {
-            $search_fit = true;
-        }
-    }
-    if ($search_fit == true) {
-        echo "<div class='col-12 col-md-3 col-sm-6 p-2 shadow-lg p-3 mb-3 bg-white rounded border'>";
-        echo "<div class='row' >";
-        echo "<div class='col-8'>";
-        echo "<h6 id='h_obj-" . $id_shift[$x] . "' style='display:inline;text-overflow: ellipsis;white-space: nowrap;overflow: hidden' title='" . $object_name[$x] . "'>" . $object_name[$x] . " - </h6><h6 id='h_shi-" . $id_shift[$x] . "' style='display:inline;text-overflow: ellipsis;white-space: nowrap;overflow: hidden' title='" . $shift_name[$x] . "'>" . $shift_name[$x] . "</h6>";
-        echo "</div>";
-        echo "<div class='col-4'>";
-        echo "<div class='text-end'>";
-        echo "<input class='in' style='background-color: " . $color[$x] . "'>";
-        echo "</div>";
-        echo "</div>";
-        echo "</div>";
-
-
-        echo "<center>";
-
-        echo "<p style='text-overflow: ellipsis;white-space: nowrap;overflow: hidden'>";
-        if ($monday[$x] == 1) {
-            echo "Monday: " . substr($mon_from[$x], 0, -3) . " - " . substr($mon_to[$x], 0, -3) . "<br><br>";
-        }
-        if ($tuesday[$x] == 1) {
-            echo "Tuesday: " . substr($tue_from[$x], 0, -3) . " - " . substr($tue_to[$x], 0, -3) . "<br><br>";
-        }
-        if ($wednesday[$x] == 1) {
-            echo "Wednesday: " . substr($wed_from[$x], 0, -3) . " - " . substr($wed_to[$x], 0, -3) . "<br><br>";
-        }
-        if ($thursday[$x] == 1) {
-            echo "Thursday: " . substr($thu_from[$x], 0, -3) . " - " . substr($thu_to[$x], 0, -3) . "<br><br>";
-        }
-        if ($friday[$x] == 1) {
-            echo "Friday: " . substr($fri_from[$x], 0, -3) . " - " . substr($fri_to[$x], 0, -3) . "<br><br>";
-        }
-        if ($saturday[$x] == 1) {
-            echo "Saturday: " . substr($sat_from[$x], 0, -3) . " - " . substr($sat_to[$x], 0, -3) . "<br><br>";
-        }
-        if ($sunday[$x] == 1) {
-            echo "Sunday: " . substr($sun_from[$x], 0, -3) . " - " . substr($sun_to[$x], 0, -3) . "<br><br>";
-        }
-        echo "</p>";
-        if ($type == 1) {
-            echo "<input type='button' class='btn btn-primary' id='edit-" . $id_shift[$x] . "' onclick='Open_edit(this.id)' value='EDIT'>";
-        } else {
-            echo "<input type='button' class='btn btn-primary' id='edit-" . $id_shift[$x] . "' onclick='Select_sh(this.id)' value='SELECT'>";
-        }
-        echo "</center>";
-        echo "<br>";
-        echo "</div>";
-    }
-}
-
-}
-}
-}
-
-
-echo "</div>";
-}*/
-function objectDropdown($encrytion)
-{
-    $fetch = DB::select("SELECT * FROM object_model ORDER BY object_name");
+    $fetch = DB::select("SELECT * FROM object_model  ORDER BY object_name");
 
     $names = array();
     $ids = array();
+    $icc = array();
 
     foreach ($fetch as $result) {
         if ($result->superior_object_id == 0) {
             $ids[] = $result->id_object;
             $names[] = $result->object_name;
+            $icc[] = $result->object_icon;
         }
     }
     for ($x = 0; $x < count($ids); $x++) {
@@ -1216,14 +977,15 @@ function objectDropdown($encrytion)
     for ($x = 0; $x < count($ids); $x++) {
 
         $id = $ids[$x];
-        echo "<li><a  id='drop$id' class='dropdown-item' onclick='select_dropdown(this.id)'>$names[$x]</a></li>";
+        echo "<input id='hdrop$id' type='hidden' value='$sub_object'>";
+        echo "<li><a  id='drop$id' class='dropdown-item' onclick='select_dropdown2(this.id)'><i class='$icc[$x]'></i>&nbsp;$names[$x]</a></li>";
 
     }
 
 }
 
 
-function sub_object_model($searching, $dat1, $dat2, $dat4, $previous, $object_sub_decrypted, $is_sub_encrypte)
+function sub_object_model($searching, $dat1, $dat2, $dat4, $previous, $object_sub_decrypted, $is_sub_encrypte, $icons)
 {
     static $dd = 1;
     $find = 0;
@@ -1251,7 +1013,7 @@ function sub_object_model($searching, $dat1, $dat2, $dat4, $previous, $object_su
 
                         echo "<h2 class='ccordion-header w-100 mb-0 ' id='heading$dat1[$i]'>";
                         echo "<button class='accordion-button w-100' type='button' data-bs-toggle='collapse' data-bs-target='#collapse$dat1[$i]' aria-expanded='false' aria-controls='$dat1[$i]' clicked='true' >";
-                        echo " $dat2[$i]  <div class='w-100'><div style='float:right' style='margin-right: 35px '>";
+                        echo "<div class='w-100'><i class='$icons[$i]'></i>&nbsp;$dat2[$i] <div style='float:right' style='margin-right: 35px '>";
                         if ($is_sub_encrypte == 0 && $object_sub_decrypted == Crypt::decrypt($dat1[$i])) {
                             echo "<input id='" . $dat1[$i] . "' type='radio' name='accept-offers' onclick='radiocheck(this.id)' class='hidden radio-label' checked>";
                         } else {
@@ -1267,7 +1029,7 @@ function sub_object_model($searching, $dat1, $dat2, $dat4, $previous, $object_su
                         echo "<div id='collapse$dat1[$i]' class='w-100 accordion-collapse ' aria-labelledby='heading$dat1[$i]' data-bs-parent='heading$previous'>";
                         echo "<div class='accordion-body pt-0 pb-0  w-100'>";
 
-                        sub_object_model($sea, $dat1, $dat2,/* $dat3,*/ $dat4, $dat1[$i], $object_sub_decrypted, $is_sub_encrypte);
+                        sub_object_model($sea, $dat1, $dat2,/* $dat3,*/ $dat4, $dat1[$i], $object_sub_decrypted, $is_sub_encrypte, $icons);
 
 
                         echo "</div>";
@@ -1280,7 +1042,7 @@ function sub_object_model($searching, $dat1, $dat2, $dat4, $previous, $object_su
                 }
                 if ($find2 == 0) {
 
-                    echo "<button class='btn btn-light w-100 mt-3 mb-3 pt-2 pb-2' style='text-align: left;align-items: center;' >" . $dat2[$i] . "<div style='float:right' style='margin-right: 35px '>";
+                    echo "<button class='btn btn-light w-100 mt-3 mb-3 pt-2 pb-2' style='text-align: left;align-items: center;' ><i class='$icons[$i]'></i>&nbsp;" . $dat2[$i] . "<div style='float:right' style='margin-right: 35px '>";
                     if ($is_sub_encrypte == 0 && $object_sub_decrypted == Crypt::decrypt($dat1[$i])) {
                         echo "<input id='" . $dat1[$i] . "' type='radio' name='accept-offers' onclick='radiocheck(this.id)' class='hidden radio-label' checked>";
                     } else {
@@ -1297,12 +1059,9 @@ function sub_object_model($searching, $dat1, $dat2, $dat4, $previous, $object_su
             }
         }
 
-        if ($find == 0) {
-
-            // echo "<h6>dsa</h6>";
-        }
 
     }
+  
 }
 
 ?>

@@ -22,16 +22,14 @@
                         <i class="fa fa-bell-o" style="font-size: 20px; float: left; color: black">
                         </i>
                     </a>
-                    <span class="badge badge-danger" style="position:absolute">10</span>
+                    <span class="badge badge-danger" style="position:absolute">0</span>
                     <ul class="dropdown-menu dropdown-menu-dark text-small shadow mt-2 "
                         aria-labelledby="dropdownMenu1">
-                        <li><a class="dropdown-item" href="#">New project...</a></li>
-                        <li><a class="dropdown-item" href="#">Settings</a></li>
-                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li><a class="dropdown-item" href="#">//TODO</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="#">Sign out</a></li>
+                        <li><a class="dropdown-item" href="#">//TODO</a></li>
                     </ul>
                 </div>
 
@@ -102,29 +100,6 @@
                         </li>
                     </ul>
 
-
-                    <!--<div class="dropdown mt-2" style="float: right">
-
-                        <ul class="dropdown-menu" aria-labelledby="dropdownUser1">
-                            <li>
-                                <a class="dropdown-item" href="#"><span class="fi fi-gb"></span>&nbsp; English
-                                    <i class="fa fa-check text-success ms-2"></i></a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="#"><span class="fi fi-cz"></span>
-                                    </i>&nbsp;Czech</a>
-                            </li>
-
-                            <li>
-                                <a class="dropdown-item" href="#"><span
-                                        class="fi fi-de"></span></i>&nbsp;Deutsch</a>
-                            </li>
-
-                        </ul>
-                    </div>-->
                 </div>
             </div>
             <div class="col-2 col-md-1">
@@ -137,7 +112,7 @@
 
                     <ul class="dropdown-menu" aria-labelledby="Dropdowns">
                         <li>
-                            <a class="dropdown-item" href="#"><span class="fi fi-gb"></span>&nbsp; English
+                            <a class="dropdown-item" href="#"><span class="fi fi-gb"></span>&nbsp; English - TODO
                                 <i class="fa fa-check text-success ms-2"></i></a>
                         </li>
                         <li>
@@ -145,12 +120,12 @@
                         </li>
                         <li>
                             <a class="dropdown-item" href="#"><span class="fi fi-cz"></span>
-                                </i>&nbsp;Czech</a>
+                                </i>&nbsp;Czech - TODO</a>
                         </li>
 
                         <li>
                             <a class="dropdown-item" href="#"><span
-                                    class="fi fi-de"></span></i>&nbsp;Deutsch</a>
+                                    class="fi fi-de"></span></i>&nbsp;Deutsch - TODO</a>
                         </li>
 
                     </ul>
@@ -158,5 +133,4 @@
             </div>
         </div>
     </div>
-    <!--<div class="header_img"> <img src="https://i.imgur.com/hczKIze.jpg" alt=""> </div>-->
 </header>

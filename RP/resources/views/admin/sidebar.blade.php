@@ -8,57 +8,54 @@
                     <!--<i class='bx bx-layer nav_logo-icon text-dark'></i>-->
                     <span class="nav_logo-name text-dark">Clock Work</span> </a>
                 <div class="nav_list">
-                    <a href="/admin/dashboard3" class="nav_link active mb-1 text-dark link-secondary"><i
+                    <a href="/admin/dashboard" class="nav_link active mb-1 text-dark link-secondary"><i
                             class='bx bx-grid-alt nav_icon'></i> <span class="nav_name">Dashboard</span> </a>
-                    <a href="#" class="nav_link mb-1 text-dark link-secondary"> <i
-                            class='bx bx-user nav_icon'></i> <span class="nav_name">Users</span> </a>
-                    <a href="/admin/shift-model/create-model-shift" class="nav_link mb-1 text-dark link-secondary"> <i
-                            class='bx bx-message-square-detail nav_icon'></i> <span class="nav_name">Create
-                            shift</span>
-                    </a> <a href="/admin/object-model/create-model-object" class="nav_link mb-1 text-dark link-secondary"> <i
-                            class='bx bx-bookmark nav_icon'></i> <span class="nav_name">Structure</span>
-                    </a> <a href="#" class="nav_link mb-1 text-dark link-secondary"
+                    <a href="/admin/employee-list" class="nav_link mb-1 text-dark link-secondary"> <i
+                            class='bx bx-user nav_icon'></i> <span class="nav_name">Employees</span> </a>
+                    <a href="/admin/shift-model/create-model-shift" class="nav_link mb-1 text-dark link-secondary"> <i class="bi bi-card-heading nav_icon"></i> <span class="nav_name">Shift models
+                            </span>
+                        </a> <a href="/admin/offers" class="nav_link mb-1 text-dark link-secondary"
+                        class=" nav_link nav-link px-0 mx-0 align-middle"> <i class='bx bx-hash nav_icon' ></i> <span class="nav_name">Shift offers</span> </a>
+                            <a href="/admin/confirm-offer-request" class="nav_link mb-1 text-dark link-secondary"
                         class=" nav_link nav-link px-0 mx-0 align-middle"> <i class='bx bx-folder nav_icon'
-                            data-bs-parent="#menu"></i> <span class="nav_name">Files</span> </a>
+                            data-bs-parent="#menu"></i> <span class="nav_name">Shift requests</span> </a>
+                        </a> <a href="/admin/object-model/create-model-object" class="nav_link mb-1 text-dark link-secondary"> <i class='bx bx-building-house nav_icon' ></i> <span class="nav_name">Objects
+                            </span>
+                        </a> <a href="/chatify" class="nav_link mb-1 text-dark link-secondary"
+                        class=" nav_link nav-link px-0 mx-0 align-middle"> <i
+                        class='bx bx-message-square-detail nav_icon'></i> <span class="nav_name">Chat</span> </a>
 
                     <li class="mx-0">
                         <a href="#submenu6" class="nav_link mb-1 text-dark link-secondary"
                             data-bs-toggle="collapse" class=" nav_link nav-link px-0 mx-0 align-middle">
-                            <i class="fs-4 bi-speedometer2"></i> <span
-                                class="ms-1 d-none d-sm-inline">Dashboard</span> </a>
+                            <i class='bi bi-calendar-week nav_icon'></i> <span
+                                class="ms-1 d-none d-sm-inline">Calendar</span> </a>
                         <ul class="collapse nav flex-column ms-1" id="submenu6" data-bs-parent="#menu">
                             <li class="w-100">
-                                <a href="#" class="nav_link mb-1 text-dark link-secondary"
-                                    class="nav-link px-0"> 1 <span class="d-none d-sm-inline">Item</span></a>
+                                <a href="/admin/calendar-view" class="nav_link mb-1 text-dark link-secondary"
+                                    class="nav-link px-0"> <i class="bi bi-eye nav_icon"></i> <span class="d-none d-sm-inline">View calendar</span></a>
                             </li>
                             <li>
-                                <a href="#" class="nav_link mb-1 text-dark link-secondary"
-                                    class="nav-link px-0"> 2 <span class="d-none d-sm-inline">Item</span> </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="mx-0">
-                        <a href="#submenu7" class="nav_link mb-1 text-dark link-secondary"
-                            data-bs-toggle="collapse" class=" nav_link nav-link px-0 mx-0 align-middle">
-                            <i class="fs-4 bi-speedometer2"></i> <span
-                                class="ms-1 d-none d-sm-inline">Dashboard</span> </a>
-                        <ul class="collapse nav flex-column ms-1" id="submenu7" data-bs-parent="#menu">
-                            <li class="w-100">
-                                <a href="#" class="nav_link mb-1 text-dark link-secondary"
-                                    class="nav-link px-0"> 1<span class="d-none d-sm-inline">Item</span> </a>
-                            </li>
-                            <li>
-                                <a href="#" class="nav_link mb-1 text-dark link-secondary"
-                                    class="nav-link px-0"> 2 <span class="d-none d-sm-inline">Item</span></a>
+                                <a href="/admin/calendar" class="nav_link mb-1 text-dark link-secondary"
+                                    class="nav-link px-0"> <i class="bi bi-pen nav_icon"></i> <span class="d-none d-sm-inline">Edit calendar</span> </a>
                             </li>
                         </ul>
                     </li>
 
 
-                    <div id="asd"><a href="#" class="nav_link  mb-1 text-dark link-secondary"> <i
-                                class='bx bx-bar-chart-alt-2 nav_icon'></i> <span class="nav_name">Stats</span>
+                    <div ><a href="/admin/my-statistics" class="nav_link  mb-1 text-dark link-secondary"> <i
+                                class='bx bx-bar-chart-alt-2 nav_icon'></i> <span class="nav_name">My statistics</span>
                         </a>
                     </div>
+                    <div ><a href="/admin/device-" class="nav_link  mb-1 text-dark link-secondary"> <i class='bx bx-briefcase-alt nav_icon' ></i> <span class="nav_name">My time options</span>
+                        </a>
+                    </div>
+                    <div ><a href="/admin/device-register" class="nav_link  mb-1 text-dark link-secondary"> <i class='bx bx-devices nav_icon' ></i> <span class="nav_name">Devices</span>
+                    </a>
+                </div>
+                <div ><a href="/admin/board-information" class="nav_link  mb-1 text-dark link-secondary"> <i class='bx bx-chalkboard nav_icon' ></i> <span class="nav_name">Info-board</span>
+                </a>
+                </div>
 
 
 

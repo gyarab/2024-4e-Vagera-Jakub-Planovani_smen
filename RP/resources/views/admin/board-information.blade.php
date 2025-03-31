@@ -30,11 +30,13 @@
     <link href="{{ asset('CSS/object-structure1.css') }}" rel="stylesheet">
     <link href="{{ asset('CSS/select-button.css') }}" rel="stylesheet">
     <link href="{{ asset('CSS/timeline.css') }}" rel="stylesheet">
-
-    <!-- <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src=" https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js "></script>
+    <link href=" https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.min.css " rel="stylesheet">
 </head>
 
 <body id="body-pd">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         @media (max-width: 767px) {
             .carousel-inner .carousel-item>div {
@@ -88,7 +90,15 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
         </script>
-
+<script>
+        function success_sweet_alert(message) {
+    Swal.fire({
+        title: message,
+        text: "",
+        icon: "success"
+    });
+}
+</script>
 
 
         <div class="container-fluid">
@@ -191,10 +201,7 @@
                         <div class="row">
                             <h5>Image </h5>
                             <hr>
-                            <!--<input type="file" class="mt-2" id="imageInput" hidden />
-                            <label for="imageInput" class="btn btn-primary mt-2"> <i for="imageInput"
-                                    class="fa fa-fw fa-camera "></i>
-                                <span for="imageInput">Image</span></label>-->
+      
 
                             <input id="file_picker" type="file" class="mt-2" hidden />
                             <img id="board_img" for="file_picker" class="object-fit-cover img-responsive w-100"
@@ -210,48 +217,8 @@
                                 document.getElementById('file_picker').addEventListener('change', function(e) {
                                     if (e.target.files[0]) {
 
-                                        //alert("222222");
-                                        // Get the selected file
-                                        /*var file = document.getElementById('file_picker').files[0];
-
-                                                                if (!file) {
-                                                                    alert('Please select an image file.');
-                                                                    return;
-                                                                }
-                                                              // alert("----------");
-
-                                                                // Create a FormData object to send the file data
-                                                                var formData = new FormData();
-                                                                formData.append('image', file);
-                                                                //alert("----------");
-
-                                                                // Get the CSRF token
-                                                                var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');*/
-                                        //  alert("jfdhjkfdsjhfsdjk");
                                         filePreview();
-                                        // AJAX request to upload the image
-                                        /*$.ajax({
-                                            url: '{{ route('storeImage') }}',
-                                            type: 'POST',
-                                            data: formData,
-                                            processData: false, // Prevent jQuery from processing the data
-                                            contentType: false, // Prevent jQuery from setting content-type
-                                            headers: {
-                                                'X-CSRF-TOKEN': csrfToken
-                                            },
-                                            success: function(response) {
-                                                if (response.success) {
-                                                    $('#profileImage').attr('src', response.path);
-                                                    //alert(response.messages);
-                                                } else {
-                                                    document.getElementById('responseMessage').innerHTML = 'Upload failed!';
-                                                }
-                                            },
-                                            error: function(xhr, status, error) {
-                                                document.getElementById('responseMessage').innerHTML =
-                                                    'Error uploading image: ' + error;
-                                            }
-                                        });*/
+                         
                                     }
                                 });
 
@@ -478,151 +445,7 @@
 
 
             <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-            <!--<div class="row">
-                <div class="col-3">
-                    <div class="card">
-                        <div class="card-header" style="background-color: #009242; height: 25px">
-                        </div>
-                        <img class="card-img-top img-responsive img-fluid" src="https://www.rozbehamecesko.cz/repository/layout/noimage.png" style="height: 250px" alt="Card image cap">-->
-            <!--<img height="150" class="object-fit-cover img-responsive"
-                            style="aspect-ratio: auto;overflow: hidden;white-space: nowrap;"
-                            src="https://www.rozbehamecesko.cz/repository/layout/noimage.png">
-                        <div class="card-body">
-                            <h5 class="card-title">Special title treatment</h5>
-                            <p class="card-text">With supporting text below as a natural lead-in to additional content.d sad sa dsa dsa dsa dsa s   as  sad asdhjhfjkhsajkf hdhskj fhsdh jkfhkdsh khfjshd jhfjkds hfhksd hjkfds  fhdsjh hsdjk fjksdh fhie fhsd
-                            </p>
-                            <p>For</p>
-                        </div>
-                        <div class="card-footer">
-                            
-                                <div style="display: inline">
-                                    <img src=""" alt="hugenerd" width="40"
-                                        height="40" class="rounded-circle object-fit-cover img-responsive mr-3"
-                                        style="aspect-ratio: auto;overflow: hidden;white-space: nowrap;display: inline">
-                                </div>
-                                <div class="user__info" style="display: inline">
-                                    <h5 class="mt-1" style="display: inline">&nbsp; John Doe&nbsp;&nbsp;</h5>
-
-
-                                </div>
-                                <small class="mt-2" style="float: right">2d ago</small>
-                           
-                        </div>
-                    </div>
-                </div>
-            </div>-->
-
-            <!--<div class="container-fluid">-->
-            <!--<div class="row mx-auto my-auto justify-content-center">
-                        <div id="recipeCarousel" class="carousel slide" data-bs-ride="carousel">
-                            <div class="carousel-inner" role="listbox">
-                                <div class="carousel-item active">
-                                    <div class="col-md-3">
-                                        <div class="card p-2">-->
-            <!--<div class="card-img">
-                                                <img src="https://via.placeholder.com/700x500.png/CB997E/333333?text=1" class="img-fluid">
-                                            </div>
-                                            <div class="card-img-overlay">Slide 1</div>-->
-
-            <!-- <div class="card">
-                                              <div class="card-header" style="background-color: ' . $result->color . '; height: 25px">
-                                                 </div>
-                                                <img height="150" class="object-fit-cover img-responsive" style="aspect-ratio: auto;white-space: nowrap;" src="https://www.rozbehamecesko.cz/repository/layout/noimage.png">
-                                                <div class="card-body">
-                                               <h5 class="card-title"></h5>
-                                                <p class="card-text" style="overflow: hidden visible;text-overflow: ellipsis;white-space: normal; max-height: 186px">
-                                               </p>
-                                              <hr>
-                                                <p style="float: left"><strong>For :  </strong></p>
-                                                </div>
-                                                 <div class="card-footer">
-                                                 <div class="row">
-                                                <div class="col-12">
-                                               <div class="" style="display: inline">
-                                               
-                                                 <img src=" . $imageUrl . " alt='hugenerd' width='40'
-                                                     height="40" class="rounded-circle object-fit-cover img-responsive mr-3"
-                                                     style="aspect-ratio: auto;overflow: hidden;white-space: nowrap;display: inline;float: left">
-                                                 </div>
-                                    
-                                                 <h5 class="mt-2" style="display: inline;float: left">&nbsp;&nbsp;&nbsp;</h5>
-                                        
-                                                 <small class="mt-2" style="float:right"></small>
-                                    
-                                    
-                                    
-                                              
-                                                 </div>
-                                              </div>
-                                    
-                                    
-                                    
-                                    
-                                                 </div>
-                                                </div>
-                                           
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="carousel-item">
-                                    <div class="col-md-3">
-                                        <div class="card">
-                                            <div class="card-img">
-                                                <img src="https://via.placeholder.com/700x500.png/DDBEA9/333333?text=2" class="img-fluid">
-                                            </div>
-                                            <div class="card-img-overlay">Slide 2</div>
-                                        </div>
-                                    </div>
-                                </div>-->
-            <!--<div class="carousel-item">
-                                    <div class="col-md-3">
-                                        <div class="card">
-                                            <div class="card-img">
-                                                <img src="https://via.placeholder.com/700x500.png/FFE8D6/333333?text=3" class="img-fluid">
-                                            </div>
-                                            <div class="card-img-overlay">Slide 3</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="carousel-item">
-                                    <div class="col-md-3">
-                                        <div class="card">
-                                            <div class="card-img">
-                                                <img src="https://via.placeholder.com/700x500.png/B7B7A4/333333?text=4" class="img-fluid">
-                                            </div>
-                                            <div class="card-img-overlay">Slide 4</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="carousel-item">
-                                    <div class="col-md-3">
-                                        <div class="card">
-                                            <div class="card-img">
-                                                <img src="https://via.placeholder.com/700x500.png/A5A58D/333333?text=5" class="img-fluid">
-                                            </div>
-                                            <div class="card-img-overlay">Slide 5</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="carousel-item">
-                                    <div class="col-md-3">
-                                        <div class="card">
-                                            <div class="card-img">
-                                                <img src="https://via.placeholder.com/700x500.png/6B705C/eeeeee?text=6" class="img-fluid">
-                                            </div>
-                                            <div class="card-img-overlay">Slide 6</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>-->
-            <!-- <a class="carousel-control-prev bg-transparent w-aut" href="#recipeCarousel" role="button" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            </a>
-                            <a class="carousel-control-next bg-transparent w-aut" href="#recipeCarousel" role="button" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            </a>
-                        </div>-->
-            <!--</div>-->
+           
             <div class="row">
 
                 <div id="MultiCarouselInsert">
@@ -681,92 +504,25 @@
                                                         {!! nl2br(e($b->content)) !!}
                                                     </p>
                                                     <script></script>
-                                                    <!-- <hr>
-                                                    <p style="float: left"><strong>For : {{ $counter }} </strong>
-                                                    </p>-->
+                                          
                                                 </div>
                                                 <div class="card-footer">
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            @php
-                                                                /*$fetch_img = DB::select("SELECT COUNT(*) AS count FROM profile_pictures WHERE id = '$b->created_by'");
-                                                            $supress = $fetch_img[0]->count;
-                                                            if ($supress > 0) {
-                                                                $fetch_link = DB::select("SELECT * FROM profile_pictures WHERE id = '$b->created_by'");
-                                                                $link_image = "";
-                                                                foreach ($fetch_link as $result_link) {
-                                                                    $link_image = $result_link->image_link;
-                                                                }
-                                                                $imageUrl = Storage::url($link_image);
-                                                            } else {
-                                                                $imageUrl = Storage::url('profile-images/avatar_blank2.jpg');
-                                                            }*/
-                                                            @endphp
-                                                            <!-- <img src="" alt='hugenerd' width='40'
-                                                            height="40" class="rounded-circle object-fit-cover img-responsive mr-3"
-                                                            style="aspect-ratio: auto;overflow: hidden;white-space: nowrap;display: inline;float: left">
+                                                    
                                                         
-                                           
-                                                        <h5 class="mt-2" style="display: inline;float: left">&nbsp;&nbsp;&nbsp;</h5>-->
-                                                        <button type="button" class="btn btn-outline-primary btn-sm " style="float: left"
-                                                        data-bs-toggle="modal" data-bs-target="#modalVer">Details</button>
-                                                            <small class="mt-1"
-                                                                style="float:right">{{ substr($b->created_at, 0, -8) }}</small>
                                                         </div>
-                                                        <!--<div class="col-12">
-                                                            <center>
-                                                                <button class="btn btn-primary">
-                                                                    Edit
-                                                                </button>
-                                                            </center>
-                                                        </div>-->
+                                                  
                                                     </div>
                                                 </div>
-                                                <!--<div class="card-img">
-                                                    <img src="https://via.placeholder.com/700x500.png/DDBEA9/333333?text=2"
-                                                        class="img-fluid">
-                                                </div>
-                                                <div class="card-img-overlay"> {{ $counter }} </div>-->
+
                                             </div>
                                         </div>
                                     </div>
                             </div>
                             @endforeach
 
-                            <!--<div class="carousel-item active">
-                                    <div class="col-md-3">
-                                        <div class="card">
-                                            <div class="card-img">
-                                                <img src="https://via.placeholder.com/700x500.png/DDBEA9/333333?text=2"
-                                                    class="img-fluid">
-                                            </div>
-                                            <div class="card-img-overlay">Slide 1</div>
-                                        </div>
-                                    </div>
-                                </div>-->
-
-                            <!--<div class="carousel-item">
-                                    <div class="col-md-3">
-                                        <div class="card">
-                                            <div class="card-img">
-                                                <img src="https://via.placeholder.com/700x500.png/DDBEA9/333333?text=2"
-                                                    class="img-fluid">
-                                            </div>
-                                            <div class="card-img-overlay">Slide 2</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="carousel-item">
-                                    <div class="col-md-3">
-                                        <div class="card">
-                                            <div class="card-img">
-                                                <img src="https://via.placeholder.com/700x500.png/DDBEA9/333333?text=2"
-                                                    class="img-fluid">
-                                            </div>
-                                            <div class="card-img-overlay">Slide 2</div>
-                                        </div>
-                                    </div>
-                                </div>-->
+                  
                         </div>
 
 
@@ -815,11 +571,10 @@
                     _token: '{{ csrf_token() }}',
                 },
                 success: function(response) {
-                    //alert(response);
-                    //$("#MultiCarouselInsert").html(response);
+
                 },
                 error: function(response) {
-                    alert("dsad");
+                    error_sweet_alert("dsad");
                 }
             });
             $.ajax({
@@ -829,15 +584,10 @@
                     _token: '{{ csrf_token() }}',
                 },
                 success: function(response) {
-                    //alert(response);
-                    // $("#content_i").html(response);
-                    //document.getElementById("content_i").innerText = response;
-                    // document.getElementById("content_i").innerText = "<div class='carousel-item active'><div class='col-md-3'><div class='card'><div class='card-img'><img src='https://via.placeholder.com/700x500.png/DDBEA9/333333?text=2' class='img-fluid'></div><div class='card-img-overlay'>Slide 1</div></div></div></div>       <div class='carousel-item'> <div class='col-md-3'><div class='card'><div class='card-img'> <img src='https://via.placeholder.com/700x500.png/DDBEA9/333333?text=2' class='img-fluid'> </div> <div class='card-img-overlay'>Slide 2</div>   </div> </div></div>";
-
 
                 },
                 error: function(response) {
-                    alert("dsad");
+                    error_sweet_alert("dsad");
                 }
             });
         </script>
@@ -856,10 +606,6 @@
         const currentMonth = monthsArr[currentDateObj.getMonth()];
         const currentYear = currentDateObj.getFullYear();
     </script>
-    <!-- <button id="edit_opener" type="button" class="btn btn-info btn-lg w-100" data-bs-toggle="modal"
-        data-bs-target="#myModals">Open Modal</button>-->
-
-    <!-- Modal -->
     <div class="modal fade w-100" id="myModals" role="dialog" data-bs-backdrop="false">
         <div class="modal-dialog w-100 modal-fullscreen">
 
@@ -876,10 +622,8 @@
                     <div class="container-fluid">
 
                         <div class="row">
-                            <!--<div class="col-12">
-                                            <h3>Board editor</h3>
-                                        </div>-->
-                            <div class="col-12 col-md-2 flex">
+
+                            <div class="col-12 col-md-2 mb-3 flex">
                                 <div class="card p-3">
                                     <div class="row">
                                         <h5>TimeLine</h5>
@@ -1013,11 +757,7 @@
                                     <div class="row">
                                         <h5>Image </h5>
                                         <hr>
-                                        <!--<input type="file" class="mt-2" id="imageInput" hidden />
-                                                        <label for="imageInput" class="btn btn-primary mt-2"> <i for="imageInput"
-                                                                class="fa fa-fw fa-camera "></i>
-                                                            <span for="imageInput">Image</span></label>-->
-
+                   
                                         <input id="file_picker2" type="file" class="mt-2" hidden />
                                         <img id="board_img2" for="file_picker2"
                                             class="object-fit-cover img-responsive w-100"
@@ -1042,7 +782,6 @@
                                                 const preview2 = document.getElementById('board_img2');
 
                                                 const file_2 = document.querySelector('#file_picker2').files[0];
-                                                //alert("123456");
 
                                                 const reader2 = new FileReader();
 
@@ -1166,7 +905,6 @@
             let next = el.nextElementSibling
             for (var i = 1; i < minPerSlide; i++) {
                 if (!next) {
-                    // wrap carousel by using first child
                     next = items[0]
                 }
                 let cloneChild = next.cloneNode(true)
@@ -1211,14 +949,13 @@
 
                 },
                 success: function(response) {
-                    alert(response.stat);
 
                     // Get the selected file
-
+                    success_sweet_alert("Board saved successfully");
+                    load_boards();
                     if ($('#file_picker')[0].files.length != 0) {
                         var file = document.getElementById('file_picker').files[0];
                         if (!file) {
-                            //alert('Please select an image file.');
                             return;
                         }
 
@@ -1241,40 +978,21 @@
                                 'X-CSRF-TOKEN': csrfToken
                             },
                             success: function(response) {
-                                // alert(response.success);
-                                /*if (response.success) {
-                                  
-                                                $('#profileImage').attr('src', response.path);
-                                            } else {
-                                                document.getElementById('responseMessage').innerHTML = 'Upload failed!';
-                                            }*/
+
                             },
                             error: function(xhr, status, error) {
-                                alert("RRRRRRRRRRRR");
+                                error_sweet_alert("RRRRRRRRRRRR");
 
-                                /* document.getElementById('responseMessage').innerHTML =
-                                     'Error uploading image: ' + error;*/
                             }
                         });
                     }
 
                 },
                 error: function(response) {
-                    alert("dsad");
+                    error_sweet_alert("dsad");
                 }
             });
-            /*$.ajax({
 
-
-                url: "../board/add_board.php",
-                method: "POST",
-                data: {
-                    color: shex, man: man, part: part, full: full, text: te, caption: ca
-                },
-                success: function (data) {
-                    success_alert("Board was successfully added");
-                }
-            });*/
         }
 
         function updateBoard() {
@@ -1292,9 +1010,7 @@
             if (document.getElementById("2em_part_c").checked == true) {
                 part = 1;
             }
-            //alert("------");
-
-            //alert(id_update);
+            //succes_alert("Board successfully updated");
             $.ajax({
                 url: '{{ route('updateBoard') }}',
                 type: 'POST',
@@ -1309,15 +1025,13 @@
                     id_board: id_update,
                 },
                 success: function(response) {
-                    //alert(response);
 
-                    // alert(response.id_return);
-
-
+                    success_sweet_alert("Board updated successfully");
+                    load_boards();
                     if ($('#file_picker2')[0].files.length != 0) {
                         var file = document.getElementById('file_picker2').files[0];
                         if (!file) {
-                            alert('Please select an image file.');
+                            //alert('Please select an image file.');
                             return;
                         }
 
@@ -1340,19 +1054,19 @@
                                 'X-CSRF-TOKEN': csrfToken
                             },
                             success: function(response) {
-                                alert(response.success);
 
                             },
                             error: function(xhr, status, error) {
-                                alert("RRRRRRRRRRRR");
+                                error_sweet_alert("RRRRRRRRRRRR");
 
                             }
                         });
                     }
 
+
                 },
                 error: function(response) {
-                    alert("dsad");
+                    error_sweet_alert("dsad");
                 }
             });
 
@@ -1385,16 +1099,14 @@
                     if (response.employee_part == 1) {
                         document.getElementById("2em_part_c").checked = true;
                     }
-                    //alert(response.content);
                     document.getElementById("areatext2").value = response.content;
                     eColor(map2.get(response.color));
 
                     document.getElementById("board_img2").src = response.imageUrl;
 
-
                 },
                 error: function(response) {
-                    alert("dsad");
+                    error_sweet_alert("dsad");
                 }
             });
         }
@@ -1420,12 +1132,11 @@
                     _token: '{{ csrf_token() }}',
                 },
                 success: function(data) {
-                    // alert("123");
 
                     $("#all_board").html(data);
                 },
                 error: function(response) {
-                    alert("dsad");
+                    error_sweet_alert("dsad");
                 }
             });
         }
@@ -1441,12 +1152,11 @@
                     number: number
                 },
                 success: function(data) {
-                    // alert("123");
 
                     $("#timeline_div").html(data);
                 },
                 error: function(response) {
-                    alert("dsa ----d");
+                    error_sweet_alert("dsa ----d");
                 }
             });
 
@@ -1469,22 +1179,19 @@
                     id_board: id_update,
                 },
                 success: function(data) {
-                     alert("ttttttttttttttttttt123");
-
+                    $('#myModals').modal('hide');
+                    load_boards();
+                    success_sweet_alert("Board deleted successfully");
                 },
                 error: function(response) {
-                    alert("dsad");
+                    error_sweet_alert("dsad");
                 }
             });
         }
     </script>
     <button id="modalVerification" type="button" class="btn btn-outline-primary btn-sm " style="float: right"
         data-bs-toggle="modal" data-bs-target="#modalVer">Details</button>
-    <!--<button id="modalbtn" type="button"
-  class="btn btn-outline-info btn-rounded mt-1" data-bs-toggle="modal"
-  data-bs-target="#exampleModal">
-  Get my id
-</button>-->
+
 
     <!-- Modal -->
     <div class="modal fade w-100" id="modalVer" tabindex="-1" data-bs-backdrop="false"
@@ -1518,6 +1225,19 @@
             </div>
         </div>
     </div>
+    <script>
+        function error_sweet_alert(message) {
+            Swal.fire({
+                title: "Connection failed",
+                text: ,
+                icon: "error"
+            });
+
+        }
+
+
+
+    </script>
     </div>
 </body>
 

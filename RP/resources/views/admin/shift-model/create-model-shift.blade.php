@@ -42,6 +42,29 @@
             width: 29px;
             opacity: 0.6;
         }
+
+        /*source: https://www.bootdey.com/snippets/view/profile-with-team-section*/
+        .avatar-group .avatar-group-item {
+            margin-left: -14px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            -webkit-transition: all .2s;
+            transition: all .2s;
+        }
+
+        .avatar-sm {
+            height: 50px;
+            width: 50px;
+        }
+
+        .avatar-group {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            padding-left: 12px;
+        }
     </style>
 
 </head>
@@ -52,14 +75,63 @@
     @include('admin.header')
     @include('admin.sidebar')
     @include('admin.scripts')
-    <div class="height-100 bg-light">
+    <div class="border-start wh-100 bg-light">
         <div class="container-fluid">
             <script>
                 var sub_object = "";
                 var current_object = 0;
                 var current_sub_object = 0;
                 var edit_shift_id = "";
-                var  shift_id = "";
+                var shift_id = "";
+                var search_text = "";
+
+                function success_alert(message) {
+                    Swal.fire({
+                        title: message,
+                        text: "",
+                        icon: "success"
+                    });
+
+                }
+
+                function error_alert(message) {
+                    Swal.fire({
+                        title: "Connection Error",
+                        text: "",
+                        icon: "error"
+                    });
+
+                }
+
+                function sure_delete() {
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Do you want to delete this shift?",
+                        text: "Such action is irreversible",
+                        showCancelButton: true,
+                        confirmButtonText: "Delete object",
+                    }).then((result) => {
+                        /* Read more about isConfirmed, isDenied below */
+                        if (result.isConfirmed) {
+                            alert(shift_id);
+                            $.ajax({
+                                url: '{{ route('deleteShift') }}',
+                                type: "POST",
+                                data: {
+                                    _token: '{{ csrf_token() }}',
+                                    shift_id: shift_id,
+                                },
+                                success: function(response) {
+                                    $('#myModals').modal('hide');
+                                    success_alert("Shift successfully deleted from system");
+                                },
+                                error: function(response) {
+                                    error_alert("Error");
+                                }
+                            });
+                        }
+                    });
+                }
             </script>
 
 
@@ -68,8 +140,14 @@
                     <div class="col-12 col-md-2">
                         <div class="form">
                             <i class="fa fa-search"></i>
-                            <input type="text" class="form-control form-input" style=""
-                                placeholder="Search anything...">
+                            <input id="search_shift" type="text" class="form-control form-input"
+                                onkeyup="searchKeyup(this.value)" placeholder="Search anything...">
+                            <script>
+                                function searchKeyup(input_value) {
+                                    search_text = input_value;
+                                    load_existing_shifts();
+                                }
+                            </script>
 
                         </div>
                     </div>
@@ -91,12 +169,10 @@
 
                                 },
                                 success: function(response) {
-                                    //alert(response)
                                     $("#select_obj").html(response);
-                                    //$("#select_obj_edit").html(response);
                                 },
                                 error: function(response) {
-                                    alert("dsad");
+                                    error_alert("Error");
                                 }
                             });
                         </script>
@@ -123,21 +199,12 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
-                <!--<div class="row">
-                    <div class="col-12">
-                        <br>
-                        <div class="p-3 mb-2" style="background: #4CAF50;color:#ffffff; font-size: 20px;">Create a new
-                            shift
-                        </div>
-                    </div>
-                </div>-->
+
 
                 <div class="row">
-                    <!-- <div class='col-12 '>
-                        <div class="p-2 mb-2" style="background: #4CAF50;color:#ffffff; font-size: 18px;">Name of the
-                            shift
-                        </div>-->
+
                     <script>
                         var obj_search = new Array();
                         var shi_search = new Array();
@@ -156,220 +223,9 @@
                         });
                     </script>
 
-                    <!--<div class="row">
-                            <div class='col-12 col-md-8'>
-                                <input type="text" class="form-control" name="jobname" id="jobname"
-                                    style="display:inline">
-                                <br id="hbr" style="display:none">
-                                <small id="label2" style="visibility:hidden;color:red"></small>
-                            </div>
-                        </div>
 
-                        <div class="p-2 mb-2 mt-2" style="background: #4CAF50;color:#ffffff; font-size: 18px;">Select
-                            the time
-                        </div>-->
-
-
-                    <!-- <div class="row">
-                            <div class='col-12 col-md-12'>
-                                <div class="row">
-                                    <div class='col-12 col-md-4'>
-                                        <input type="checkbox" class="form-check-input" id="everyday" name="radio"
-                                            style="height:20px;width:20px">
-                                        <label for="everyday" class="form-check-label"
-                                            style="display:inline;font-size: 17px">
-                                            Everyday</label>
-                                    </div>
-                                    <div class='col-12 col-md-4'>
-                                        <input type="checkbox" class="form-check-input" id="everyworkday"
-                                            name="radio" style="height:20px;width:20px">
-                                        <label for="everyworkday" class="form-check-label"
-                                            style="display:inline;font-size: 17px"> Every work
-                                            day</label>
-                                    </div>
-                                    <div class='col-12 col-md-4'>
-
-                                        <input type="checkbox" class="form-check-input" id="weekend"
-                                            name="radio" style="height:20px;width:20px">
-                                        <label for="weekend" class="form-check-label"
-                                            style="display:inline;font-size: 17px"> Every
-                                            weekend</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>-->
-                    <!--<div class="row">
-                            <div class='col-12 col-md-12'>
-
-                            </div>
-                        </div>
-                        <hr>-->
-                    <!-- monday -->
-
-
-                    <!--<div class="row mt-2">
-                    <div class='col-12 col-md-12'>
-                      <input class="form-check-input" type="checkbox" id="tuesday" name="tuesday">
-                      <label for="tuesday" class="form-check-label" style="display:inline"> Tuesday - </label>
-                      <label for="fromtuesday" style="display:inline">From </label>
-                      <input type="time" id="fromtuesday" name="fromtuesday" style="display:inline" />
-                      <label for="totuesday" style="display:inline">To </label>
-                      <input type="time" id="totuesday" name="totuesday" style="display:inline" />
-                    </div>
-                  </div>
-                  <div class="row mt-2">
-                    <div class='col-12 col-md-12'>
-                      <input class="form-check-input" type="checkbox" id="wednesday" name="wednesday">
-                      <label for="wednesday" class="form-check-label" style="display:inline"> Wednesday - </label>
-                      <label for="fromwednesday" style="display:inline">From </label>
-                      <input type="time" id="fromwednesday" name="fromwednesday" style="display:inline" />
-                      <label for="towednesday" style="display:inline">To </label>
-                      <input type="time" id="towednesday" name="towednesday" style="display:inline" />
-                    </div>
-                  </div>
-      
-                  <div class="row mt-2">
-                    <div class='col-12 col-md-12'>
-                      <input class="form-check-input" type="checkbox" id="thursday" name="thursday">
-                      <label for="thursday" class="form-check-label" style="display:inline"> Thursday - </label>
-                      <label for="fromthursday" style="display:inline">From </label>
-                      <input type="time" id="fromthursday" name="fromthursday" min="00:00" max="00:00" style="display:inline" />
-                      <label for="tothursday" style="display:inline">To </label>
-                      <input type="time" id="tothursday" name="tothursday" min="00:00" max="00:00" style="display:inline" />
-                    </div>
-                  </div>
-      
-                  <div class="row mt-2">
-                    <div class='col-12 col-md-12'>
-                      <input class="form-check-input" type="checkbox" id="friday" name="friday">
-                      <label for="Friday" class="form-check-label" style="display:inline"> Friday - </label>
-                      <label for="fromfriday" style="display:inline">From </label>
-                      <input type="time" id="fromfriday" name="fromfriday" min="00:00" max="00:00" style="display:inline" />
-                      <label for="tofriday" style="display:inline">To </label>
-                      <input type="time" id="tofriday" name="tofriday" min="00:00" max="00:00" style="display:inline" />
-                    </div>
-                  </div>
-      
-                  <div class="row mt-2">
-                    <div class='col-12 col-md-12'>
-                      <input class="form-check-input" type="checkbox" id="saturday" name="saturday">
-                      <label for="saturday" class="form-check-label" style="display:inline"> Saturday - </label>
-                      <label for="fromsaturday" style="display:inline">From </label>
-                      <input type="time" id="fromsaturday" name="fromsaturday" min="00:00" max="00:00" style="display:inline" />
-                      <label for="tosaturday" style="display:inline">To </label>
-                      <input type="time" id="tosaturday" name="tosaturday" min="00:00" max="00:00" style="display:inline" />
-                    </div>
-                  </div>
-      
-                  <div class="row mt-2">
-                    <div class='col-12 col-md-12'>
-                      <input class="form-check-input" type="checkbox" id="sunday" name="sunday">
-                      <label for="sunday" class="form-check-label" style="display:inline"> Sunday - </label>
-                      <label for="fromsunday" style="display:inline">From </label>
-                      <input type="time" id="fromsunday" name="fromsunday" min="00:00" max="00:00" style="display:inline" />
-                      <label style="display:inline">To </label>
-                      <input type="time" id="tosunday" name="tosunday" min="00:00" max="00:00" style="display:inline" />
-                    </div>
-                  </div>-->
-
-
-                    <!--<div class="row">
-                            <div class='col-12 col-md-12'>
-                                <div class="p-2 mb-2 mt-2"
-                                    style="background: #4CAF50;color:#ffffff; font-size: 18px;">Color picker
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-
-                            <div class='col-12 col-md-2'>
-                            </div>
-                            <div class='col-12 col-md-8'>
-                                <center>
-
-                                    <input id="color-1" type="button" class="in" onclick="Color(this.id)"
-                                        style="background-color: #124072;" value="">
-
-                                    <input id="color-2" type="button" class="in" onclick="Color(this.id)"
-                                        style="background-color: #067088;" value="">
-
-                                    <input id="color-3" type="button" class="in" onclick="Color(this.id)"
-                                        style="background-color: #056362;" value="">
-
-                                    <input id="color-4" type="button" class="in" onclick="Color(this.id)"
-                                        style="background-color: #055d2b;" value="">
-
-
-                                    <input id="color-5" type="button" class="in" onclick="Color(this.id)"
-                                        style="background-color: #4b8723;" value="">
-
-
-                                    <input id="color-6" type="button" class="in" onclick="Color(this.id)"
-                                        style="background-color: #889d1e;" value="">
-
-
-                                    <br>
-                                    <input id="color-7" type="button" class="in" onclick="Color(this.id)"
-                                        style="background-color: #c3b204;" value="">
-                                    <input id="color-8" type="button" class="in" onclick="Color(this.id)"
-                                        style="background-color: #ce8425;" value="">
-                                    <input id="color-9" type="button" class="in" onclick="Color(this.id)"
-                                        style="background-color:  #a53d1a;" value="">
-                                    <input id="color-10" type="button" class="in" onclick="Color(this.id)"
-                                        style="background-color:  #880002;" value="">
-                                    <input id="color-11" type="button" class="in" onclick="Color(this.id)"
-                                        style="background-color:  #6a1161;" value="">
-                                    <input id="color-12" type="button" class="in" onclick="Color(this.id)"
-                                        style="background-color:  #4c1862 ;" value="">
-                                    <br>
-                                    <input id="color-13" type="button" class="in" onclick="Color(this.id)"
-                                        style="background-color: #1965b9;" value="">
-                                    <input id="color-14" type="button" class="in" onclick="Color(this.id)"
-                                        style="background-color:  #039ce0;" value="">
-                                    <input id="color-15" type="button" class="in" onclick="Color(this.id)"
-                                        style="background-color: #01969c;" value="">
-                                    <input id="color-16" type="button" class="in" onclick="Color(this.id)"
-                                        style="background-color: #009242;" value="">
-                                    <input id="color-17" type="button" class="in" onclick="Color(this.id)"
-                                        style="background-color:  #67ad31 ;" value="">
-                                    <input id="color-18" type="button" class="in" onclick="Color(this.id)"
-                                        style="background-color: #bcd637;" value="">
-                                    <br>
-                                    <input id="color-19" type="button" class="in" onclick="Color(this.id)"
-                                        style="background-color: #fff002;" value="">
-                                    <input id="color-20" type="button" class="in" onclick="Color(this.id)"
-                                        style="background-color: #fdaf43;" value="">
-                                    <input id="color-21" type="button" class="in" onclick="Color(this.id)"
-                                        style="background-color: #e87034;" value="">
-                                    <input id="color-22" type="button" class="in" onclick="Color(this.id)"
-                                        style="background-color: #eb1c26;" value="">
-                                    <input id="color-23" type="button" class="in" onclick="Color(this.id)"
-                                        style="background-color: #a2288d;" value="">
-                                    <input id="color-24" type="button" class="in" onclick="Color(this.id)"
-                                        style="background-color: #652d90;" value="">
-                                    <br>
-                                    <input id="color-25" type="button" class="in" onclick="Color(this.id)"
-                                        style="background-color: #81c1e7;" value="">
-                                    <input id="color-26" type="button" class="in" onclick="Color(this.id)"
-                                        style="background-color: #50ddd5;" value="">
-                                    <input id="color-27" type="button" class="in" onclick="Color(this.id)"
-                                        style="background-color: #addc81;" value="">
-                                    <input id="color-28" type="button" class="in" onclick="Color(this.id)"
-                                        style="background-color: #ffffba;" value="">
-                                    <input id="color-29" type="button" class="in" onclick="Color(this.id)"
-                                        style="background-color: #fea698;" value="">
-                                    <input id="color-30" type="button" class="in" onclick="Color(this.id)"
-                                        style="background-color: #b697dd;" value="">
-                                    <br>
-                                </center>
-                            </div>
-                            <div class='col-12 col-md-2'>
-                            </div>
-
-                        </div>-->
                 </div>
-                <button type="button" class="btn btn-info btn-lg w-100" data-bs-toggle="modal"
-                    data-bs-target="#myModals">Open Modal</button>
+
 
                 <!-- Modal -->
                 <div class="modal fade w-100" id="myModals" role="dialog" data-bs-backdrop="false">
@@ -379,8 +235,8 @@
                         <div class="modal-content modal-fullscreen d-flex justify-content-center w-100">
                             <div class="modal-header">
                                 <h5 class="modal-title"><b>Create panel</b></h5>
-                                <button type="button" class="close btn" style="float: right"
-                                    data-bs-dismiss="modal" aria-label="Close" onclick="hide_btn()">
+                                <button type="button" class="close btn" style="float: right" data-bs-dismiss="modal"
+                                    aria-label="Close" onclick="hide_btn()">
                                     <span style="font-size: 35px; float: right" aria--bs-hidden="true"
                                         onclick="hide_btn()">&times;</span>
                                 </button>
@@ -403,12 +259,12 @@
                                             </div>
                                             <div class='col-12 col-md-3'>
                                                 <div class='text-end'>
-                                                    <p style='margin-right: 10px;display: inline'>Repeateble</p>
+                                                    <p style='margin-right: 10px;display: inline'>Repeatable</p>
 
 
                                                     <label class='switch '>
 
-                                                        <input id="repeateble" type='checkbox' onclick="repeatable()"
+                                                        <input id="repeatable" type='checkbox' onclick="repeatable()"
                                                             class='primary' checked>
 
 
@@ -452,7 +308,6 @@
                                         </div>
                                         <div class="row mt-2">
                                             <div class='col-12 col-md-4'>
-                                                <!--<label for="from" style="display:inline; font-size:18px">From </label>-->
 
                                                 <div class="input-group mb-3">
                                                     <div class="input-group-prepend">
@@ -463,7 +318,6 @@
                                                 </div>
                                             </div>
                                             <div class='col-12 col-md-4'>
-                                                <!--<label for="to" style="display:inline">To </label>-->
                                                 <div class="input-group mb-3">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text" id="basic-addon2">To</span>
@@ -750,185 +604,133 @@
 
                                         </div>
 
-                                        <!--<button id="dropdown-currency-button" data-dropdown-toggle="dropdown-currency" class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600" type="button">
-                                                    <svg fill="none" aria-hidden="true" class="h-4 w-4 me-2" viewBox="0 0 20 15"><rect width="19.6" height="14" y=".5" fill="#fff" rx="2"/><mask id="a" style="mask-type:luminance" width="20" height="15" x="0" y="0" maskUnits="userSpaceOnUse"><rect width="19.6" height="14" y=".5" fill="#fff" rx="2"/></mask><g mask="url(#a)"><path fill="#D02F44" fill-rule="evenodd" d="M19.6.5H0v.933h19.6V.5zm0 1.867H0V3.3h19.6v-.933zM0 4.233h19.6v.934H0v-.934zM19.6 6.1H0v.933h19.6V6.1zM0 7.967h19.6V8.9H0v-.933zm19.6 1.866H0v.934h19.6v-.934zM0 11.7h19.6v.933H0V11.7zm19.6 1.867H0v.933h19.6v-.933z" clip-rule="evenodd"/><path fill="#46467F" d="M0 .5h8.4v6.533H0z"/><g filter="url(#filter0_d_343_121520)"><path fill="url(#paint0_linear_343_121520)" fill-rule="evenodd" d="M1.867 1.9a.467.467 0 11-.934 0 .467.467 0 01.934 0zm1.866 0a.467.467 0 11-.933 0 .467.467 0 01.933 0zm1.4.467a.467.467 0 100-.934.467.467 0 000 .934zM7.467 1.9a.467.467 0 11-.934 0 .467.467 0 01.934 0zM2.333 3.3a.467.467 0 100-.933.467.467 0 000 .933zm2.334-.467a.467.467 0 11-.934 0 .467.467 0 01.934 0zm1.4.467a.467.467 0 100-.933.467.467 0 000 .933zm1.4.467a.467.467 0 11-.934 0 .467.467 0 01.934 0zm-2.334.466a.467.467 0 100-.933.467.467 0 000 .933zm-1.4-.466a.467.467 0 11-.933 0 .467.467 0 01.933 0zM1.4 4.233a.467.467 0 100-.933.467.467 0 000 .933zm1.4.467a.467.467 0 11-.933 0 .467.467 0 01.933 0zm1.4.467a.467.467 0 100-.934.467.467 0 000 .934zM6.533 4.7a.467.467 0 11-.933 0 .467.467 0 01.933 0zM7 6.1a.467.467 0 100-.933.467.467 0 000 .933zm-1.4-.467a.467.467 0 11-.933 0 .467.467 0 01.933 0zM3.267 6.1a.467.467 0 100-.933.467.467 0 000 .933zm-1.4-.467a.467.467 0 11-.934 0 .467.467 0 01.934 0z" clip-rule="evenodd"/></g></g><defs><linearGradient id="paint0_linear_343_121520" x1=".933" x2=".933" y1="1.433" y2="6.1" gradientUnits="userSpaceOnUse"><stop stop-color="#fff"/><stop offset="1" stop-color="#F0F0F0"/></linearGradient><filter id="filter0_d_343_121520" width="6.533" height="5.667" x=".933" y="1.433" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/><feOffset dy="1"/><feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.06 0"/><feBlend in2="BackgroundImageFix" result="effect1_dropShadow_343_121520"/><feBlend in="SourceGraphic" in2="effect1_dropShadow_343_121520" result="shape"/></filter></defs></svg>
-                                                USD <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/></svg>
-                                                </button>
-                                                <div id="dropdown-currency" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-36 dark:bg-gray-700">
-                                                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-currency-button">
-                                                        <li>
-                                                            <button type="button" class="inline-flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">
-                                                                <div class="inline-flex items-center">
-                                                                    <svg fill="none" aria-hidden="true" class="h-4 w-4 me-2" viewBox="0 0 20 15"><rect width="19.6" height="14" y=".5" fill="#fff" rx="2"/><mask id="a" style="mask-type:luminance" width="20" height="15" x="0" y="0" maskUnits="userSpaceOnUse"><rect width="19.6" height="14" y=".5" fill="#fff" rx="2"/></mask><g mask="url(#a)"><path fill="#D02F44" fill-rule="evenodd" d="M19.6.5H0v.933h19.6V.5zm0 1.867H0V3.3h19.6v-.933zM0 4.233h19.6v.934H0v-.934zM19.6 6.1H0v.933h19.6V6.1zM0 7.967h19.6V8.9H0v-.933zm19.6 1.866H0v.934h19.6v-.934zM0 11.7h19.6v.933H0V11.7zm19.6 1.867H0v.933h19.6v-.933z" clip-rule="evenodd"/><path fill="#46467F" d="M0 .5h8.4v6.533H0z"/><g filter="url(#filter0_d_343_121520)"><path fill="url(#paint0_linear_343_121520)" fill-rule="evenodd" d="M1.867 1.9a.467.467 0 11-.934 0 .467.467 0 01.934 0zm1.866 0a.467.467 0 11-.933 0 .467.467 0 01.933 0zm1.4.467a.467.467 0 100-.934.467.467 0 000 .934zM7.467 1.9a.467.467 0 11-.934 0 .467.467 0 01.934 0zM2.333 3.3a.467.467 0 100-.933.467.467 0 000 .933zm2.334-.467a.467.467 0 11-.934 0 .467.467 0 01.934 0zm1.4.467a.467.467 0 100-.933.467.467 0 000 .933zm1.4.467a.467.467 0 11-.934 0 .467.467 0 01.934 0zm-2.334.466a.467.467 0 100-.933.467.467 0 000 .933zm-1.4-.466a.467.467 0 11-.933 0 .467.467 0 01.933 0zM1.4 4.233a.467.467 0 100-.933.467.467 0 000 .933zm1.4.467a.467.467 0 11-.933 0 .467.467 0 01.933 0zm1.4.467a.467.467 0 100-.934.467.467 0 000 .934zM6.533 4.7a.467.467 0 11-.933 0 .467.467 0 01.933 0zM7 6.1a.467.467 0 100-.933.467.467 0 000 .933zm-1.4-.467a.467.467 0 11-.933 0 .467.467 0 01.933 0zM3.267 6.1a.467.467 0 100-.933.467.467 0 000 .933zm-1.4-.467a.467.467 0 11-.934 0 .467.467 0 01.934 0z" clip-rule="evenodd"/></g></g><defs><linearGradient id="paint0_linear_343_121520" x1=".933" x2=".933" y1="1.433" y2="6.1" gradientUnits="userSpaceOnUse"><stop stop-color="#fff"/><stop offset="1" stop-color="#F0F0F0"/></linearGradient><filter id="filter0_d_343_121520" width="6.533" height="5.667" x=".933" y="1.433" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/><feOffset dy="1"/><feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.06 0"/><feBlend in2="BackgroundImageFix" result="effect1_dropShadow_343_121520"/><feBlend in="SourceGraphic" in2="effect1_dropShadow_343_121520" result="shape"/></filter></defs></svg>
-                                                                    USD
-                                                                </div>
-                                                            </button>
-                                                        </li>
-                                                        <li>
-                                                            <button type="button" class="inline-flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">
-                                                                <div class="inline-flex items-center">
-                                                                    <svg fill="none" aria-hidden="true" class="h-4 w-4 me-2" viewBox="0 0 20 15"><rect width="19.6" height="14" y=".5" fill="#fff" rx="2"/><mask id="a" style="mask-type:luminance" width="20" height="15" x="0" y="0" maskUnits="userSpaceOnUse"><rect width="19.6" height="14" y=".5" fill="#fff" rx="2"/></mask><g mask="url(#a)"><path fill="#043CAE" d="M0 .5h19.6v14H0z"/><path fill="#FFD429" fill-rule="evenodd" d="M9.14 3.493L9.8 3.3l.66.193-.193-.66.193-.66-.66.194-.66-.194.193.66-.193.66zm0 9.334l.66-.194.66.194-.193-.66.193-.66-.66.193-.66-.193.193.66-.193.66zm5.327-4.86l-.66.193L14 7.5l-.193-.66.66.193.66-.193-.194.66.194.66-.66-.193zm-9.994.193l.66-.193.66.193L5.6 7.5l.193-.66-.66.193-.66-.193.194.66-.194.66zm9.369-2.527l-.66.194.193-.66-.194-.66.66.193.66-.193-.193.66.193.66-.66-.194zm-8.743 4.86l.66-.193.66.193-.194-.66.194-.66-.66.194-.66-.194.193.66-.193.66zm7.034-6.568l-.66.193.194-.66-.194-.66.66.194.66-.193-.193.66.193.66-.66-.194zm-5.326 8.276l.66-.193.66.193-.194-.66.194-.66-.66.194-.66-.193.193.66-.193.66zM13.84 10.3l-.66.193.194-.66-.194-.66.66.194.66-.194-.193.66.193.66-.66-.193zM5.1 5.827l.66-.194.66.194-.194-.66.194-.66-.66.193-.66-.193.193.66-.193.66zm7.034 6.181l-.66.193.194-.66-.194-.66.66.194.66-.193-.193.66.193.66-.66-.194zm-5.326-7.89l.66-.193.66.193-.194-.66.194-.66-.66.194-.66-.193.193.66-.193.66z" clip-rule="evenodd"/></g></svg>
-                                                                    EUR
-                                                                </div>
-                                                            </button>
-                                                        </li>
-                                                        <li>
-                                                            <button type="button" class="inline-flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">
-                                                                <div class="inline-flex items-center">
-                                                                    <svg fill="none" aria-hidden="true" class="h-4 w-4 me-2" viewBox="0 0 20 15"><rect width="19.1" height="13.5" x=".25" y=".75" fill="#fff" stroke="#F5F5F5" stroke-width=".5" rx="1.75"/><mask id="a" style="mask-type:luminance" width="20" height="15" x="0" y="0" maskUnits="userSpaceOnUse"><rect width="19.1" height="13.5" x=".25" y=".75" fill="#fff" stroke="#fff" stroke-width=".5" rx="1.75"/></mask><g fill="#FF3131" mask="url(#a)"><path d="M14 .5h5.6v14H14z"/><path fill-rule="evenodd" d="M0 14.5h5.6V.5H0v14zM11.45 6.784a.307.307 0 01-.518-.277l.268-1.34-.933.466-.467-1.4-.467 1.4-.933-.466.268 1.34a.307.307 0 01-.518.277.307.307 0 00-.434 0l-.25.25-.933-.467L7 7.5l-.231.231a.333.333 0 000 .471l1.164 1.165h1.4l.234 1.4h.466l.234-1.4h1.4l1.164-1.165a.333.333 0 000-.471l-.231-.23.467-.934-.934.466-.25-.25a.307.307 0 00-.433 0z" clip-rule="evenodd"/></g></svg>
-                                                                    CAD
-                                                                </div>
-                                                            </button>
-                                                        </li>
-                                                        <li>
-                                                            <button type="button" class="inline-flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">
-                                                                <div class="inline-flex items-center">
-                                                                    <svg fill="none" aria-hidden="true" class="h-4 w-4 me-2" viewBox="0 0 20 15"><rect width="19.6" height="14" y=".5" fill="#fff" rx="2"/><mask id="a" style="mask-type:luminance" width="20" height="15" x="0" y="0" maskUnits="userSpaceOnUse"><rect width="19.6" height="14" y=".5" fill="#fff" rx="2"/></mask><g mask="url(#a)"><path fill="#0A17A7" d="M0 .5h19.6v14H0z"/><path fill="#fff" fill-rule="evenodd" d="M-.898-.842L7.467 4.8V-.433h4.666V4.8l8.365-5.642L21.542.706l-6.614 4.46H19.6v4.667h-4.672l6.614 4.46-1.044 1.549-8.365-5.642v5.233H7.467V10.2l-8.365 5.642-1.044-1.548 6.614-4.46H0V5.166h4.672L-1.942.706-.898-.842z" clip-rule="evenodd"/><path stroke="#DB1F35" stroke-linecap="round" stroke-width=".667" d="M13.068 4.933L21.933-.9M14.009 10.088l7.948 5.357M5.604 4.917L-2.686-.67M6.503 10.024l-9.19 6.093"/><path fill="#E6273E" fill-rule="evenodd" d="M0 8.9h8.4v5.6h2.8V8.9h8.4V6.1h-8.4V.5H8.4v5.6H0v2.8z" clip-rule="evenodd"/></g></svg>
-                                                                    GBP
-                                                                </div>
-                                                            </button>
-                                                        </li>
-                                                    </ul>
-                                                </div>-->
-
 
 
                                         <div class="row">
-                                            <div class="col-12 col-md-6">
-                                                <div class="mb-1">
-                                                    <h5>Select Salary</h5>
+                                            <div class="col-12">
+                                                <div class="input-group mb-1">
+                                                    <span class="input-group-text">Description</span>
+                                                    <textarea id="description" class="form-control" aria-label="With textarea"></textarea>
                                                 </div>
-                                                <div class="input-group">
-                                                    <input type="number" id="currency-input" class="form-control"
-                                                        aria-label="Text input with dropdown button" required>
-                                                    <div class="input-group-append">
-                                                        <select name="" id=""
-                                                            style="display: inline;height: 38px;"
-                                                            class="form-select form-select-sm">
-                                                            <option>USD </option>
-                                                            <option>CZK </option>
-                                                            <option>EUR </option>
-                                                        </select>
+                                                <hr>
 
-                                                    </div>
-                                                </div>
-
-                                                <div class="relative">
-
-
-                                                    <input id="price-range-input" type="range" value="1000"
-                                                        min="0" max="1500"
-                                                        class="w-100 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700">
-                                                    <!--<span class="text-sm text-gray-500 dark:text-gray-400 absolute start-0 -bottom-6">Min ($100)</span>
-                                                <span class="text-sm text-gray-500 dark:text-gray-400 absolute start-1/3 -translate-x-1/2 rtl:translate-x-1/2 -bottom-6">$500</span>
-                                                <span class="text-sm text-gray-500 dark:text-gray-400 absolute start-2/3 -translate-x-1/2 rtl:translate-x-1/2 -bottom-6">$1000</span>
-                                                <span class="text-sm text-gray-500 dark:text-gray-400 absolute end-0 -bottom-6">Max ($1500)</span>-->
-                                                </div>
                                             </div>
+                                        </div>
+
+                                        <div class="row">
+
                                             <div class="col-12 col-md-6">
-                                                <div class="mb-1">
-                                                    <h5>Select color</h5>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-12">
-                                                        <input id="scolor-1" type="button" class="in"
+                                                <div class="card ">
+                                                    <div class="card-body">
+                                                        <div class="mb-1">
+                                                            <h5>Select color</h5>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <input id="scolor-1" type="button" class="in"
+                                                                    onclick="sColor(this.id)"
+                                                                    style="background-color: #124072;" value="">
+                                                                <input id="scolor-2" type="button" class="in"
+                                                                    onclick="sColor(this.id)"
+                                                                    style="background-color: #067088;" value="">
+                                                                <input id="scolor-3" type="button" class="in"
+                                                                    onclick="sColor(this.id)"
+                                                                    style="background-color: #056362;" value="">
+                                                                <input id="scolor-4" type="button" class="in"
+                                                                    onclick="sColor(this.id)"
+                                                                    style="background-color: #055d2b;" value="">
+                                                                <input id="scolor-5" type="button" class="in"
+                                                                    onclick="sColor(this.id)"
+                                                                    style="background-color: #4b8723;" value="">
+                                                                <input id="scolor-6" type="button" class="in"
+                                                                    onclick="sColor(this.id)"
+                                                                    style="background-color: #889d1e;" value="">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <input id="scolor-7" type="button" class="in"
+                                                                    onclick="sColor(this.id)"
+                                                                    style="background-color: #c3b204;" value="">
+                                                                <input id="scolor-8" type="button" class="in"
+                                                                    onclick="sColor(this.id)"
+                                                                    style="background-color: #ce8425;" value="">
+                                                                <input id="scolor-9" type="button" class="in"
+                                                                    onclick="sColor(this.id)"
+                                                                    style="background-color:  #a53d1a;"
+                                                                    value="">
+                                                                <input id="scolor-10" type="button" class="in"
+                                                                    onclick="sColor(this.id)"
+                                                                    style="background-color:  #880002;"
+                                                                    value="">
+                                                                <input id="scolor-11" type="button" class="in"
+                                                                    onclick="sColor(this.id)"
+                                                                    style="background-color:  #6a1161;"
+                                                                    value="">
+                                                                <input id="scolor-12" type="button" class="in"
+                                                                    onclick="sColor(this.id)"
+                                                                    style="background-color:  #4c1862 ;"
+                                                                    value="">
+                                                            </div>
+                                                        </div>
+                                                        <input id="scolor-13" type="button" class="in"
                                                             onclick="sColor(this.id)"
-                                                            style="background-color: #124072;" value="">
-                                                        <input id="scolor-2" type="button" class="in"
+                                                            style="background-color: #1965b9;" value="">
+                                                        <input id="scolor-14" type="button" class="in"
                                                             onclick="sColor(this.id)"
-                                                            style="background-color: #067088;" value="">
-                                                        <input id="scolor-3" type="button" class="in"
+                                                            style="background-color:  #039ce0;" value="">
+                                                        <input id="scolor-15" type="button" class="in"
                                                             onclick="sColor(this.id)"
-                                                            style="background-color: #056362;" value="">
-                                                        <input id="scolor-4" type="button" class="in"
+                                                            style="background-color: #01969c;" value="">
+                                                        <input id="scolor-16" type="button" class="in"
                                                             onclick="sColor(this.id)"
-                                                            style="background-color: #055d2b;" value="">
-                                                        <input id="scolor-5" type="button" class="in"
+                                                            style="background-color: #009242;" value="">
+                                                        <input id="scolor-17" type="button" class="in"
                                                             onclick="sColor(this.id)"
-                                                            style="background-color: #4b8723;" value="">
-                                                        <input id="scolor-6" type="button" class="in"
+                                                            style="background-color:  #67ad31 ;" value="">
+                                                        <input id="scolor-18" type="button" class="in"
                                                             onclick="sColor(this.id)"
-                                                            style="background-color: #889d1e;" value="">
+                                                            style="background-color: #bcd637;" value="">
+                                                        <br>
+                                                        <input id="scolor-19" type="button" class="in"
+                                                            onclick="sColor(this.id)"
+                                                            style="background-color: #fff002;" value="">
+                                                        <input id="scolor-20" type="button" class="in"
+                                                            onclick="sColor(this.id)"
+                                                            style="background-color: #fdaf43;" value="">
+                                                        <input id="scolor-21" type="button" class="in"
+                                                            onclick="sColor(this.id)"
+                                                            style="background-color: #e87034;" value="">
+                                                        <input id="scolor-22" type="button" class="in"
+                                                            onclick="sColor(this.id)"
+                                                            style="background-color: #eb1c26;" value="">
+                                                        <input id="scolor-23" type="button" class="in"
+                                                            onclick="sColor(this.id)"
+                                                            style="background-color: #a2288d;" value="">
+                                                        <input id="scolor-24" type="button" class="in"
+                                                            onclick="sColor(this.id)"
+                                                            style="background-color: #652d90;" value="">
+                                                        <br>
+                                                        <input id="scolor-25" type="button" class="in"
+                                                            onclick="sColor(this.id)"
+                                                            style="background-color: #81c1e7;" value="">
+                                                        <input id="scolor-26" type="button" class="in"
+                                                            onclick="sColor(this.id)"
+                                                            style="background-color: #50ddd5;" value="">
+                                                        <input id="scolor-27" type="button" class="in"
+                                                            onclick="sColor(this.id)"
+                                                            style="background-color: #addc81;" value="">
+                                                        <input id="scolor-28" type="button" class="in"
+                                                            onclick="sColor(this.id)"
+                                                            style="background-color: #ffffba;" value="">
+                                                        <input id="scolor-29" type="button" class="in"
+                                                            onclick="sColor(this.id)"
+                                                            style="background-color: #fea698;" value="">
+                                                        <input id="scolor-30" type="button" class="in"
+                                                            onclick="sColor(this.id)"
+                                                            style="background-color: #b697dd;" value="">
                                                     </div>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="col-12">
-                                                        <input id="scolor-7" type="button" class="in"
-                                                            onclick="sColor(this.id)"
-                                                            style="background-color: #c3b204;" value="">
-                                                        <input id="scolor-8" type="button" class="in"
-                                                            onclick="sColor(this.id)"
-                                                            style="background-color: #ce8425;" value="">
-                                                        <input id="scolor-9" type="button" class="in"
-                                                            onclick="sColor(this.id)"
-                                                            style="background-color:  #a53d1a;" value="">
-                                                        <input id="scolor-10" type="button" class="in"
-                                                            onclick="sColor(this.id)"
-                                                            style="background-color:  #880002;" value="">
-                                                        <input id="scolor-11" type="button" class="in"
-                                                            onclick="sColor(this.id)"
-                                                            style="background-color:  #6a1161;" value="">
-                                                        <input id="scolor-12" type="button" class="in"
-                                                            onclick="sColor(this.id)"
-                                                            style="background-color:  #4c1862 ;" value="">
-                                                    </div>
-                                                </div>
-                                                <input id="scolor-13" type="button" class="in"
-                                                    onclick="sColor(this.id)" style="background-color: #1965b9;"
-                                                    value="">
-                                                <input id="scolor-14" type="button" class="in"
-                                                    onclick="sColor(this.id)" style="background-color:  #039ce0;"
-                                                    value="">
-                                                <input id="scolor-15" type="button" class="in"
-                                                    onclick="sColor(this.id)" style="background-color: #01969c;"
-                                                    value="">
-                                                <input id="scolor-16" type="button" class="in"
-                                                    onclick="sColor(this.id)" style="background-color: #009242;"
-                                                    value="">
-                                                <input id="scolor-17" type="button" class="in"
-                                                    onclick="sColor(this.id)" style="background-color:  #67ad31 ;"
-                                                    value="">
-                                                <input id="scolor-18" type="button" class="in"
-                                                    onclick="sColor(this.id)" style="background-color: #bcd637;"
-                                                    value="">
-                                                <br>
-                                                <input id="scolor-19" type="button" class="in"
-                                                    onclick="sColor(this.id)" style="background-color: #fff002;"
-                                                    value="">
-                                                <input id="scolor-20" type="button" class="in"
-                                                    onclick="sColor(this.id)" style="background-color: #fdaf43;"
-                                                    value="">
-                                                <input id="scolor-21" type="button" class="in"
-                                                    onclick="sColor(this.id)" style="background-color: #e87034;"
-                                                    value="">
-                                                <input id="scolor-22" type="button" class="in"
-                                                    onclick="sColor(this.id)" style="background-color: #eb1c26;"
-                                                    value="">
-                                                <input id="scolor-23" type="button" class="in"
-                                                    onclick="sColor(this.id)" style="background-color: #a2288d;"
-                                                    value="">
-                                                <input id="scolor-24" type="button" class="in"
-                                                    onclick="sColor(this.id)" style="background-color: #652d90;"
-                                                    value="">
-                                                <br>
-                                                <input id="scolor-25" type="button" class="in"
-                                                    onclick="sColor(this.id)" style="background-color: #81c1e7;"
-                                                    value="">
-                                                <input id="scolor-26" type="button" class="in"
-                                                    onclick="sColor(this.id)" style="background-color: #50ddd5;"
-                                                    value="">
-                                                <input id="scolor-27" type="button" class="in"
-                                                    onclick="sColor(this.id)" style="background-color: #addc81;"
-                                                    value="">
-                                                <input id="scolor-28" type="button" class="in"
-                                                    onclick="sColor(this.id)" style="background-color: #ffffba;"
-                                                    value="">
-                                                <input id="scolor-29" type="button" class="in"
-                                                    onclick="sColor(this.id)" style="background-color: #fea698;"
-                                                    value="">
-                                                <input id="scolor-30" type="button" class="in"
-                                                    onclick="sColor(this.id)" style="background-color: #b697dd;"
-                                                    value="">
                                                 <script>
                                                     const map1 = new Map();
 
@@ -968,7 +770,26 @@
                                                     map1.set('#b697dd', 'scolor-30');
                                                 </script>
                                             </div>
+                                            <div class="col-12 col-md-6">
+                                                <div class="card ">
+                                                    <div class="card-body">
+                                                        <div class="mb-1">
+                                                            <h5>Controllers: </h5>
+                                                            <input type="button" style="display: none; float: right"
+                                                                id="edit_btn" onclick="Edit_shift()"
+                                                                class="btn btn-primary" value="EDIT">
+                                                            <input type="button" style="display: none; float: right"
+                                                                id="save_btn" onclick="Save_shift()"
+                                                                class="btn btn-primary" value="Save">
+                                                            <input type="button" style="display: none; float: left"
+                                                                id="delete_btn" onclick="sure_delete()"
+                                                                class="btn btn-danger" value="DELETE">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
+
 
 
 
@@ -992,10 +813,6 @@
 
                                         <div class='row'>
                                             <div class='col-12 col-md-6'>
-                                                <!--<Select id="select_obj_edit" style="display: inline;height: 38px;"
-                                                        class="form-select form-select-sm">
-                                                
-                                                    </Select>-->
                                             </div>
                                         </div>
                                         <div class="tree">
@@ -1009,42 +826,28 @@
                                         <script></script>
                                     </div>
                                 </div>
+                                <div class="row">
+
+                                    <div class="col-12 ">
+                                        <div id="assignment_div">
+                                            <div class="mb-1">
+                                                <h5>Assigned employees </h5>
+                                            </div>
+                                            <div id="assignment_table">
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
                                 <div>
 
-                                    <script></script>
 
-                                    <!--<fieldset class="color-swatch" id="cp2"
-                                        style="--bdw:1px;--gap:2px;--item-bxsh-w:1px;--items-per-row:10;--maw:15rem;">
-                          
-                                    </fieldset><br>-->
+
 
                                     <script>
-                                        /*const swatches = '\
-                                                                                                            #000000 #434343 #656666 #999999 #B7B7B7 #CCCDCD #D7D8D8 #EEEEEF #F3F3F3 #FFFFFF \
-                                                                                                            #94000B #F8001A #F99922 #FBFF2F #2AFF24 #45FFFE #5880E6 #3600FC #9D00FC #FC01FD \
-                                                                                                            #E4B7B0 #F2CBCC #FAE5CE #FDF3CD #DAEBD5 #D1E0E3 #CBD9F7 #D2E1F3 #D9D1E8 #E9D0DC \
-                                                                                                            #D97C6D #E7979A #F5CC9E #FCE79C #B6D9A9 #A4C4C8 #A8C0F3 #A3C5E7 #B5A4D5 #D3A4BD \
-                                                                                                            #C73B2C #DB6268 #F1B370 #FBDB6E #94C77F #7AA5AE #769AE9 #77A6DA #9077C1 #C077A0 \
-                                                                                                            #A1100E #C60013 #E19140 #EDC43F #6BAB52 #4B818D #4B72D6 #4A82C4 #6A46A5 #A34879 \
-                                                                                                            #811B13 #95000B #B05E17 #BB921A #3A7921 #1C4F5B #2F4BCA #214F92 #380D74 #711147 \
-                                                                                                            #580A04 #630005 #753F0D #7C610E #285016 #12343D #284185 #143562 #220A4C #4A0B30'.split(' ');
-
-                                                                                                                renderColorPicker(cp1, '\
-                                                                                                            hsl(168,41%,65%) hsl(198,45%,47%) hsl(207,84%,63%) hsl(210,58%,77%) \
-                                                                                                            hsl(227,92%,64%) hsl(258,90%,64%) hsl(276,74%,57%) hsl(297,59%,75%) \
-                                                                                                            hsl(332,54%,58%) hsl(5,77%,74%) hsl(0,0%,50%) hsl(0,0%,73%) hsl(27,30%,69%) \
-                                                                                                            transparent'.split(' '), 'cg1');
-
-                                                                                                                renderColorPicker(cp2, swatches, 'cg2');
-                                                                                                                renderColorPicker(cp3, swatches, 'cg3');
-
-                                                                                                                function renderColorPicker(element, colors, group) {
-                                                                                                                    element.innerHTML = colors.map((color, index) => `
-<label class="color-item" style="--bgc:${color.trim()}">
-  <input type="radio" name="${group}" value="${color.trim()}"${index === 0 ? ` checked`:''}><i></i>
-</label>`).join('');
-                                                                                                                }*/
-
                                         function setLuminance(elements) {
                                             elements.forEach(element => {
                                                 const rgb = window.getComputedStyle(element).getPropertyValue('background-color');
@@ -1069,12 +872,7 @@
                                         }
                                     </script>
 
-                                    <input type="button" style="display: none; float: right" id="edit_btn"
-                                        onclick="Edit_shift()" class="btn btn-primary" value="EDIT">
-                                    <input type="button" style="display: none; float: right" id="save_btn"
-                                        onclick="Save_shift()" class="btn btn-primary" value="Save">
-                                    <input type="button" style="display: none; float: left" id="delete_btn"
-                                        onclick="Delete_shift()" class="btn btn-danger" value="DELETE">
+
                                     <br>
                                     <br>
                                     <br id="hbr1s" style="display:none">
@@ -1094,22 +892,8 @@
 
                     </div>
                 </div>
-                <div id="myModal" class="modal">
 
-                    <!-- Modal content -->
-
-
-                </div>
                 <script>
-                    function Open_edit() {
-                        //var modal = document.getElementById("myModal");
-                        //var span = document.getElementsByClassName("close")[0];
-                        // modal.style.display = "block";
-
-                    }
-
-
-
                     var modal = document.getElementById("myModal");
 
                     // Get the button that opens the modal
@@ -1154,15 +938,15 @@
                             data: {
                                 _token: '{{ csrf_token() }}',
                                 object: current_object,
-                                shift_list: shi_search
+                                shift_list: shi_search,
+                                search_text: search_text,
 
                             },
                             success: function(response) {
-                                //alert(response)
                                 $("#shift_existing").html(response);
                             },
                             error: function(response) {
-                                alert("dsad");
+                                error_alert("Error");
                             }
                         });
                     }
@@ -1180,11 +964,10 @@
 
                             },
                             success: function(response) {
-                                // alert(response)
                                 $("#shift_list_load").html(response);
                             },
                             error: function(response) {
-                                alert("dsad");
+                                error_alert("Error");
                             }
                         });
                     }
@@ -1201,11 +984,10 @@
 
                         },
                         success: function(response) {
-                            //alert(response)
                             $("#object_model").html(response);
                         },
                         error: function(response) {
-                            alert("dsad");
+                            error_alert("Error");
                         }
                     });
 
@@ -1220,7 +1002,31 @@
                             shi_search.push(clicked_val);
                         }
                         load_existing_shifts();
-                        //alert(shi_search);
+                    }
+
+                    function select_dropdown2(response) {
+                        current_object = response.substring(4);
+
+                        var select_value = document.getElementById("h" + response).value;
+                        $.ajax({
+                            url: '{{ route('loadObjectStructure') }}',
+                            type: 'POST',
+                            data: {
+                                _token: '{{ csrf_token() }}',
+                                object: current_object,
+                                sub_object: select_value,
+                            },
+
+                            success: function(response) {
+                                $("#object_model").html(response);
+
+                            },
+                            error: function(response) {
+                                error_alert("Error");
+                            }
+                        });
+
+
                     }
 
                     function select_dropdown(response, response2) {
@@ -1238,68 +1044,23 @@
 
                             success: function(response) {
                                 $("#object_model").html(response);
-                                /*$('#structure').html(response);
-                                document.getElementById("h_controler").innerHTML = "Control panel : ";
-                                sub_object = "";*/
 
                             },
                             error: function(response) {
-                                alert("dsad");
+                                error_alert("Error");
                             }
                         });
 
                     }
 
-                    function radiocheck(browser) {
-                        //alert(browser);
-                        sub_object = browser;
 
-                        //document.getElementById("h_controler").value;
-                        /*$.ajax({
-                            url: '{{ route('parametrsGet') }}',
-                            type: 'POST',
-                            data: {
-                                _token: '{{ csrf_token() }}',
-                                search: browser
-                            },
-                            success: function(response) {
-                                document.getElementById("h_controler").innerHTML = "Control panel : " + response;
-                                sub_object = browser;
-
-                            },
-                            error: function(response) {
-                                alert("dsad");
-                            }
-                        });*/
-                    }
 
                     function create_shift_load() {
+                        document.getElementById("edit_btn").style.display = "none";
+                        document.getElementById("delete_btn").style.display = "none";
+
+                        document.getElementById("assignment_div").style.display = "none";
                         document.getElementById("save_btn").style.display = "block";
-                        /*var mf = document.getElementById('sfrommonday').value;
-                        document.getElementById('stomonday').value = "";
-                        document.getElementById('sfromtuesday').value = "";
-                        document.getElementById('stotuesday').value = "";
-                        document.getElementById('sfromwednesday').value = "";
-                        document.getElementById('stowednesday').value = "";
-                        document.getElementById('sfromthursday').value = "";
-                        document.getElementById('stothursday').value = "";
-                        document.getElementById('sfromfriday').value = "";
-                        document.getElementById('stofriday').value = "";
-                        document.getElementById('sfromsaturday').value = "";
-                        document.getElementById('stosaturday').value = "";
-                        document.getElementById('sfromsunday').value = "";
-                        document.getElementById('stosunday').value = "";
-
-                        document.getElementById('sfield').value = "";
-                        var start = currentDate;
-
-                        var mo_d = document.getElementById("smonday");
-                        var tu_d = document.getElementById("stuesday");
-                        var we_d = document.getElementById("swednesday");
-                        var th_d = document.getElementById("sthursday");
-                        var fr_d = document.getElementById("sfriday");
-                        var sa_d = document.getElementById("ssaturday");
-                        var su_d = document.getElementById("ssunday");*/
                         clear_data();
                     }
 
@@ -1332,7 +1093,6 @@
                             var sut = document.getElementById('stosunday').value;
 
                             var name = document.getElementById('sfield').value;
-                            //var start = currentDate;
 
                             var mo_d = document.getElementById("smonday");
                             var tu_d = document.getElementById("stuesday");
@@ -1343,11 +1103,6 @@
                             var su_d = document.getElementById("ssunday");
                             if (sub_object != "") {
 
-
-                                /*var bb = "box" + previous;
-                                var hh = "hid" + previous;
-                                var pj = document.getElementById(bb).value;
-                                var jj = document.getElementById(hh).value;*/
                                 var update = 0;
 
                                 if (mo_d.checked == true) {
@@ -1386,25 +1141,6 @@
                                 } else {
                                     sun_day = 0;
                                 }
-                                alert("--------asd-------");
-
-                                /* var monf = JSON.stringify(mf);
-                                                                  var mont = JSON.stringify(mt);
-                                                                  var tuef = JSON.stringify(tuf);
-                                                                  var tuet = JSON.stringify(tut);
-                                                                  var wedf = JSON.stringify(wf);
-                                                                  var wedt = JSON.stringify(wt);
-                                                                  var thuf = JSON.stringify(thf);
-                                                                  var thut = JSON.stringify(tht);
-                                                                  var frif = JSON.stringify(ff);
-                                                                  var frit = JSON.stringify(ft);
-                                                                  var satf = JSON.stringify(saf);
-                                                                  var satt = JSON.stringify(sat);
-                                                                  var sunf = JSON.stringify(suf);
-                                                                  var sunt = JSON.stringify(sut);
-
-                                                                  var jobname = JSON.stringify(name);
-                                */
                                 var mond = JSON.parse(mon_day);
                                 var tued = JSON.parse(tue_day);
                                 var wedd = JSON.parse(wed_day);
@@ -1448,51 +1184,22 @@
 
                                     },
                                     success: function(data) {
-                                        //success_alert("Shift saved succesfully");
-                                        alert(data);
                                         clear_data();
+
+                                        success_alert("Shift saved successfully");
+
                                     },
                                     error: function(data) {
-                                        alert("dsad");
+                                        error_alert("Error");
                                     }
 
                                 });
-                                /*$.ajax({
 
-
-                                  url: "../shifts/load_existing_shift.php",
-                                  method: "POST",
-                                  data: { input: inp0, type: typ_btn, obj: obj_search, shi: shi_search, id: usid },
-                                  success: function (data) {
-                                    $("#shift_ex_load").html(data);
-                                  }
-                                });
-                                var popup = document.getElementById("label2");
-                                popup.style.visibility = "hidden";
-                                popup.innerText = "";
-                                var po = document.getElementById("hbr");
-                                po.style.display = "none";
-
-                                var popu = document.getElementById("label1");
-                                popu.style.visibility = "hidden";
-                                var pop = document.getElementById("hbr1");
-                                pop.style.display = "none";
-
-                                var popups = document.getElementById("label3");
-                                popups.style.visibility = "hidden";
-                                var p = document.getElementById("hbr3");
-                                p.style.display = "none";*/
                             } else {
-                                // alert("adssda");
                                 var popup = document.getElementById("label3s");
                                 popup.style.visibility = "visible";
                                 var po = document.getElementById("hbr3s");
                                 po.style.display = "";
-
-                                /*         var popu = document.getElementById("label1s");
-                                         popu.style.visibility = "visible";
-                                         var pop = document.getElementById("hbr1s");
-                                         pop.style.display = "";*/
 
 
                             }
@@ -1500,19 +1207,15 @@
                             var popup = document.getElementById("label2s");
                             popup.style.visibility = "visible";
                             popup.innerText = "Needs to be filled*";
-                            //  var po = document.getElementById("hbrs");
-                            //po.style.display = "";
-
-                            /*var popu = document.getElementById("slabel1");
-                            popu.style.visibility = "visible";
-                            var pop = document.getElementById("shbr1");
-                            pop.style.display = "";*/
 
 
                         }
                     }
 
                     function clear_data() {
+
+                        document.getElementById("description").value = "";
+
                         document.getElementById("sfield").value = "";
                         document.getElementById("smonday").checked = false;
                         document.getElementById("stuesday").checked = false;
@@ -1538,10 +1241,10 @@
                         document.getElementById("everyday").checked = false;
                         document.getElementById("weekend").checked = false;
                         document.getElementById("everyworkday").checked = false;
+                        document.getElementById("repeatable").checked = true;
+
                         $('input[name=accept-offers]').prop('checked', false);
-                        /*let sclicked_color = document.getElementById(spreviouscolor);
-                            sclicked_color.style.border = "solid black";
-                            shex = "#124072";*/
+
                     }
 
 
@@ -1692,19 +1395,15 @@
                     }
 
                     function load_existing_data(get_id) {
-                        //alert("dsjak");
                         var cut_id = get_id.substring(5);
-                        //alert(cut_id);
                         $.ajax({
                             url: '{{ route('loadExistingShiftParametrs') }}',
                             type: 'POST',
                             data: {
                                 _token: '{{ csrf_token() }}',
                                 id: cut_id
-                                //search: browser
                             },
                             success: function(response) {
-                                //alert(response);
                                 let data1 = response.data1;
                                 let data2 = response.data2;
 
@@ -1758,23 +1457,29 @@
 
                                     document.getElementById("stosunday").value = response.sun_to;
                                 }
+                                if (response.repeat == 1) {
+                                    document.getElementById("repeatable").checked = true;
+                                } else {
+                                    document.getElementById("repeatable").checked = false;
+                                }
+                                document.getElementById("description").value = response.description;
 
                                 document.getElementById("sfield").value = response.shift_name;
                                 sColor(map1.get(response.color));
                                 edit_shift_id = get_id;
-                                //alert(response.main_object);
                                 let extra = "drop" + response.main_object;
                                 let sub_check = response.sub_object;
-                                //alert(response.sub_object);
                                 select_dropdown(extra, sub_check);
                                 sub_object = response.sub_object;
                                 document.getElementById("edit_btn").style.display = "block";
                                 document.getElementById("delete_btn").style.display = "block";
                                 shift_id = response.shift_id;
+                                document.getElementById("save_btn").style.display = "none";
+                                load_assigned_employess(cut_id);
 
                             },
                             error: function(response) {
-                                alert("dsad");
+                                error_alert("dsad");
                             }
                         });
                     }
@@ -1814,6 +1519,7 @@
                             var sut = document.getElementById('stosunday').value;
 
                             var name = document.getElementById('sfield').value;
+                            var description = document.getElementById('description').value;
 
 
                             var mo_d = document.getElementById("smonday");
@@ -1823,6 +1529,8 @@
                             var fr_d = document.getElementById("sfriday");
                             var sa_d = document.getElementById("ssaturday");
                             var su_d = document.getElementById("ssunday");
+                            var repeatable = document.getElementById("repeatable");
+                            var r_non = 0;
                             if (sub_object != "") {
 
 
@@ -1864,7 +1572,11 @@
                                 } else {
                                     sun_day = 0;
                                 }
-                                alert("--------asd-------");
+                                if (repeatable.checked == true) {
+                                    r_non = 1;
+                                } else {
+                                    r_non = 0;
+                                }
 
 
                                 var mond = JSON.parse(mon_day);
@@ -1907,15 +1619,16 @@
                                         color: shex,
                                         object: sub_object,
                                         update: update,
-                                        shift_id: shift_id
+                                        shift_id: shift_id,
+                                        repeat: r_non,
+                                        description: description,
 
                                     },
                                     success: function(data) {
-                                        alert(data);
-                                        //clear_data();
+                                        success_alert("Edited successfully");
                                     },
                                     error: function(data) {
-                                        alert("dsad");
+                                        error_alert("error");
                                     }
 
                                 });
@@ -1940,8 +1653,80 @@
 
                         }
                     }
-                </script>
 
+                    function enableShift(response) {
+                        var eanableID = response.substring(7);
+                        var elementEnable = document.getElementById(response);
+                        if (elementEnable.checked == true) {
+                            questionEnable("Do you want to do this ?", eanableID, 1);
+
+                        } else {
+                            questionEnable("Do you want to do this ?", eanableID, 0);
+                        }
+                    }
+
+                    function questionEnable(message, eanableID, status) {
+                        Swal.fire({
+                            icon: "warning",
+                            title: message,
+                            text: "Such action will effect access to shift",
+                            showCancelButton: true,
+                            confirmButtonText: "Enable",
+                        }).then((result) => {
+                            /* Read more about isConfirmed, isDenied below */
+                            if (result.isConfirmed) {
+                                $.ajax({
+                                    url: '{{ route('enableShift') }}',
+                                    type: 'POST',
+                                    data: {
+                                        _token: '{{ csrf_token() }}',
+                                        shift_id: eanableID,
+                                        status: status
+
+
+                                    },
+                                    success: function(response) {
+
+                                    },
+                                    error: function(response) {
+                                        error_alert("Error");
+                                    }
+                                });
+                            } else {
+                                if (status == 1) {
+                                    document.getElementById("enable_" + eanableID).checked = false;
+                                } else {
+                                    document.getElementById("enable_" + eanableID).checked = true;
+
+                                }
+                            }
+                        });
+
+                    }
+                </script>
+                <script>
+                    function load_assigned_employess(send_id) {
+                        document.getElementById("assignment_div").style.display = "block";
+
+                        $.ajax({
+
+
+                            url: '{{ route('loadShiftAssignmentStructure') }}',
+                            type: "POST",
+                            data: {
+                                _token: '{{ csrf_token() }}',
+                                id_shift: send_id,
+
+                            },
+                            success: function(response) {
+                                $("#assignment_table").html(response);
+                            },
+                            error: function(response) {
+                                error_alert("ERROR");
+                            }
+                        });
+                    }
+                </script>
             </div>
         </div>
     </div>

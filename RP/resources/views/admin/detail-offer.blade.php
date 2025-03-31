@@ -36,8 +36,8 @@
 </head>
 
 <body id="body-pd">
-    @include('vendor.Chatify.pages.header')
-    @include('vendor.Chatify.pages.sidebar')
+    @include('vendor.Chatify.pages.header-admin')
+    @include('vendor.Chatify.pages.sidebar-admin')
     @include('admin.scripts')
     <div class="bg-light" style="height: 100vh;">
         <br>
@@ -148,27 +148,10 @@
                                 style="height: 150px; width: 150px">
                         </div>
                         <script>
-                            /*$.ajax({
-                                                                                            url: '{{ route('showImagePersonal') }}',
-                                                                                            type: 'POST',
-                                                                                            data: {
-                                                                                                _token: '{{ csrf_token() }}',
-                                                                                            },
-                                                                                            success: function(response) {
-                                                                                                // Set the response (image data) as the source for the image element
-                                                                                                //alert(response.url);
-                                                                                                $('#imagePersoanl').attr('src', response.url);
-
-                                                                                            },
-                                                                                            error: function(xhr, status, error) {
-                                                                                                alert('Error fetching image:', error);
-                                                                                            }
-                                                                                        });*/
+                  
                         </script>
                         <hr>
-                        <!--<h6>Name</h6>-->
                         <p id="modalName">Name: </p>
-                        <!--<h6>Role</h6>-->
                         <p id="modalRole">Position: </p>
                         <button style="float: right" onclick="saveRequest()" class="btn btn-primary"> Save</button>
                         <script>
@@ -187,9 +170,7 @@
                                             id_offer: id_offer
                                         },
                                         success: function(response) {
-                                            /* document.getElementById("select_obj_waiting").innerHTML = response;*/
-                                            //document.getElementById("table").innerHTML = response;
-                                           // alert("sd");
+                        
                 
 
 
@@ -202,7 +183,6 @@
                             }
                             loadRequestProfile();
                             function loadRequestProfile() {
-                               // alert(global_user);
                                 if (global_user != null || global_user != "") {
                                     $.ajax({
                                         url: '{{ route('requestProfile') }}',
@@ -213,15 +193,12 @@
                                             
                                         },
                                         success: function(response) {
-                                            //alert(response.imageUrl);
                                             $('#modalImage').attr('src', response.imageUrl);
                                             document.getElementById("modalName").innerHTML = "Name: <strong id='name_selected'>" +
                                             response.name +
                                             "</strong>";
                                         document.getElementById("modalRole").innerHTML = "Position: " + response.role;
-                                            /* document.getElementById("select_obj_waiting").innerHTML = response;*/
-                                            //document.getElementById("table").innerHTML = response;
-                                           // alert("sd");
+                                      
 
 
 
@@ -233,8 +210,7 @@
                                 }
                             }
                         </script>
-                        <!--<h6>Planned</h6>
-                        <h6>Role</h6>-->
+                    
                     </div>
                 </div>
                 <div class="col-12 col-md-8">
@@ -255,9 +231,7 @@
                                     input: {{ $offer->id_offer }}
                                 },
                                 success: function(response) {
-                                    /* document.getElementById("select_obj_waiting").innerHTML = response;*/
                                     document.getElementById("table").innerHTML = response;
-                                    // alert(response);
 
 
                                 },
@@ -267,7 +241,6 @@
                             });
 
                             function pickUser(id_user) {
-                                //alert("4564");
                                 global_user = id_user.substring(4);
                                 $.ajax({
                                     url: '{{ route('showImagePersonal') }}',
@@ -277,8 +250,7 @@
                                         id: id_user.substring(4),
                                     },
                                     success: function(response) {
-                                        // Set the response (image data) as the source for the image element
-                                        //alert(response.url);
+                                   
                                         $('#modalImage').attr('src', response.url);
 
                                     },
@@ -294,31 +266,12 @@
                                         id: id_user.substring(4),
                                     },
                                     success: function(response) {
-                                        // Set the response (image data) as the source for the image element
-                                        //alert(response.name);
+                                  
                                         document.getElementById("modalName").innerHTML = "Name: <strong id='name_selected'>" +
                                             response.name +
                                             "</strong>";
                                         document.getElementById("modalRole").innerHTML = "Position: " + response.role;
-                                       // var myElem = document.getElementById("time-" + id_user.substring(4));
-                                        /*if (myElem != null) {
-                                            var comtents1 = document.getElementById("time-" + id_user.substring(4)).innerHTML;
-                                            document.getElementById("modalHours").innerHTML = "Hours: " + comtents1;
-
-                                        } else {
-                                            document.getElementById("modalHours").innerHTML = "Hours: 0 h 0 min";
-
-                                        }
-                                        var myElem2 = document.getElementById("count-" + id_user.substring(4));
-                                        if (myElem2 != null) {
-                                            var comtents2 = document.getElementById("count-" + id_user.substring(4)).innerHTML;
-                                            document.getElementById("modalAmount").innerHTML = "Amount: " + comtents2;
-
-                                        } else {
-                                            document.getElementById("modalAmount").innerHTML = "Amount: 0 ";
-
-                                        }*/
-                                        // $('#modalName').attr('src', response.url);
+                               
 
                                     },
                                     error: function(xhr, status, error) {

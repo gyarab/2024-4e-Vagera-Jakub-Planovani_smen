@@ -28,6 +28,6 @@
                 }
             </script>
         </div>
-        <p>{{ strlen($user->first_name) > 5 ? substr($user->first_name,0,6).'..' : $user->first_name }}</p>
+        <p>{{ strlen($user->last_name ) > 6 ? substr($user->last_name,0,6).'..' : $user->last_name }}</p>
     @endif
 </div>

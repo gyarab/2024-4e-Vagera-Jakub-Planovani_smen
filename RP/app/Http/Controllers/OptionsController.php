@@ -18,11 +18,7 @@ class OptionsController extends Controller
 {
     public function showPermanentOption($id)
     {
-        //$user = DB::select("SELECT * FROM users WHERE id='$id'"); // Fetch user from database
-        //$user = 5;
-        //$offer_shift = DB::select(" SELECT * FROM shift_offer, shift_model, object_model, shift_active_data, users WHERE shift_active_data.id_shift = shift_offer.id_shift AND shift_active_data.saved_at=shift_offer.date AND shift_offer.id_shift=shift_model.id_shift AND object_model.id_object=shift_model.id_object AND users.id=shift_offer.created_by  AND shift_offer.id_offer='$id' ");
         $user = User::find($id);
-        //$code_id = $user->id;
         return view('admin/permanent-time-options', compact('user'));
     }
     public function insertPermanenntOption(Request $request)
@@ -75,7 +71,6 @@ VALUES
     {
         $id = $request->input('input');
         $fetch = DB::select("SELECT * FROM permanent_time_options WHERE id='$id'");
-        //$get = mysqli_query($conn, $sql);
         $saved_data[] = array();
         foreach ($fetch as $row) {
             $saved_data[0] = $row->monday;
@@ -106,30 +101,7 @@ VALUES
 
 
         ]);
-        /*while ($row = $get->fetch_assoc()) {
-            $saved_data[0] = $row['monday'];
-            $saved_data[1] = $row['mon_from'];
-            $saved_data[2] = $row['mon_to'];
-            $saved_data[3] = $row['tuesday'];
-            $saved_data[4] = $row['tue_from'];
-            $saved_data[5] = $row['tue_to'];
-            $saved_data[6] = $row['wednesday'];
-            $saved_data[7] = $row['wed_from'];
-            $saved_data[8] = $row['wed_to'];
-            $saved_data[9] = $row['thursday'];
-            $saved_data[10] = $row['thu_from'];
-            $saved_data[11] = $row['thu_to'];
-            $saved_data[12] = $row['friday'];
-            $saved_data[13] = $row['fri_from'];
-            $saved_data[14] = $row['fri_to'];
-            $saved_data[15] = $row['saturday'];
-            $saved_data[16] = $row['sat_from'];
-            $saved_data[17] = $row['sat_to'];
-            $saved_data[18] = $row['sunday'];
-            $saved_data[19] = $row['sun_from'];
-            $saved_data[20] = $row['sun_to'];
-            $saved_data[21] = $row['id_user'];
-        }*/
+    
     }
     public function loadPermanentOptionsTimeline(Request $request)
     {
@@ -172,22 +144,15 @@ VALUES
     {
         $saved_data = array();
         $shift_month = array();
-        /*$Year = $request->input('year');
-        $Month = $request->input('month');*/
+
         $date = $request->input('date');
         $id_user = Auth::id();
 
         $dt = "";
-        //$hh = "2024-01-01";
-        //$e = $cha;
+
         $A = 1;
-        //$R = "0" . $A;
         $d = "";
-        /*
-        $mysqli_sav = require ("../database.php");
 
-
-        $conn = new mysqli($host, $username, $password, $dbname);*/
 
 
 
@@ -206,7 +171,6 @@ VALUES
 
             $sql_get = DB::select(" SELECT COUNT(*) as count FROM time_options WHERE id='$id_user' AND saved_at='$d' ");
             $RR = " SELECT COUNT(*) as count FROM time_options WHERE id='$id_user' AND saved_at='$d' ";
-            //$check_get = mysqli_query($conn, $sql_get);
             if ($sql_get[0]->count == 0) {
                 $saved_data[$i - 1] = "empty";
             } else {
@@ -216,36 +180,26 @@ VALUES
                     $saved_data[$i - 1] = $result->opt_from . "//" . $result->opt_to;
 
                 }
-                /*$result_get = $mysqli_sav->query($sql_get);
-                while ($rows_get = $result_get->fetch_assoc()) {
-                  $get_from = $rows_get['opt_from'];
-                  $get_to = $rows_get['opt_to'];
 
-                }*/
-                // $saved_data[$i - 1] = $get_from . "//" . $get_to;
             }
             $month_shift = DB::select("SELECT * FROM shift_active_data WHERE shift_active_data.saved_at='$d' AND shift_active_data.id='$id_user' ");
             $counter = 0;
 
             foreach ($month_shift as $result_shift) {
                 array_push($shift_month, $result_shift->saved_at);
-                //shift_month 
             }
 
 
         }
-        // $conn->close();
         return response()->json([
             'saved_data' => $saved_data,
             'shifts' => $shift_month,
             'response' => $RR,
 
         ]);
-        // echo json_encode($saved_data);
     }
     public function insertTimeOptions(Request $request)
     {
-        // $request->input(
         $fromArr = $request->input('from');
         $toArr = $request->input('to');
         $dateArr = $request->input('date');
@@ -253,15 +207,16 @@ VALUES
         $YM = $request->input('dateym');
         $time = time();
 
-        /*if (mysqli_connect_errno()) {
-            echo "Failed to connect to MySQL: " . mysqli_connect_error();
-        }*/
 
         for ($x = 0; $x < count($fromArr); $x++) {
-            if ($fromArr[$x] != "" && $toArr[$x] != "") { /*not allowing empty values and the row which has been removed.*/
+            if (($fromArr[$x] != "" && $toArr[$x] == "") || ($fromArr[$x] == "" && $toArr[$x] != "") || ($fromArr[$x] != "" && $toArr[$x] != "")) { /*not allowing empty values and the row which has been removed.*/
+                if($fromArr[$x] == ""){
+                    $fromArr[$x] = "00:00";
+                }
+                if($toArr[$x] == ""){
+                    $toArr[$x] = "00:00";
+                }
 
-
-                //$check_unique_row = mysqli_query($conn, "SELECT * FROM time_options WHERE saved_date = '$dateArr[$x]' AND id_user='$id_user'");
                 $check_unique_row = DB::select("SELECT COUNT(*) AS count FROM time_options WHERE saved_at = '$dateArr[$x]' AND id='$id_user' ");
                 if ($check_unique_row[0]->count == 0) {
 
@@ -269,13 +224,9 @@ VALUES
 VALUES
 ($id_user,'$dateArr[$x]','$fromArr[$x]','$toArr[$x]','$time')");
 
-                    /*if (!mysqli_query($conn, $sql)) {
-                        die('Error: ' . mysqli_error($conn));
-                    }*/
 
                 } else {
-                    /*$sqlsav = "UPDATE time_options SET opt_from='$fromArr[$x]', opt_to='$toArr[$x]' , up_timestamp='$time' WHERE saved_date='$dateArr[$x]' AND id_user='$id_user'";
-                    $conn->query($sqlsav);*/
+  
                     DB::update("UPDATE time_options SET opt_from='$fromArr[$x]', opt_to='$toArr[$x]' ,timestamp_update='$time' WHERE saved_at='$dateArr[$x]' AND id='$id_user'");
 
                 }
@@ -291,26 +242,16 @@ VALUES
                     $day = $z;
                 }
                 $date = $YM . "-" . $day;
-                //$up_time = "SELECT * FROM time_options WHERE saved_date = '$date' AND id_user = $id_user";
                 $fetch_up_time = DB::select("SELECT * FROM time_options WHERE saved_at = '$date' AND id = $id_user");
-                //$result = $conn->query($up_time);
                 foreach ($fetch_up_time as $row) {
                     $last_up = $row->timestamp_update;
                     if ($last_up < $time) {
                         DB::delete("DELETE FROM time_options WHERE saved_at = '$date' AND id = $id_user");
-                        //  $conn->query($sqldel);
                     }
                 }
-                /*while($row = $result->fetch_assoc()) {
-                    $last_up = $row['up_timestamp'];
-                }*/
-                /*if($last_up < $time) {
-                    $sqldel = "DELETE FROM time_options WHERE saved_date = '$date' AND id_user = $id_user";
-                    $conn->query($sqldel);
-                }*/
+   
             }
         }
-        print "Data added Successfully !";
     }
 }
 

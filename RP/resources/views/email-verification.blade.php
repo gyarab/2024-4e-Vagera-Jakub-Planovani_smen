@@ -89,7 +89,8 @@ i.fas.fa-envelope-open {
     <center>
   <div class="container-sec">
     <div class="text-center">
-      <div><i class="fas fa-lock otp-lock"></i></div>
+      <div><img id="Logo" src="{{ URL('images/big_icon.png') }}" alt="App icon"
+        style="height: 120px; width: 120px;"></div>
       <div class="welcome-section">
         <div class="app-name">
           ClockWork

@@ -80,10 +80,6 @@ class UserAvatarController extends Controller
             foreach ($fetch_link as $result) {
                 $link_image = $result->image_link;
             }
-            //$link_image = Str::substr($link_image, 14);
-            /*$fullPath = Storage::path($link_image);
-            Storage::delete(asset('/storage/' .$link_image));
-           Storage::delete($fullPath);*/
             Storage::disk('public')->delete($link_image);
             DB::update("UPDATE profile_pictures SET image_link='$imagePath' WHERE id='$id' ");
 
@@ -92,15 +88,11 @@ class UserAvatarController extends Controller
         } else {
             DB::insert("INSERT INTO profile_pictures (id, image_link) VALUES ('$id', '$imagePath')");
         }
-        //DB::insert("INSERT INTO profile_pictures (id, image_link) VALUES ('$id', '$imagePath')");
-        // Optionally, you can return the path or URL of the uploaded file
-
         return response()->json([
             'success' => true,
             'message' => 'Image uploaded successfully!',
             'messages' => $link_image,
             'path' => asset('storage/' . $imagePath)
-            //'path' => $imagePath
         ]);
     }
     public function showImagePersonal(Request $request)
@@ -118,16 +110,12 @@ class UserAvatarController extends Controller
         } else {
             $imageUrl = Storage::url('profile-images/avatar_blank2.jpg');
         }
-        // Generate the URL for the image using the public disk
-        //$imageUrl = Storage::url($imagePath);
 
-        // Return the image URL as a JSON response
         return response()->json(['url' => $imageUrl]);
     }
 
     public function showProfileImage(Request $request)
     {
-        //$imagePath = $request->input('imageFilename'); // Assuming image path is sent via AJAX
         $id = Auth::id();
         $fetch = DB::select("SELECT COUNT(*) AS count FROM profile_pictures WHERE id = '$id'");
         $supress = $fetch[0]->count;
@@ -141,15 +129,11 @@ class UserAvatarController extends Controller
         } else {
             $imageUrl = Storage::url('profile-images/avatar_blank2.jpg');
         }
-        // Generate the URL for the image using the public disk
-        //$imageUrl = Storage::url($imagePath);
-
-        // Return the image URL as a JSON response
+ 
         return response()->json(['url' => $imageUrl]);
     }
     public function showProfileImageChat(Request $request)
     {
-        //$imagePath = $request->input('imageFilename'); // Assuming image path is sent via AJAX
         $id = $request->input('id');
         $fetch = DB::select("SELECT COUNT(*) AS count FROM profile_pictures WHERE id = '$id'");
         $supress = $fetch[0]->count;
@@ -163,10 +147,7 @@ class UserAvatarController extends Controller
         } else {
             $imageUrl = Storage::url('profile-images/avatar_blank2.jpg');
         }
-        // Generate the URL for the image using the public disk
-        //$imageUrl = Storage::url($imagePath);
-
-        // Return the image URL as a JSON response
+    
         return response()->json(['url' => $imageUrl]);
     }
     public function updateProfilePersonal(Request $request)
@@ -180,9 +161,7 @@ class UserAvatarController extends Controller
         $phone_number = $request->input('phone_number');
         $role = $request->input('role');
         $status_active = $request->input('status');
-        /*$bio = $request->input('bio');
-        $new_password = $request->input('new_password');
-        $repeat_password = $request->input('repeat_password');*/
+    
         $email_valid = 0;
         $username_valid = 1;
         $password_valid = 1;
@@ -220,7 +199,6 @@ class UserAvatarController extends Controller
             $phone_valid = 1;
         }
         if ($username_valid == 1 && $email_valid == 1 && $password_valid == 1 && $phone_valid == 1) {
-            //DB::update("UPDATE users SET first_name='$first_name' , middle_name='$middle_name' , last_name='$last_name' , email='$email' , username='$username', phone_code='$phone_code', phone_number='$phone_number',  updated_at = CURRENT_TIMESTAMP WHERE id='$id' ");
             if ($phone_number == "") {
                 DB::update("UPDATE users SET first_name='$first_name' , middle_name='$middle_name' , last_name='$last_name' , email='$email' , username='$username', phone_code='$phone_code', phone_number=NULL,  updated_at = CURRENT_TIMESTAMP, role='$role', status='$status_active' WHERE id='$id' ");
                 $status = 1;
@@ -321,7 +299,6 @@ class UserAvatarController extends Controller
                 $password_hash = password_hash($new_password, PASSWORD_DEFAULT);
                 DB::update("UPDATE users SET first_name='$first_name' , middle_name='$middle_name' , last_name='$last_name' , email='$email' , username='$username', bio='$bio', password='$password_hash',  updated_at = CURRENT_TIMESTAMP WHERE id='$id' ");
 
-                //DB::update("UPDATE users SET first_name='$first_name' , middle_name='$middle_name' , last_name='$last_name' , email='$email' , username='$username', bio='$bio',  updated_at = CURRENT_TIMESTAMP WHERE id='$id' ");
             }
         }
         return response()->json([
@@ -330,7 +307,6 @@ class UserAvatarController extends Controller
             'password' => $password_valid
         ]);
 
-        //DB::insert("INSERT INTO users (image_link)  WHERE id='$id' ");
 
     }
 

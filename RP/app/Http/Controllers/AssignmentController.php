@@ -26,11 +26,9 @@ class AssignmentController extends Controller
         $id_decrypted_obj = Crypt::decrypt($id_obj);
         $id = $request->input('id');
         $col = $request->input('col');
-         //echo "dsa";
          $id_obj = array();
          $name_obj = array();
          $superior_obj = array();
-         //$fetch = DB::select("SELECT * FROM object_model ORDER BY object_name");
          $fetch = DB::select("SELECT * FROM object_model ");
          foreach ($fetch as $result) {
  
@@ -47,11 +45,9 @@ class AssignmentController extends Controller
             if ($id_obj[$x] == $id_decrypted_obj) {
                 echo "<div class='row mt-1'>";
                 $replace = $superior_obj[$x];
-                //$rname = $data3[$x];
                 $fetch_shift = DB::select("SELECT * FROM shift_model WHERE id_object='$id_obj[$x]' ");
                 $found = 0;
                 foreach ($fetch_shift as $result_shift) {
-                    //echo $result_shift->id_shift;
                     $fetch_shift_assignment = DB::select("SELECT * FROM shift_assignment, shift_model WHERE shift_assignment.id='$id' AND shift_assignment.id_shift='$result_shift->id_shift' AND shift_model.id_shift=shift_assignment.id_shift ");
                     foreach ($fetch_shift_assignment as $result_shift_assignment) {
                         $found++;
@@ -61,23 +57,11 @@ class AssignmentController extends Controller
                         echo "<h6 class='mx-1'>$name_obj[$x]</h6>";
                         }
                         $id_encrypted =  Crypt::encrypt($result_shift_assignment->id_shift);
-                        //echo $result_shift_assignment->shift_name;
                         echo "<label for='ch_$id_encrypted' class='mx-1 px-2 py-1 text-light' id='h_shi-" . $id_encrypted . "' style='margin-top: 5px;background: " . $result_shift_assignment->color . ";border-radius: 25px;text-overflow: ellipsis;white-space: nowrap' title='" . $result_shift_assignment->shift_name . "'>" . $result_shift_assignment->shift_name . "</label>";
         
                     }
                     
-                   /*$id_encrypted =  Crypt::encrypt($result_shift->id_shift);
-                    echo "<input type='checkbox' class='mb-3' id='ch_$id_encrypted' name='ch_assign' "; 
-                    $rr = $result_shift->id_shift;
-                    $fetch_assignment = DB::select("SELECT COUNT(*) AS count FROM shift_assignment WHERE id_shift='$rr' AND id='$id' ");
-                    $counter = $fetch_assignment[0]->count;
-                    if($counter > 0){
-                        echo "checked";
-                    }*/
-                    
-                    //echo " value='$id_encrypted' /><label for='ch_$id_encrypted' class='mx-2 px-2 py-1 text-light' id='h_shi-" . $id_encrypted . "' style='margin-top: 10px;height: 50px;background: " . $result_shift->color . ";border-radius: 25px;display:inline;text-overflow: ellipsis;white-space: nowrap;overflow: hidden' title='" . $result_shift->shift_name . "'>" . $result_shift->shift_name . "</label>";
-
-        
+         
                 }
                 if($found > 0){
                     echo "</div>";
@@ -134,11 +118,59 @@ class AssignmentController extends Controller
 
     }
     public function mainObjectSelect(){
-       //$fetch = DB::select("SELECT * FROM object_model WHERE superior_object_id = 0 ORDER BY object_name");
         $fetch = DB::select("SELECT * FROM object_model WHERE superior_object_id = 0 ");
 
         foreach ($fetch as $result) {
-            echo "<option value='".Crypt::encrypt($result->id_object)."' >".$result->object_name."</option>";
+
+
+            echo "<option value='".Crypt::encrypt($result->id_object)."' data-bs-icon='$result->object_icon' >".$result->object_name."</option>";
+        }
+    }
+    public function loadShiftAssignmentStructure(Request $request)
+    {
+        $shift_crypted = $request->input('id_shift');
+        error_log($shift_crypted);
+        $shift = Crypt::decrypt($shift_crypted);
+        $fetch_count = DB::select("SELECT COUNT(*) AS count FROM shift_assignment, users WHERE users.id=shift_assignment.id AND shift_assignment.id_shift='$shift' AND users.delete_status !=1 ORDER BY users.last_name,users.first_name, users.middle_name ");
+        $fetch = DB::select("SELECT *, users.id AS user_id FROM shift_assignment, users WHERE users.id=shift_assignment.id AND shift_assignment.id_shift='$shift'  AND users.delete_status !=1 ORDER BY users.last_name,users.first_name, users.middle_name");
+
+        if ($fetch_count[0]->count > 0) {
+           echo "<ul class='list-group overflow-auto' style='max-height: 350px;'>";
+            foreach ($fetch as $row) {
+                $disable = "";
+                if($row->status == 0){
+                    $disable = "disabled";
+
+                }
+                echo "<li id='a_a-$row->user_id' onclick='pickUser(this.id)' class='list-group-item list-group-item-action $disable   '>";
+                echo "<div class='row'><div class='col-12 col-md-6'>";
+                $fetch_count = DB::select("SELECT COUNT(*) AS count FROM profile_pictures WHERE id ='$row->user_id'");
+                if ($fetch_count[0]->count > 0) {
+                    $fetch_link = DB::select("SELECT * FROM profile_pictures WHERE id ='$row->user_id'");
+                    $link_image = "";
+                    foreach ($fetch_link as $result_link) {
+                        $link_image = $result_link->image_link;
+                    }
+                    $imageUrl = Storage::url($link_image);
+                    echo ' <img src="' . $imageUrl . '"';
+                } else {
+                    $imageUrl = Storage::url('profile-images/avatar_blank2.jpg');
+                    echo '<img src="' . $imageUrl . '"';
+                }
+
+                echo '  alt="" class="avatar-sm rounded-circle"  style="height: 25px; width: 25px; display: inline" />';
+                echo '<div class=" mx-2" style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden; display: inline ">' . $row->first_name . ' ' . $row->middle_name . ' ' . $row->last_name . '</div>';
+                echo "</div><div class='col-12 col-md-6'>";
+                $fetch_editor = DB::select("SELECT * FROM users WHERE users.id='$row->updated_by'  ");
+                foreach($fetch_editor as $row_editor){
+                    echo '<div class=" mx-2 float-start float-md-end" style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden; ">Granted by: ' . $row_editor->first_name . ' ' . $row_editor->middle_name . ' ' . $row_editor->last_name . '</div>';
+
+                }
+
+                echo "</div></div>";
+                echo "</li>";
+            }
+            echo "</ul>";
         }
     }
 
@@ -147,17 +179,19 @@ class AssignmentController extends Controller
         $id_decrypted_obj = Crypt::decrypt($id_obj);
         $id = $request->input('id');
 
-        //echo "dsa";
         $id_obj = array();
         $name_obj = array();
         $superior_obj = array();
-        //$fetch = DB::select("SELECT * FROM object_model ORDER BY object_name");
+        $icons = array();
+
         $fetch = DB::select("SELECT * FROM object_model ");
         foreach ($fetch as $result) {
 
             $id_obj[] = $result->id_object;
             $name_obj[] = $result->object_name;
             $superior_obj[] = $result->superior_object_id;
+            $icons[] = $result->object_icon;
+
 
         }
         array_multisort($id_obj, $name_obj, $superior_obj);
@@ -165,10 +199,8 @@ class AssignmentController extends Controller
             if ($id_obj[$x] == $id_decrypted_obj) {
 
                 $replace = $superior_obj[$x];
-                //$rname = $data3[$x];
                 $fetch_shift = DB::select("SELECT * FROM shift_model WHERE id_object='$id_obj[$x]' ");
                 foreach ($fetch_shift as $result_shift) {
-                    //echo $result_shift->id_shift;
                    $id_encrypted =  Crypt::encrypt($result_shift->id_shift);
                     echo "<input type='checkbox' class='mb-3' id='ch_$id_encrypted' name='ch_assign' "; 
                     $rr = $result_shift->id_shift;
@@ -186,7 +218,7 @@ class AssignmentController extends Controller
                 $row = 0;
                 for ($h = 0; $h < count($name_obj); $h++) {
                     if ($id_obj[$x]  == $superior_obj[$h]) {
-                       subLoad($id_obj[$x], $id_obj, $name_obj, $superior_obj, $id/*$rname*/);
+                       subLoad($id_obj[$x], $id_obj, $name_obj, $superior_obj, $id, $icons/*$rname*/);
                         $row++;
                         break;
                     }
@@ -215,7 +247,6 @@ class AssignmentController extends Controller
                  DB::insert("INSERT INTO shift_assignment (id, id_shift, updated_at, updated_by) VALUES ('$id', '$result_decrypt','$t', '$id_creator')");
             }else{
                 DB::update("UPDATE shift_assignment SET updated_at = '$t', updated_by = '$id_creator' WHERE id='$id' AND id_shift='$result_decrypt' ");
-               ///SET object_name = '$name' WHERE id_object= $id_decrypted
             }
         }
     }
@@ -225,7 +256,6 @@ class AssignmentController extends Controller
         $arr_obj = array();
         $arr_shi = array();
 
-        //$fetch = DB::select("SELECT * FROM object_model ORDER BY object_name");
         $fetch_objects = DB::select("SELECT * FROM object_model ");
         foreach ($fetch_objects as $result_objects) {
 
@@ -239,14 +269,8 @@ class AssignmentController extends Controller
             if ( $id_obj[$x] == $obj ) {
                 static $dd = 1;
 
-
-
-                //array_push($arr_obj, "asd");
-                //array_push($arr_sort, $data2[$x]);
-                /*$dd++;*/
                 array_push($arr_obj, $id_obj[$x]);
 
-                //$result = $this->doubleValue(10);
                 $row = 0;
                 $search = $id_obj[$x] . "";
                 for ($h = 0; $h < count($name_obj); $h++) {
@@ -272,23 +296,17 @@ class AssignmentController extends Controller
         foreach ($arr_shi as $shift) {
             DB::delete("DELETE FROM shift_assignment WHERE id='$id' AND id_shift='$shift' AND updated_at != '$t'");
 
-        /*$fetch_assignment = DB::select("SELECT * FROM shift_assignment WHERE id='$id' AND id_shift='$shift' AND updated_at != '$t'");
-        foreach ( $fetch_assignment as $assignment) {
-            DB::delete("DELETE FROM shift_assignment WHERE id_object= $id_decrypted");
 
-        }*/
         }
 
     }
     private function sub_object($searching, $dat1, $dat2, $dat4, array &$arr_obj)
     {
-        /*global $arr_obj;
-        global $arr_sort;*/
+
         $find = 0;
         for ($i = 0; $i < count($dat2); $i++) {
             if ($searching == $dat4[$i]) {
                 array_push($arr_obj, $dat1[$i]);
-                //echo "dddd";
 
 
 
@@ -307,7 +325,7 @@ class AssignmentController extends Controller
         }
     }
 }
-function subLoad($searching, $dat1, $dat2, /*$dat3,*/ $dat4, $id/*$rn*/)
+function subLoad($searching, $dat1, $dat2, $dat4, $id, $icons)
 {
     static $dd = 1;
     $find = 0;
@@ -321,16 +339,14 @@ function subLoad($searching, $dat1, $dat2, /*$dat3,*/ $dat4, $id/*$rn*/)
             $counter_sub = $fetch_shift_sub_count[0]->count;
             if($counter_sub > 0){
                 echo "<div class='mx-2'>";
-                echo "<h6>$dat2[$i]</h6>";
+                echo "<h6><i class='$icons[$i]'></i>&nbsp;$dat2[$i]</h6>";
 
             }
             $fetch_shift_sub = DB::select("SELECT * FROM shift_model WHERE id_object='$dat1[$i]' ");
             foreach ($fetch_shift_sub as $result_shift_sub) {
-                //echo $result_shift->id_shift;
                 $id_encrypted_sub = Crypt::encrypt($result_shift_sub->id_shift);
                 $sub_search = $result_shift_sub->id_shift;
 
-                //echo ("<p> SELECT COUNT(*) AS count FROM shift_assignment WHERE id_shift='$sub_search' AND id='$id' </p>");
 
                 echo "<div style='display: inline; margin-bottom: 5px'><input type='checkbox' class='mb-3' style='display: inline;' id='ch_$id_encrypted_sub' name='ch_assign' value='$id_encrypted_sub' ";
                 $fetch_assignment = DB::select("SELECT COUNT(*) AS count FROM shift_assignment WHERE id_shift='$sub_search' AND id='$id' ");
@@ -351,7 +367,7 @@ function subLoad($searching, $dat1, $dat2, /*$dat3,*/ $dat4, $id/*$rn*/)
             if ($sea != null) {
                 for ($h = 0; $h < count($dat2); $h++) {
                     if ($sea == $dat4[$h]) {
-                        subLoad($sea, $dat1, $dat2, $dat4, $id);
+                        subLoad($sea, $dat1, $dat2, $dat4, $id, $icons);
                         break;
                     }
                 }
@@ -365,14 +381,13 @@ function subLoad($searching, $dat1, $dat2, /*$dat3,*/ $dat4, $id/*$rn*/)
 
 }
 
-function subLoadList($searching, $dat1, $dat2, /*$dat3,*/ $dat4, $id, $col/*$rn*/)
+function subLoadList($searching, $dat1, $dat2,  $dat4, $id, $col)
 {
     for ($i = 0; $i < count($dat2); $i++) {
         if ($searching == $dat4[$i]) {
             $fetch_shift = DB::select("SELECT * FROM shift_model WHERE id_object='$dat1[$i]' ");
             $found = 0;
             foreach ($fetch_shift as $result_shift) {
-                //echo $result_shift->id_shift;
                 $fetch_shift_assignment = DB::select("SELECT * FROM shift_assignment, shift_model WHERE shift_assignment.id='$id' AND shift_assignment.id_shift='$result_shift->id_shift' AND shift_model.id_shift=shift_assignment.id_shift ");
                 foreach ($fetch_shift_assignment as $result_shift_assignment) {
                     $found++;
@@ -382,7 +397,6 @@ function subLoadList($searching, $dat1, $dat2, /*$dat3,*/ $dat4, $id, $col/*$rn*
                     echo "<h6 class='mx-1'>$dat2[$i]</h6>";
                     }
                     $id_encrypted =  Crypt::encrypt($result_shift_assignment->id_shift);
-                    //echo $result_shift_assignment->shift_name;
                     echo "<label for='ch_$id_encrypted' class='mx-1 px-2 py-1 text-light' id='h_shi-" . $id_encrypted . "' style='margin-top: 10px;background: " . $result_shift_assignment->color . ";border-radius: 25px;text-overflow: ellipsis;white-space: nowrap' title='" . $result_shift_assignment->shift_name . "'>" . $result_shift_assignment->shift_name . "</label>";
     
                 }

@@ -30,10 +30,7 @@ class ShiftRequest extends Controller
             $fetch_requests = DB::select("SELECT * FROM shift_request, users WHERE shift_request.id_offer='$input_id'  AND shift_request.request_status='0' AND shift_request.id=users.id ORDER BY shift_request.requested_at");
             foreach ($fetch_requests as $result_request) {
                 $name = $result_request->last_name . " ". $result_request->middle_name. " ". $result_request->first_name;
-               // $date = $result_request->date;
                 $fetch_count = DB::select("SELECT COUNT(*) AS count FROM profile_pictures WHERE id='$result_request->id' ");
-               // $all_response .= "<div class='row'><div class='col-2' ><p class='m-0'>";
-               // $all_response .= ($d + 1) . ".</p></div><div class='col-1'>";
                 if ($fetch_count[0]->count > 0) {
                     $fetch_link = DB::select("SELECT * FROM profile_pictures WHERE id = $result_request->id");
                     $link_image = "";
@@ -41,10 +38,8 @@ class ShiftRequest extends Controller
                         $link_image = $result_link->image_link;
                     }
                     $imageUrl = Storage::url($link_image);
-                  //  $all_response .= ' <img src="' . $imageUrl . '"';
                 } else {
                     $imageUrl = Storage::url('profile-images/avatar_blank2.jpg');
-                    //$all_response .= '<img src="' . $imageUrl . '"';
                 }
                 if ( $result_request->role == 'admin') {
                     $role  = '  <span class="p-1 rounded text-bg-dark">Administrator</span>';
@@ -80,7 +75,6 @@ class ShiftRequest extends Controller
             $date = $result_offer->date;
         }
         $fetch_requests = DB::select("SELECT * FROM shift_request, users WHERE shift_request.id_offer='$input_id' AND shift_request.id=users.id ORDER BY shift_request.requested_at");
-        // echo "SELECT * FROM shift_request, users WHERE shift_request.id_offer='$input_id' AND shift_request.id=users.id ORDER BY shift_request.requested_at";
         foreach ($fetch_requests as $result_request) {
             array_push($id_arr, $result_request->id);
             array_push($position_arr, $result_request->role);
@@ -125,14 +119,9 @@ class ShiftRequest extends Controller
             $all_response .= "</div>";
             $all_response .= "</div>";
             $all_response .= "</li>";
-            /*<li class='list-group-item'>Cras justo odio</li>
-            <li class='list-group-item'>Dapibus ac facilisis in</li>
-            <li class='list-group-item'>Morbi leo risus</li>
-            <li class='list-group-item'>Porta ac consectetur ac</li>
-            <li class='list-group-item'>Vestibulum at eros</li>*/
+            
             $currdate = date("Y-m-d");
             for ($d = 0; $d < count($id_arr); $d++) {
-                //echo '<div class="row" style="height: 45px; align-items: center;">';
                 if ($date >= $currdate) {
                     $all_response .= "<li id='a_a-$id_arr[$d]' onclick='pickUser(this.id)' class='list-group-item list-group-item-action'>";
                 } else {
@@ -170,37 +159,7 @@ class ShiftRequest extends Controller
 
                 }
                 $all_response .= "</center></div></div>";
-                /* if ($fetch_count[0]->count > 0) {
-                  $fetch_link = DB::select("SELECT * FROM profile_pictures WHERE id = $id_arr[$d]");
-                  $link_image = "";
-                  $all_response .= "<div class='row'><div class='col-2' ><p>$d";
-                  $all_response .= $d . ".</p>";
-                  $all_response .= "</div><div class='col-2' ></div></div>";
-                  foreach ($fetch_link as $result_link) {
-                    $link_image = $result_link->image_link;
-                  }
-                  $imageUrl = Storage::url($link_image);
-                  $all_response .= ' <img src="' . $imageUrl . '"';
-                } else {
-                  $imageUrl = Storage::url('profile-images/avatar_blank2.jpg');
-                  $all_response .= '<img src="' . $imageUrl . '"';
-                }
-        
-                $all_response .= '      alt="" class="avatar-sm rounded-circle"  style="height: 25px; width: 25px" />';
-               $all_response .= '<a      href="#" class="text-body mx-2" style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;">' . $firstname_arr[$d] . ' ' . $middlename_arr[$d] . ' ' . $lastname_arr[$d] . '</a>';
-                if ($position_arr[$d] == 'admin') {
-                  $all_response .= '  <div><span class="py-1 px-2 rounded-circle text-bg-dark">A</span></div>';
-                } else if ($position_arr[$d] == 'manager') {
-                  $all_response .= '  <div><span class="py-1 px-2 rounded-circle rounded text-bg-danger">M</span></div>';
-                } else if ($position_arr[$d] == 'fulltime') {
-                  $all_response .= '  <div><span class="py-1 px-2 rounded-circle rounded text-bg-primary">F</span></div>';
-        
-                } else if ($position_arr[$d] == 'parttime') {
-                  $all_response .= '  <div><span class="py-1 px-2 rounded-circle rounded text-bg-success">P</span></div>';
-        
-                }
-                $all_response .= "</li>";
-                //echo "</div>";*/
+            
             }
             $all_response .= "</ul>";
 
@@ -242,6 +201,21 @@ class ShiftRequest extends Controller
             </center>
         </div>
     </div>';
+    $id = Auth::id();
+    $rights = array();
+    $admin = false;
+    $fetch_position = DB::select("SELECT role AS r FROM  users WHERE id='$id'");
+
+        
+    $role = $fetch_position[0]->r;
+    if($role == "admin"){
+        $admin = true;
+    }
+    $fetch_rights = DB::select("SELECT * FROM management_rights WHERE id='$id'");
+    foreach ($fetch_rights as $result_rights) {
+        array_push($rights, $result_rights->id_object);
+
+    } 
         $main_obj = $request->input('main_obj');
         $main_obj_decrypted = Crypt::decrypt($main_obj);
         $fetch_object = DB::select("SELECT * FROM object_model");
@@ -253,22 +227,20 @@ class ShiftRequest extends Controller
         for ($x = 0; $x < count($obj_id); $x++) {
 
             if ($obj_superior[$x] == 0 && $obj_id[$x] == $main_obj_decrypted) {
-                //$final_id 
-                //array_push($final_id, $obj_id[$x]  );
                 $shift_arr = array();
                 $fetch_shifts = DB::select("SELECT * FROM shift_model WHERE id_object='$obj_id[$x]' ");
                 foreach ($fetch_shifts as $result_shift) {
+                    if ($admin == true || in_array($result_shift->id_shift, $rights) == true) {
+                        array_push($final_id, $result_shift->id_shift);
 
-                    //$shift_arr[] = $result_shift->id_shift;
-                    //$final_id[] = $result_shift->id_shift; 
-                    array_push($final_id, $result_shift->id_shift);
-                    //array_push($final_id,  $result_shift->id_shift);
-                    //array_push($shi_id,  $result->id_shift);
+
+                    }
+             
                 }
 
                 for ($h = 0; $h < count($obj_id); $h++) {
                     if ($obj_id[$x] == $obj_superior[$h]) {
-                        $this->search_shift($obj_id[$x], $obj_id, $obj_name, $obj_superior, $final_id, $obj_id[$x], $local_id);
+                        $this->search_shift($obj_id[$x], $obj_id, $obj_name, $obj_superior, $final_id, $obj_id[$x], $local_id, $admin, $rights);
                         break;
                     }
                 }
@@ -283,8 +255,6 @@ class ShiftRequest extends Controller
                 $t = date("Y-m-d");
                 $fetch_request = DB::select("SELECT COUNT(*) AS count FROM shift_offer WHERE shift_offer.id_shift='$final_id[$x]' AND shift_offer.accepted_at IS NULL AND shift_offer.date >= '$t' ");
                 $counter_waiting = $fetch_request[0]->count;
-                // array_push($waiting_final, "SELECT COUNT(*) AS count FROM shift_offer WHERE shift_offer.id_shift='$final_id[$x]' AND shift_offer.accepted_at=NULL ");
-                //array_push($waiting_final, $final_id[$x]);
                 if ($counter_waiting != 0) {
                     array_push($waiting_final, $final_id[$x]);
                     $fetch_request2 = DB::select("SELECT * FROM shift_offer, shift_model, object_model WHERE shift_offer.id_shift=shift_model.id_shift AND object_model.id_object=shift_model.id_object AND shift_offer.id_shift='$final_id[$x]' AND shift_offer.accepted_at IS NULL AND shift_offer.date >= '$t' ");
@@ -320,7 +290,7 @@ class ShiftRequest extends Controller
         
                     <div class="col-2">
                         <center>
-                            <p class="py-2 my-0"><i class="bi bi-three-dots-vertical"></i></p>
+                            <a href="' . route('showOffer', ['id' => $result_request->id_offer]) . '" style="text-decoration: none;color: black;"><p class="py-2 my-0"><i class="bi bi-three-dots-vertical"></i></p></a>
                         </center>
                     </div>
                 </div>
@@ -367,6 +337,21 @@ class ShiftRequest extends Controller
             </center>
         </div>
     </div>';
+    $id = Auth::id();
+    $rights = array();
+    $admin = false;
+    $fetch_position = DB::select("SELECT role AS r FROM  users WHERE id='$id'");
+
+        
+    $role = $fetch_position[0]->r;
+    if($role == "admin"){
+        $admin = true;
+    }
+    $fetch_rights = DB::select("SELECT * FROM management_rights WHERE id='$id'");
+    foreach ($fetch_rights as $result_rights) {
+        array_push($rights, $result_rights->id_object);
+
+    } 
         $main_obj = $request->input('main_obj');
         $year = $request->input('year');
         $month = $request->input('month');
@@ -381,22 +366,19 @@ class ShiftRequest extends Controller
         for ($x = 0; $x < count($obj_id); $x++) {
 
             if ($obj_superior[$x] == 0 && $obj_id[$x] == $main_obj_decrypted) {
-                //$final_id 
-                //array_push($final_id, $obj_id[$x]  );
+       
                 $shift_arr = array();
                 $fetch_shifts = DB::select("SELECT * FROM shift_model WHERE id_object='$obj_id[$x]' ");
                 foreach ($fetch_shifts as $result_shift) {
 
-                    //$shift_arr[] = $result_shift->id_shift;
-                    //$final_id[] = $result_shift->id_shift; 
+                   
                     array_push($final_id, $result_shift->id_shift);
-                    //array_push($final_id,  $result_shift->id_shift);
-                    //array_push($shi_id,  $result->id_shift);
+                  
                 }
 
                 for ($h = 0; $h < count($obj_id); $h++) {
                     if ($obj_id[$x] == $obj_superior[$h]) {
-                        $this->search_shift($obj_id[$x], $obj_id, $obj_name, $obj_superior, $final_id, $obj_id[$x], $local_id);
+                        $this->search_shift($obj_id[$x], $obj_id, $obj_name, $obj_superior, $final_id, $obj_id[$x], $local_id, $admin, $rights);
                         break;
                     }
                 }
@@ -410,7 +392,6 @@ class ShiftRequest extends Controller
             for ($x = 0; $x < count($final_id); $x++) {
                 $t = date("Y-m-d");
                 $fetch_request = DB::select("SELECT * FROM shift_offer, shift_model, object_model WHERE shift_offer.id_shift=shift_model.id_shift AND object_model.id_object=shift_model.id_object AND shift_offer.id_shift='$final_id[$x]' AND shift_offer.date LIKE '$YM%'");
-                //$returns = $returns . "SELECT * FROM shift_offer WHERE shift_offer.id_shift='$final_id[$x]' AND shift_offer.accepted_at IS NULL AND shift_offer.date LIKE '$YM%'";
                 foreach ($fetch_request as $result_request) {
                     $fetch_counter = DB::select("SELECT COUNT(*) AS count FROM shift_offer, shift_request WHERE shift_offer.id_offer=shift_request.id_offer AND shift_offer.id_shift='$final_id[$x]' AND  shift_offer.date='$result_request->date'  ");
 
@@ -486,7 +467,6 @@ class ShiftRequest extends Controller
             DB::update("UPDATE shift_planned_data SET id='$id_user' WHERE saved_at='$offer_date' AND id_shift='$result_shift->id_shift' ");
 
         }
-        // DB::update("UPDATE shift_active_data SET id='$id_user' WHERE saved_at='$offer_date' AND id='$id_user' ");
 
         DB::update("UPDATE shift_request SET request_status='0' WHERE id_offer='$id_offer' AND id='$id_user' ");
     }
@@ -496,9 +476,8 @@ class ShiftRequest extends Controller
 
 
 
-    private function search_shift($search, $obj_id, $obj_name, $obj_superior, array &$final_id, $main_obj, array &$local_id)
+    private function search_shift($search, $obj_id, $obj_name, $obj_superior, array &$final_id, $main_obj, array &$local_id, $admin, $rights)
     {
-        //return 0;
         $shift_arr = array();
         $finding = 0;
         for ($i = 0; $i < count($obj_id); $i++) {
@@ -506,11 +485,8 @@ class ShiftRequest extends Controller
                 $fetch_shifts = DB::select("SELECT * FROM shift_model WHERE id_object='$obj_id[$i]' ");
                 foreach ($fetch_shifts as $result_shift) {
 
-                    //$shift_arr[] = $result_shift->id_shift;
-                    //$final_id[] = $result_shift->id_shift; 
                     array_push($final_id, $result_shift->id_shift);
-                    //array_push($final_id,  $result_shift->id_shift);
-                    //array_push($shi_id,  $result->id_shift);
+        
                 }
 
 
@@ -519,10 +495,9 @@ class ShiftRequest extends Controller
                     for ($h = 0; $h < count($obj_id); $h++) {
                         if ($sea == $obj_superior[$h]) {
                             $finding = 1;
-                            $this->search_shift($obj_id[$i], $obj_id, $obj_name, $obj_superior, $final_id, $main_obj, $local_id);
+                            $this->search_shift($obj_id[$i], $obj_id, $obj_name, $obj_superior, $final_id, $main_obj, $local_id,$admin, $rights );
                             break;
-                            //break;
-                            //echo "sda";
+                      
                         }
 
                     }

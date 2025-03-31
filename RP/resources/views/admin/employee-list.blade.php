@@ -48,7 +48,7 @@
     @include('admin.scripts')
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
-    <div class="height-100 bg-light">
+    <div class="border-start wh-100 bg-light" style="height: 100%">
         <div class="container-fluid">
 
             <div class="col py-3">
@@ -73,23 +73,23 @@
                             <div class="col-12 col-md-6">
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" style="display:inline;"
-                                        onclick="pos_click(this.value)" name="pos" type="checkbox"
-                                        id="inlineCheckbox1" value="admin">
+                                        onclick="admin_click(this.value)" name="pos" type="checkbox"
+                                        id="inlineCheckboxAdmin" value="admin">
                                     <label class="form-check-label" style="display:inline;"
-                                        for="inlineCheckbox1">Admin</label>
+                                        for="inlineCheckbox1">Adminstators</label>
                                 </div>
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" style="display:inline;"
-                                        onclick="pos_click(this.value)" name="pos" type="checkbox"
-                                        id="inlineCheckbox2" value="manager">
+                                        onclick="manager_click(this.value)" name="pos" type="checkbox"
+                                        id="inlineCheckboManager" value="manager">
                                     <label class="form-check-label" style="display:inline;"
-                                        for="inlineCheckbox2">Manager</label>
+                                        for="inlineCheckbox2">Managers</label>
 
                                 </div>
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" style="display:inline;"
-                                        onclick="pos_click(this.value)" name="pos" type="checkbox"
-                                        id="inlineCheckbox3" value="fulltime_employee">
+                                        onclick="full_click(this.value)" name="pos" type="checkbox"
+                                        id="inlineCheckboxFull" value="fulltime_employee">
                                     <label class="form-check-label" style="display:inline;"
                                         for="inlineCheckbox3">Full-time
                                         employee</label>
@@ -97,8 +97,8 @@
                                 </div>
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" style="display:inline;"
-                                        onclick="pos_click(this.value)" name="pos" type="checkbox"
-                                        id="inlineCheckbox4" value="parttime_employee">
+                                        onclick="part_click(this.value)" name="pos" type="checkbox"
+                                        id="inlineCheckboxManager" value="parttime_employee">
                                     <label class="form-check-label" style="display:inline;"
                                         for="inlineCheckbox4">Part-time
                                         employee</label>
@@ -110,6 +110,45 @@
                                         class="bi bi-patch-plus "></i>&nbsp&nbsp Add account</a>
 
                             </div>
+                            <script>
+                                var checkAdmin = 0;
+                                var checkManager = 0;
+                                var checkFull = 0;
+                                var checkPart = 0;
+                                function admin_click(){
+                                    if (document.getElementById('inlineCheckboxAdmin').checked) {
+                                        checkAdmin = 1;
+                                    }else{
+                                        checkAdmin = 0;
+                                    }
+                                    loadEmployeeTable();
+
+                                }
+                                function manager_click(){
+                                    if (document.getElementById('inlineCheckboManager').checked) {
+                                        checkManager = 1;
+                                    }else{
+                                        checkManager = 0;
+                                    }
+                                    loadEmployeeTable();
+                                }
+                                function full_click(){
+                                    if (document.getElementById('inlineCheckboxFull').checked) {
+                                        checkFull = 1;
+                                    }else{
+                                        checkFull = 0;
+                                    }
+                                    loadEmployeeTable();
+                                }
+                                function part_click(){
+                                    if (document.getElementById('inlineCheckboxManager').checked) {
+                                        checkPart = 1;
+                                    }else{
+                                        checkPart = 0;
+                                    }
+                                    loadEmployeeTable();
+                                }
+                            </script>
                         </div>
                     </div>
                 </div>
@@ -120,7 +159,7 @@
                             <script>
                                 var input = "";
                             </script>
-                            <h5 class="card-title">Contact List <span id="all_counter"
+                            <h5 class="card-title mx-1">In organization <span id="all_counter"
                                     class="text-muted fw-normal ms-2"></span>
                                 <script>
                                     $.ajax({
@@ -198,7 +237,7 @@
                 <div class="bg-white" id="employee_list">
 
                 </div>
-                <a href="{{ route('profile', ['id' => 1]) }}">View Profile</a>
+                <!--<a href="{{ route('profile', ['id' => 1]) }}">View Profile</a>-->
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="">
@@ -235,7 +274,8 @@
 
 
                                     <script>
-                                        $.ajax({
+                                        loadEmployeeTable();
+                                        /*$.ajax({
                                             url: '{{ route('loadEmployee') }}',
                                             type: 'POST',
                                             data: {
@@ -250,11 +290,12 @@
                                             error: function(response) {
                                                 alert("dsad");
                                             }
-                                        });
+                                        });*/
                                         $("#live_search").keyup(function() {
 
                                             input = $(this).val();
-                                            $.ajax({
+                                            loadEmployeeTable();
+                                            /*$.ajax({
                                                 url: '{{ route('loadEmployee') }}',
                                                 type: 'POST',
                                                 data: {
@@ -269,8 +310,32 @@
                                                 error: function(response) {
                                                     alert("dsad");
                                                 }
-                                            });
+                                            });*/
                                         });
+
+                                        function loadEmployeeTable(){
+                                            $.ajax({
+                                            url: '{{ route('loadEmployee') }}',
+                                            type: 'POST',
+                                            data: {
+                                                _token: '{{ csrf_token() }}',
+                                                input: input,
+                                                admin: checkAdmin,
+                                                manager: checkManager,
+                                                full: checkManager,
+                                                part: checkPart,
+
+                                            },
+                                            success: function(response) {
+                                                //alert(response);
+                                                document.getElementById("employee_list").innerHTML = response;
+
+                                            },
+                                            error: function(response) {
+                                                alert("dsad");
+                                            }
+                                        });   
+                                        }
                                     </script>
                                     <!--<thead class="d-block d-sm-none">
                                         <tr>

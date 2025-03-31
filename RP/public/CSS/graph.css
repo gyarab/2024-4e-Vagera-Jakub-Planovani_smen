@@ -89,3 +89,8 @@
     background-color: #196127;
     list-style-type: none;
   }
+
+  .squares li[data-level="4"] {
+    background-color: #f0e446;
+    list-style-type: none;
+  }

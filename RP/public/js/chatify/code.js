@@ -630,18 +630,33 @@ function initClientChannel() {
   }
 }
 initClientChannel();
+//console.error("------!");
 
 // Listen to messages, and append if data received
 channel.bind("messaging", function (data) {
+  console.error("-data-from "+data.from_id);
+  console.error("-data-to "+data.to_id);
+  console.error("-data-3 "+ getMessengerId());
+  console.error("-data-4 "+ auth_id);
+
+  console.error("Message " + JSON.stringify(data.message));
+
   if (data.from_id == getMessengerId() && data.to_id == auth_id) {
     $(".messages").find(".message-hint").remove();
+    //messagesContainer.find(".messages").append("555555");
+
     messagesContainer.find(".messages").append(data.message);
+
+  console.error("++++++");
     scrollToBottom(messagesContainer);
+    console.error("555555");
     makeSeen(true);
+    console.error("7777");
     // remove unseen counter for the user from the contacts list
     $(".messenger-list-item[data-contact=" + getMessengerId() + "]")
       .find("tr>td>b")
       .remove();
+      console.error("6666666666");
   }
 
   playNotificationSound(
@@ -663,8 +678,11 @@ clientListenChannel.bind("client-typing", function (data) {
 
 // listen to seen event
 clientListenChannel.bind("client-seen", function (data) {
+  //console.log("5555");
   if (data.from_id == getMessengerId() && data.to_id == auth_id) {
+    
     if (data.seen == true) {
+      console.log("0000");
       $(".message-time")
         .find(".fa-check")
         .before('<span class="fas fa-check-double seen"></span> ');

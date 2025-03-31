@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 /**
  * Authentication for pusher private channels
  */
-Route::post('/chat/auth', 'MessagesController@pusherAuth')->name('api.pusher.auth');
+//Route::post('/chat/auth', 'MessagesController@pusherAuth')->name('api.pusher.auth');
 
 /**
  *  Fetch info for specific id [user/group]
@@ -15,8 +15,20 @@ Route::post('/idInfo', 'MessagesController@idFetchData')->name('api.idInfo');
 /**
  * Send message route
  */
-Route::post('/sendMessage', 'MessagesController@send')->name('api.send.message');
+Route::middleware("auth:sanctum")->group(function () {
+    Route::post('/chat/auth', action: 'MessagesController@pusherAuth')->name('api.pusher.auth');
+    Route::post('/getFavoriteStatus', action: 'MessagesController@getFavoriteStatus')->name('api.getFavoriteStatus');
+    Route::post('/removeFavoriteStatus', action: 'MessagesController@removeFavoriteStatus')->name('api.removeFavoriteStatus');
+    Route::post('/star', 'MessagesController@favorite')->name('api.star');
+    Route::post('/deleteConversation', 'MessagesController@deleteConversation')->name('api.conversation.delete');
+    Route::post('/makeSeen', 'MessagesController@seen')->name('api.messages.seen');
+    Route::post('/shared', 'MessagesController@sharedPhotos')->name('api.shared');
+    Route::get('/getContacts', 'MessagesController@getContacts')->name('api.contacts.get');
 
+    
+
+Route::post('/sendMessage', 'MessagesController@send')->name('api.send.message');
+});
 /**
  * Fetch messages
  */
@@ -30,17 +42,14 @@ Route::get('/download/{fileName}', 'MessagesController@download')->name('api.'.c
 /**
  * Make messages as seen
  */
-Route::post('/makeSeen', 'MessagesController@seen')->name('api.messages.seen');
 
 /**
  * Get contacts
  */
-Route::get('/getContacts', 'MessagesController@getContacts')->name('api.contacts.get');
 
 /**
  * Star in favorite list
  */
-Route::post('/star', 'MessagesController@favorite')->name('api.star');
 
 /**
  * get favorites list
@@ -55,12 +64,10 @@ Route::get('/search', 'MessagesController@search')->name('api.search');
 /**
  * Get shared photos
  */
-Route::post('/shared', 'MessagesController@sharedPhotos')->name('api.shared');
 
 /**
  * Delete Conversation
  */
-Route::post('/deleteConversation', 'MessagesController@deleteConversation')->name('api.conversation.delete');
 
 /**
  * Delete Conversation

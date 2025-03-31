@@ -21,28 +21,48 @@ class EmployeeLoader extends Controller
 
     $fetch = DB::select("SELECT COUNT(*) AS count FROM users");
     $count = $fetch[0]->count;
-    //$supress = 5;
     return $count;
-    //return response()->json(['url' => $supress]);
   }
   public function showProfile($id)
   {
-    //$user = DB::select("SELECT * FROM users WHERE id='$id'"); // Fetch user from database
-    //$user = 5;
+   
     $user = User::find($id);
     return view('admin/employee-list-personal', compact('user'));
   }
   public function showChatify ($id){
     
     $user = User::find($id);
-  //  return view('chatifys', compact('user'));
   }
   function loadEmployee(Request $request)
   {
 
     $input = $request->input('input');
+    $admin = $request->admin;
+    $manager = $request->manager;
+    $fullTime = $request->full;
+    $partTime = $request->part;
 
 
+    $allowed_positions = array();
+    if($admin == 0 && $manager == 0 && $fullTime == 0 && $partTime == 0){
+
+
+    }else{
+        if($admin == 1){
+            array_push($allowed_positions, "admin");
+        }
+        if($manager == 1){
+            array_push($allowed_positions, "manager");
+        }
+        if($fullTime == 1 ){
+            array_push($allowed_positions, "fulltime");
+
+        }
+        if($partTime == 1){
+            array_push($allowed_positions, "parttime");
+
+        }
+    }
     $arr = array();
     $arr_filter = array();
     trim($input);
@@ -165,6 +185,16 @@ class EmployeeLoader extends Controller
 
 
     }
+    array_multisort(
+            
+      $firstname_arr, SORT_ASC,
+      $lastname_arr, SORT_ASC,
+      $middlename_arr, SORT_ASC,
+      $position_arr, SORT_ASC,
+      $email_arr, SORT_ASC,
+      $status_arr, SORT_ASC,
+      $id_arr, SORT_ASC,
+  );
 
     if (count($id_arr) == 0) {
       echo "<ul class='list-group overflow-auto'>";
@@ -215,6 +245,7 @@ class EmployeeLoader extends Controller
  </div>';
  echo '</li>';
       for ($d = 0; $d < count($id_arr); $d++) {
+        if (in_array($position_arr[$d], $allowed_positions) || count($allowed_positions) == 0) {
         echo "<li class='list-group-item list-group-item-action '>";
         
 
@@ -269,9 +300,9 @@ class EmployeeLoader extends Controller
         echo '     <div class="dropdown-menu dropdown-menu-end">';
         echo '         <a class="dropdown-item " href="' . route('profile', ['id' => $id_arr[$d]]) . '"><i';
         echo '             class="bx bx-pencil text-primary font-size-18"></i>&nbsp;Edit</a><a';
-        echo '             class="dropdown-item" href="/chatify/'. $id_arr[$d]. /*route('chatifys', ['id' => $id_arr[$d]])*/  '"><i class="bi bi-chat-dots"></i>&nbsp;Message';
+        echo '             class="dropdown-item" href="/chatify/'. $id_arr[$d].   '"><i class="bi bi-chat-dots"></i>&nbsp;Message';
         echo '</a><a class="dropdown-item"';
-        echo '             href="#"><i class="bi bi-bar-chart-line"></i>&nbsp;Stats</a>';
+        echo '              href="' . route('showCertainStatistics', ['id' => $id_arr[$d]]) . '"><i class="bi bi-bar-chart-line"></i>&nbsp;Stats</a>';
         echo '      </div>';
         echo '       </center></li>';
         echo '      </ul> </center>';
@@ -280,7 +311,9 @@ class EmployeeLoader extends Controller
         echo '</div>';
         echo '</li>';
       }
+      }
       echo '</ul>';
+      
     }
   }
   public function calendarEmployeeSearch(Request $request)
@@ -288,7 +321,6 @@ class EmployeeLoader extends Controller
     $roles = $request->input('roles');
     $shift = $request->input('shift');
     $search_text = $request->input('search_text');
-    //$input = $request->input('input');
 
 
     $arr = array();
@@ -399,7 +431,6 @@ class EmployeeLoader extends Controller
         if (in_array($result_users->id, $id_arr)) {
 
         } else {
-          //$all_response = $result_users->role;
 
           if ((in_array($result_users->role, $roles) || in_array("|--ALL--|", $roles)) && $result_users->status == 1) {
             array_push($id_arr, $result_users->id);
@@ -422,14 +453,9 @@ class EmployeeLoader extends Controller
       $all_response .= "<h6> No data found</h6>";
     } else {
       $all_response .= "<ul class='list-group overflow-auto' style='max-height: 350px;'>";
-      /*<li class='list-group-item'>Cras justo odio</li>
-      <li class='list-group-item'>Dapibus ac facilisis in</li>
-      <li class='list-group-item'>Morbi leo risus</li>
-      <li class='list-group-item'>Porta ac consectetur ac</li>
-      <li class='list-group-item'>Vestibulum at eros</li>*/
+
 
       for ($d = 0; $d < count($id_arr); $d++) {
-        //echo '<div class="row" style="height: 45px; align-items: center;">';
         $all_response .= "<li id='a_a-$id_arr[$d]' onclick='pickUser(this.id)' class='list-group-item list-group-item-action d-flex justify-content-between'>";
         $fetch_count = DB::select("SELECT COUNT(*) AS count FROM profile_pictures WHERE id = $id_arr[$d]");
         if ($fetch_count[0]->count > 0) {
@@ -446,7 +472,7 @@ class EmployeeLoader extends Controller
         }
 
         $all_response .= '      alt="" class="avatar-sm rounded-circle"  style="height: 25px; width: 25px" />';
-        $all_response .= '<a      href="#" class="text-body mx-2" style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;">' . $firstname_arr[$d] . ' ' . $middlename_arr[$d] . ' ' . $lastname_arr[$d] . '</a>';
+        $all_response .= '<div class="text-body mx-2" style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;">' . $firstname_arr[$d] . ' ' . $middlename_arr[$d] . ' ' . $lastname_arr[$d] . '</div>';
         if ($position_arr[$d] == 'admin') {
           $all_response .= '  <div><span class="py-1 px-2 rounded-circle text-bg-dark">A</span></div>';
         } else if ($position_arr[$d] == 'manager') {
@@ -496,7 +522,7 @@ class EmployeeLoader extends Controller
           }
 
           $asign_response .= '      alt="" class="avatar-sm rounded-circle"  style="height: 25px; width: 25px" />';
-          $asign_response .= '<a      href="#" class="text-body mx-2" style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;">' . $firstname_arr[$d] . ' ' . $middlename_arr[$d] . ' ' . $lastname_arr[$d] . '</a>';
+          $asign_response .= '<div class="text-body mx-2" style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;">' . $firstname_arr[$d] . ' ' . $middlename_arr[$d] . ' ' . $lastname_arr[$d] . '</div>';
           if ($position_arr[$d] == 'admin') {
             $asign_response .= '  <div><span class="py-1 px-2 rounded-circle text-bg-dark">A</span></div>';
           } else if ($position_arr[$d] == 'manager') {
@@ -516,7 +542,6 @@ class EmployeeLoader extends Controller
     return response()->json([
       'all_response' => $all_response,
       'asign_response' => $asign_response,
-      //'shifts' => $shift_final_string,
     ]);
   }
 
@@ -543,7 +568,6 @@ class EmployeeLoader extends Controller
     return response()->json([
       'name' => $full_name,
       'role' => $role,
-      //'shifts' => $shift_final_string,
     ]);
 
   }

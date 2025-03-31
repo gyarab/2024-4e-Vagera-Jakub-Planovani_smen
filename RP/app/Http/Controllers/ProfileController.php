@@ -67,14 +67,12 @@ class ProfileController extends Controller
         $id = Auth::id();
  
         return $id;
-        //return view('admin.dashboard2',['id'=>$id]);
     }
     public function session_parameters(){
         $id = Auth::id();
         $parametrs = DB::select("SELECT * FROM users WHERE id='$id'");
  
         return $parametrs;
-        //return view('admin.dashboard2',['id'=>$id]);
       
     }
     public function parameters(){
@@ -91,7 +89,6 @@ class ProfileController extends Controller
             'middle_name' => $middle_name,
             'last_name' => $last_name,
         ]);
-        //return view('admin.dashboard2',['id'=>$id]);
       
     }
     public function insertUser(Request $request){
@@ -121,7 +118,7 @@ class ProfileController extends Controller
             $fetch_email = DB::select("SELECT COUNT(*) AS count FROM users WHERE email = '$email'");
             $supress_email = $fetch_email[0]->count;
             if ($supress_email > 0) {
-                $email_valid = 0;
+                $email_valid = 2;
             }else{
                 $email_valid = 1;
 
@@ -173,7 +170,7 @@ class ProfileController extends Controller
         'verify' => $verification_code
     ];
 
-    //
+    
  
     
     if( $username_valid == 1 && $email_valid == 1 && $password_valid == 1 && $password_valid == 1){
@@ -188,8 +185,6 @@ class ProfileController extends Controller
               Mail::to($email)->send(new VerificationEmail($details));
             }
 
-        //DB::insert("INSERT INTO users (first_name, middle_name, last_name, username, email, password, created_at, role, bio, status, phone_code, phone_number ) VALUES ('$first_name', '$middle_name', '$last_name', '$username', '$email', '$password_hash', '$role', '$bio', 1 , '$phone_code', '$phone_number')");
-    //DB::insert("INSERT INTO object_model (object_name, superior_object_id) VALUES ('$name',0)");
     $fetch = DB::select("SELECT id FROM users WHERE email='$email' ");
     foreach ($fetch as $result) {
         $id_return = $result->id;
@@ -213,41 +208,16 @@ class ProfileController extends Controller
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        // Store the image in the 'public' disk (local storage)
         $imagePath = $request->file('image')->store('profile-images', 'public');
         $id = $request->input('id');
         $counter = 0;
         DB::insert("INSERT INTO profile_pictures (id, image_link) VALUES ('$id', '$imagePath')");
-
-        /*$fetch = DB::select("SELECT COUNT(*) AS count FROM profile_pictures WHERE id = '$id'");
-        $supress = $fetch[0]->count;
-        if ($supress > 0) {
-            $fetch_link = DB::select("SELECT * FROM profile_pictures WHERE id = '$id'");
-            $link_image = "";
-            foreach ($fetch_link as $result) {
-                $link_image = $result->image_link;
-            }
-            //$link_image = Str::substr($link_image, 14);
-            /*$fullPath = Storage::path($link_image);
-            Storage::delete(asset('/storage/' .$link_image));
-           Storage::delete($fullPath);*/
-         /*   Storage::disk('public')->delete($link_image);
-            DB::update("UPDATE profile_pictures SET image_link='$imagePath' WHERE id='$id' ");
-
-
-
-        } else {
-            DB::insert("INSERT INTO profile_pictures (id, image_link) VALUES ('$id', '$imagePath')");
-        }*/
-        //DB::insert("INSERT INTO profile_pictures (id, image_link) VALUES ('$id', '$imagePath')");
-        // Optionally, you can return the path or URL of the uploaded file
 
         return response()->json([
             'success' => true,
             'message' => 'Image uploaded successfully!',
             'path' => asset('storage/' . $imagePath),
             't' =>  $id,
-            //'path' => $imagePath
         ]);
     }
    

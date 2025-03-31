@@ -57,14 +57,7 @@
     @include('admin.header')
     @include('admin.sidebar')
     @include('admin.scripts')
-    <div class="bg-light">
-        <!-- <i id="myButton" class="bi bi-suitcase-lg-fill mt-1">My button</i>
-        <i id="c-11" class="bi bi-suitcase-lg-fill mt-1">My button</i>
-        <button id="myButtons" class="btn btn-primary" type="button">
-            <span id="spinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"
-                style="display: none;"></span>
-            Click Me
-        </button>-->
+    <div class="border-start bg-light">
         <script src="https://unpkg.com/@popperjs/core@2"></script>
         <script src="https://unpkg.com/tippy.js@6"></script>
         <script>
@@ -92,14 +85,7 @@
 
             });
         </script>
-        <!--  <br>
-        <br>
-        <br>
-        <div class="container">
-            <h3>Tooltip Example</h3>
-            <a href="#" data-toggle="tooltip" data-html="true"
-                title="On main object: <br> Made by : Jan <br> Made at:">Hover over me</a>
-        </div>-->
+
 
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
@@ -108,175 +94,40 @@
 
         <div class="wrapper">
             <div class="container-fluid">
-                <center>
-                    <p class="current-date mb-0 mt-3" style="font-size: 25px"></p>
-                </center>
-                <!-- <div class="container-fluid">
-                    <div class="row mx-1 gx-2 mb-1">
-                        <div class="col-2 col-md-2 px-0 ">
-                            <div class="card rounded-0 p-2 h-100">
-                                <div class="row">
-                                    <div class="col-12 ">
-                                        <center>
-                                            <h5 class="mb-3 " style="display: inline">20.</h5><small class="mb-1 "
-                                                style="display: inline">1.</small>
-                                            <br>
-                                            <p>Jan</p>
-                                        </center>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card px-1 mx-1 mb-2 mt-2">
+                            <div class="row">
+                                <div class="col-4 ">
+                                    <div class="icons">
+                                        <span id="prev" class="material-symbols-rounded"
+                                            style="font-size: 25px"><label class="my-1 mr-2" for="role"><i
+                                                    class="bi bi-arrow-bar-left"></i>
+                                                Previous</label></span>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <hr class="mx-2 mt-0">
+                                <div class="col-4 ">
+                                    <center>
+                                        <p class="current-date mb-0 mt-2" style="font-size: 25px"></p>
+                                    </center>
+                              
+                                </div>
+                                <div class="col-4 ">
+                                    <div class="icons">
+                                        <span id="next" class="material-symbols-rounded"
+                                            style="float: right; font-size: 25px"><label class="my-1 mr-2"
+                                                for="next">Next</label><i class="bi bi-arrow-bar-right"></i>
+                                        </span>
                                     </div>
                                 </div>
-
-                                <div class="row">
-                                    <div class="col-12 col-md-4  d-flex justify-content-center">
-                                        <i class="bi bi-sunglasses " style="font-size: 25px; display:inline"></i>
-                                    </div>
-                                    <div class="col-12 col-md-4 d-flex justify-content-center">
-                                        <i class="bi bi-suitcase-lg-fill mt-1"
-                                            style="font-size: 20px; display:inline"></i>
-
-                                    </div>
-                                    <div class="col-12 col-md-4 d-flex justify-content-center">
-                                        <i class="bi bi-flag-fill mt-3  mt-md-1" style="font-size: 20px;"></i>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="col-10 col-md-10 p-0 ">
-                            <div class="card h-100 rounded-0">
-                                <div class="row">
-                                    <div class="col-12 col-md-4">
-                                        <div class="mb-1 p-2">
-                                            <div class="card_shift radius-10 border-top border-bottom border-end pb-2"
-                                                style="border:10px solid #dc3545">
-                                                <p class="mb-0 mx-2 my-2 text-secondary">FIRST - VIP</p>
-                                                <p class="mb-0 mx-2 my-1" style="display:inline;margin-bottom: 15px">
-                                                    <strong>00:00 -
-                                                        00:00</strong>
-                                                </p>
-                                                <i class="bi bi-info-circle mx-2" style="float: right"></i>
-                                                <br>
-                                                <hr class="m-0 mt-1 mb-1 p-0">
-                                                <i class="bi bi-chat-fill mx-2"
-                                                    style="font-size: 20px; margin-top: 15px"></i>
-                                                <button class="mt-1 mx-2 btn btn-sm btn-outline-primary"
-                                                    style="float:right">Request</button>
-
-
-
-                                            </div>
-                                        </div>
-                                        <div class="mb-1 p-2">
-                                            <div class="card_shift radius-10 border-top border-bottom border-end pb-2"
-                                                style="border:10px solid #dc3545">
-                                                <p class="mb-0 mx-2 my-2 text-secondary">FIRST - VIP</p>
-                                                <p class="mb-0 mx-2 my-1" style="display:inline;margin-bottom: 15px">
-                                                    <strong>00:00 -
-                                                        00:00</strong>
-                                                </p>
-                                                <i class="bi bi-info-circle mx-2" data-toggle="tooltip"
-                                                    data-html="true"
-                                                    title="On main object: <br> Made by : Jan <br> Made at:"
-                                                    style="float: right"></i>
-                                                <br>
-                                                <hr class="m-0 mt-1 p-0">
-                                                <i class="bi bi-sunglasses mx-2" style="font-size: 25px"></i>
-                                                <i class="bi bi-suitcase-lg-fill mt-1" style="font-size: 20px"></i>
-                                                <i class="bi bi-chat-square-dots-fill mt-1 mx-2"
-                                                    style="font-size: 17px"></i>
-                                                <button class="mt-2 mx-2 btn btn-sm btn-outline-primary"
-                                                    style="float:right">Request</button>
-
-
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-4">
-
-                                    </div>
-                                    <div class="col-12 col-md-4">
-
-                                    </div>
+                                <div class="col-12">
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row mx-1 gx-2">
-                        <div class="col-2 col-md-2 px-0 ">
-                            <div class="card rounded-0 p-2 h-100">
-                                <div class="row">
-                                    <div class="col-12 ">
-                                        <center>
-                                            <h5 class="mb-3 " style="display: inline">20.</h5><small class="mb-1 "
-                                                style="display: inline">1.</small>
-                                            <br>
-                                            <p>Jan</p>
-                                        </center>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <hr class="mx-2 mt-0">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12 col-md-4  d-flex justify-content-center">
-                                        <i class="bi bi-sunglasses " style="font-size: 25px; display:inline"></i>
-                                    </div>
-                                    <div class="col-12 col-md-4 d-flex justify-content-center">
-                                        <i class="bi bi-suitcase-lg-fill mt-1"
-                                            style="font-size: 20px; display:inline"></i>
-
-                                    </div>
-                                    <div class="col-12 col-md-4 d-flex justify-content-center">
-                                        <i class="bi bi-flag-fill mt-3  mt-md-1" style="font-size: 20px;"></i>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="col-10 col-md-10 p-0 ">
-                            <div class="card h-100 rounded-0">
-
-                            </div>
-                        </div>
-                    </div>
-                </div>-->
-
-                <!--<div class='row '>
-                    <div class='col-12 '>
-                        <div class="row mx-2">
-                            <div class="col-12 ">
-                                <div class="row">
-                                    <div class='col-12 col-md-1 border shadow-sm row rounded'>
-                                        <center>
-                                            <p>1</p>
-                                            <hr>
-                                        </center>
-                                    </div>
-                                    <div class='col-12 col-md-11 shadow-sm row rounded p-0'>
-                                        <button class="btn btn-primary"></button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>-->
-                <div class="icons">
-                    <span id="prev" class="material-symbols-rounded" style="font-size: 25px"><label
-                            class="my-1 mr-2" for="role"><i class="bi bi-arrow-bar-left"></i>
-                            Previous</label></span>
-                    <span id="next" class="material-symbols-rounded"
-                        style="float: right; font-size: 25px"><label class="my-1 mr-2" for="next">Next</label><i
-                            class="bi bi-arrow-bar-right"></i> </span>
                 </div>
             </div>
+
             <div class="calendar d-none">
                 <ul class="weeks">
 
@@ -311,10 +162,7 @@
         <div class="row">
             <div class="col-12">
                 <br>
-                <input type="button" name="save" class="btn btn-primary" style="font-size: 15px;float:right;"
-                    value="Save to database" id="butsave">
-                <br>
-                <br>
+              
                 <br>
             </div>
         </div>
@@ -357,6 +205,11 @@
         var comments_id = new Array();
         var tooltip_comments = new Array();
         var shift_month = new Array();
+        var main_arr = new Array();
+        var icon = new Array();
+        var created = new Array();
+
+
         var date_selection = "2025-01";
 
         function RenderAjax() {
@@ -382,20 +235,23 @@
                     tooltip_user_arr = [];
                     comments_id = [];
                     tooltip_comments = [];
+                    main_arr = [];
+                    icon = [];
+                    created = [];
                     offer_arr = response.offer;
                     tooltip_arr = response.tooltip;
                     tooltip_user_arr = response.tooltip_user;
                     tooltip_comments = response.tooltip_comments;
                     comments_id = response.comments_id;
                     shift_month = response.shift_month;
-                    // alert(shift_month[0]);
+                    main_arr = response.main;
+                    icon = response.icon;
+                    created = response.creation;
 
-                    // alert(offer_arr[0]);
                     renderTable(offer_arr);
-                    //$("#MultiCarouselInsert").html(response);
                 },
                 error: function(response) {
-                    alert("dsad");
+                    error_alert("Connection Error 2");
                 }
             });
         }
@@ -420,65 +276,19 @@
                 currMonthNull = currMonth + 1;
             }
             for (let i = firstDayofMonth; i > 0; i--) { // creating li of previous month last days
-                //liTag += `<li class="inactive"><div class='row'><div class='col-12'>${lastDateofLastMonth - i + 1}</div></div></li>`;
             }
             var counter = 0;
             for (let i = 1; i <= lastDateofMonth; i++) {
                 liTag +=
                     `<input type='hidden' id='current_load_date' name='current_load_date' value='${currYear}-${currMonthNull}'>`;
-                if (i == 1) {
-                    /*var text_return = "";
-                    result_arr = [];
-                    $.ajax({
-                        type: "POST",
-                        url: "../options/load_time_options.php",
-                        dataType: "json",
-                        cache: false,
-                        async: false,
-                        data: {
-                            month: currMonthNull, year: currYear, id: usid
-                        },
-                        success: function (data) {
-                            text_return = JSON.stringify(data);
-                            //alert(data);
-                        }
 
-                    });
-                    text_return = text_return.substring(1, text_return.length - 1);
-                    result_arr = text_return.split(",");
-                    if (result_arr.length != 0) {
-                        for (var ff = 0; ff < result_arr.length; ff++) {
-                            result_arr[ff] = result_arr[ff].substring(1, result_arr[ff].length - 1);
-                            if (result_arr[ff] == "empty") {
-                                from_result_arr[ff] = "";
-                                to_result_arr[ff] = "";
-                            } else {
-                                from_result_arr[ff] = result_arr[ff].substring(0, 5);
-                                to_result_arr[ff] = result_arr[ff].substring(10, 15);
-                            }
-
-                        }
-                    }*/
-
-                }
 
 
                 // creating li of all days of current month
                 // adding active class to li if the current day, month, and year matched
                 let isToday = i === date.getDate() && currMonth === new Date().getMonth() &&
                     currYear === new Date().getFullYear() ? "active" : "";
-                //liTag += `<li class="${isToday}"><p class="day">${i}</p></li>`;
-                if (i == currDay && nowMonth == currMonth && nowYear == currYear) {
-                    //liTag += `<div class='row'><div class='col-12'><center><div class="circle"><p style="display: inline-block;color: #ffffff;">${i}</p></div></center>`;
-                    //liTag +=
-                    //`<div class='shadow-sm row rounded'><div class='pb-2 col-12'><div class='row'><div class=' col-12 text-center col-md-1 border-right'><center><div class="circle2 text-center mt-2"><p style="display: inline-block;color: #ffffff;">${i}</p></div></center></div><div class="col-12 col-md-11 border-left">`;
 
-                } else {
-                    //liTag += `<div class='row'><div class='col-12'><p>${i}</p>`;
-                    //liTag +=
-                    //  `<div class=' shadow-sm row rounded'><div class='pb-2 col-12'><div class='row'><div class=' col-12 text-center col-md-1 border-right'><p class="mt-2" style="font-size: 20px">${i}</p></div><div class="col-12 col-md-11 border-left">`;
-
-                }
                 liTag += ` <div class="row mx-1 gx-2 mb-1">
                         <div class="col-2 col-md-2 px-0 ">
                             <div class="card rounded-0 p-2 h-100">
@@ -506,12 +316,9 @@
                 } else {
                     var dayNull = (i);
                 }
-                //alert(tt);
 
                 var complete_date = currYear + "-" + currMonthNull + "-" + dayNull;
-                // alert(complete_date);
                 if (shift_month.includes(complete_date)) {
-                    // alert(complete_date);
                     liTag += `  <i class="bi bi-suitcase-lg-fill mt-1"
                                             style="font-size: 20px; display:inline; color:#0d6efd ;"></i>`;
                 } else {
@@ -546,32 +353,20 @@
 
 
 
-                /*liTag +=
-                            `<div class='row'><div class='col-12'><p style="float:left"><div class="input-group mb-2"><div class="input-group-prepend"><span class="input-group-text">From</span></div><input id="fr${i}t" type="time" style="float:right" class="form-control" value="${from_result_arr[i - 1]}"></div></div></div>`;
-                        liTag +=
-                            `<div class='row'><div class='col-12'><p style="float:left"><div class="input-group mb-2"><div class="input-group-prepend"><span class="input-group-text">To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div><input id="to${i}t" type="time" style="float:right" class="form-control" value="${to_result_arr[i - 1]}"></div></div></div>`;
-                        liTag += ``;
-
-                                    tippy("#c-15", {
-                        content: '<strong>Bolded <span style="color: aqua;">content</span></strong>',
-                        allowHTML: true,
-                  });
-                        liTag += `</div></div></div></div>`;*/
             }
 
-            for (let i = lastDayofMonth; i < 6; i++) { // creating li of next month first days
-                //liTag += `<li class="inactive"><div class='row'><div class='col-12'>${i - lastDayofMonth + 1}</div></div></li>`
 
-            }
             currentDate.innerText =
                 `${months[currMonth]} ${currYear}`; // passing current mon and yr as currentDate text
             daysTagt.innerHTML = liTag;
             if (tooltip_arr.length != null) {
                 for (var o = 0; o < tooltip_arr.length; o++) {
                     tippy("#c-" + tooltip_arr[o], {
-                        content: '<strong>Main: <br> Offered by: <span style="color: aqua;">' +
+                        content: '<strong>Main: <i class="' + icon[o] + '"></i> ' + main_arr[o] +
+                            '<br> Offered by: <span style="color: aqua;">' +
                             tooltip_user_arr[o] +
-                            '</span> <br> Offered at:  <span style="color: aqua;">content</span></strong>',
+                            '</span> <br> Offered at:  <span style="color: aqua;">' + new Date(created[0] *
+                                1000).toDateString() + '</span></strong>',
                         allowHTML: true,
                     });
                 }
@@ -579,7 +374,6 @@
                 if (comments_id.length != null) {
 
                     for (var o = 0; o < comments_id.length; o++) {
-                        //alert(tooltip_comments[o]);
                         var newText = tooltip_comments[o].replace(/\n/g, '<br>');
                         tippy("#cm-" + comments_id[o], {
                             content: '<strong><span style="color: aqua;">' + newText + '</span> </strong>',
@@ -605,8 +399,7 @@
                     date = new Date(); // pass the current date as date value
                 }
                 RenderAjax();
-                /*renderCalendar(); // calling renderCalendar function
-                renderTable();*/
+
             });
         });
         RenderAjax();
@@ -662,13 +455,8 @@
             var id_spinner = id_offer.substring(2);
 
 
-            //alert(id_spinner);
             $('#s-' + id_spinner).show();
-            // $("#"+id_offer).prop('disabled', true);
-            //  $('#myButtons').text('Loading...');
-
-            // After 1 second, hide the spinner and reset the button
-            // 1000ms = 1 second
+            alert(id_spinner);
 
 
             $.ajax({
@@ -680,11 +468,9 @@
 
                 },
                 success: function(response) {
-                    //alert(response);
                     setTimeout(function() {
                         $('#s-' + id_spinner).hide();
-                        $('#myButtons').prop('disabled', false);
-                        $('#myButtons').text('Click Me');
+                      
                         $("#" + id_offer).attr("class", "mt-1 mx-2 btn btn-sm btn-warning");
                         $("#" + id_offer).attr("onclick", "changeRequest(this.id)");
 
@@ -692,71 +478,20 @@
                             "<i class='bi bi-question-lg'></i>Waitting";
 
                     }, 500);
-                    //$("#MultiCarouselInsert").html(response);
                 },
                 error: function(response) {
-                    alert("dsad");
+                    error_alert("Error connection 1");
                 }
             });
 
-            // $("#"+id_offer).attr("class","mt-1 mx-2 btn btn-sm btn-warning");
         }
 
 
 
 
-        $("#butsave").click(function() {
-
-            var lastRowId = $('#table1 tr:last').attr("id"); /*finds id of the last row inside table*/
-            var from = new Array();
-            var to = new Array();
-            var date = new Array();
-            for (var i = 1; i <= 31; i++) {
-
-
-                if (i < 10) {
-                    var q = "0" + i;
-                } else {
-                    var q = i;
-                }
-
-                var kla = "fr";
-                let ml = kla + q;
-                var myElem = document.getElementById(ml);
-                if (myElem != null) {
-
-                    to.push($("#to" + q).val());
-                    from.push($("#fr" + q).val());
-                    var ym = $("#current_load_date").val();
-                    let h = ym + "-" + q;
-                    date.push(h);
-                }
-
-
-            }
-            var fromTime = JSON.stringify(from);
-            var toTime = JSON.stringify(to);
-
-            var dateArr = JSON.stringify(date);
-            alert(dateArr);
-
-            var year_month = $("#current_load_date").val();
-            $.ajax({
-                url: "../options/insert_time_options.php",
-                type: "post",
-                data: {
-                    from: fromTime,
-                    to: toTime,
-                    dateym: year_month,
-                    date: dateArr,
-                    id: usid
-                },
-                success: function(data) {
-                    success_alert(data); /* alerts the response from php.*/
-                }
-            });
-        });
-
+        /**
+         * Alerty
+        */
 
         function success_alert(message) {
             Swal.fire({
@@ -778,7 +513,7 @@
 
         function changeRequest(selected_button) {
             Swal.fire({
-                title: "Are you sure you want to fill this shift ?",
+                title: "Are you sure you want to cancel this shift ?",
                 text: "The shift has been offered",
                 icon: "warning",
                 showCancelButton: true,
@@ -797,7 +532,6 @@
 
                         },
                         success: function(response) {
-                            //alert(response);
                             $("#" + selected_button).attr("class",
                                 "mt-1 mx-2 btn btn-sm btn-outline-primary");
                             $("#" + selected_button).attr("onclick", "requestShift(this.id)");
@@ -805,10 +539,9 @@
                             document.getElementById(selected_button).innerHTML = '<span id="s-' +
                                 selected_button +
                                 '" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>Request';
-                            //$("#MultiCarouselInsert").html(response);
                         },
                         error: function(response) {
-                            alert("dsad");
+                            error_alert("Error Connection 3 ");
                         }
                     });
 
@@ -826,9 +559,8 @@
         });
     </script>
     <script>
-        tippy('#c-18', {
-            content: "My tooltip!",
-        });
+
+ 
     </script>
 
 </body>
