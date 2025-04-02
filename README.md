@@ -65,7 +65,6 @@ PUSHER_APP_TLS=true
 Android aplikace je uložena v [zde](https://github.com/gyarab/2024-4e-Vagera-Jakub-Android-Aplikace) v repozitáři :  
 ```git
 2024-4e-Vagera-Jakub-Android-Aplikace
-
 ```
 Pro úspěšné přihlášení do aplikace je zapotřebí mít spuštený webového server a aby uživatel měl v databázi účet. Cesta k serveru se v aplikaci nastavuje v souboru `/connection/ConnectionFile.java`. K ověřování server používá nástroj Laravel Sanctum. Pokud server běží na adrese jiné něž localhost, je zapotřebí na serveru do souboru `/config/sanctum.php` nastavit tuto adresu.
 ```php
