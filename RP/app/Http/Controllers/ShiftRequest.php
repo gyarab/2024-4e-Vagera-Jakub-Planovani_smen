@@ -26,6 +26,8 @@ class ShiftRequest extends Controller
         $role = "";
         if ($counter == 0) {
             $name = "";
+            $imageUrl = "https://img.freepik.com/premium-vector/vector-flat-illustration-grayscale-avatar-user-profile-person-icon-profile-picture-suitable-social-media-profiles-icons-screensavers-as-templatex9xa_719432-1040.jpg?semt=ais_hybrid";
+            $role = "";
         } else {
             $fetch_requests = DB::select("SELECT * FROM shift_request, users WHERE shift_request.id_offer='$input_id'  AND shift_request.request_status='0' AND shift_request.id=users.id ORDER BY shift_request.requested_at");
             foreach ($fetch_requests as $result_request) {
@@ -289,9 +291,15 @@ class ShiftRequest extends Controller
                     </div>
         
                     <div class="col-2">
-                        <center>
-                            <a href="' . route('showOffer', ['id' => $result_request->id_offer]) . '" style="text-decoration: none;color: black;"><p class="py-2 my-0"><i class="bi bi-three-dots-vertical"></i></p></a>
-                        </center>
+                        <center>';
+                        if($role=="admin"){
+                            echo'<a href="' . route('showOffer', ['id' => $result_request->id_offer]) . '" style="text-decoration: none;color: black;"><p class="py-2 my-0"><i class="bi bi-three-dots-vertical"></i></p></a>';
+
+                        }else{
+                            echo'<a href="' . route('showOfferManager', ['id' => $result_request->id_offer]) . '" style="text-decoration: none;color: black;"><p class="py-2 my-0"><i class="bi bi-three-dots-vertical"></i></p></a>';
+                        }
+                        echo'
+                            </center>
                     </div>
                 </div>
             </li> ';
@@ -433,9 +441,15 @@ class ShiftRequest extends Controller
                             </div>
                 
                             <div class="col-2">
-                                <center>
-                                    <a href="' . route('showOffer', ['id' => $result_request->id_offer]) . '" style="text-decoration: none;color: black;"><p class="py-2 my-0"><i class="bi bi-three-dots-vertical"></i></p></a>
-                                </center>
+                             <center>';
+                        if($role == "admin"){
+                            $returns = $returns . '<a href="' . route('showOffer', ['id' => $result_request->id_offer]) . '" style="text-decoration: none;color: black;"><p class="py-2 my-0"><i class="bi bi-three-dots-vertical"></i></p></a>';
+
+                        }else{
+                            $returns = $returns . '<a href="' . route('showOfferManager', ['id' => $result_request->id_offer]) . '" style="text-decoration: none;color: black;"><p class="py-2 my-0"><i class="bi bi-three-dots-vertical"></i></p></a>';
+                        }
+                        $returns = $returns . '
+                            </center>
                             </div>
                         </div>
                     </li> ';

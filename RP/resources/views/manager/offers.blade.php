@@ -53,29 +53,24 @@
     <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
     <script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script>
 
-    <!-- Production -->
 
-    @include('admin.header')
-    @include('admin.sidebar')
+    @include('vendor.Chatify.pages.header-manager')
+    @include('vendor.Chatify.pages.sidebar-manager')
     @include('admin.scripts')
     <div class="border-start bg-light">
         <script src="https://unpkg.com/@popperjs/core@2"></script>
         <script src="https://unpkg.com/tippy.js@6"></script>
         <script>
-            // With the above scripts loaded, you can call `tippy()` with a CSS
-            // selector and a `content` prop:
+            /**source: https://atomiks.github.io/tippyjs/-*/
             tippy('#myButton', {
                 content: 'My tooltip!',
             });
 
 
             $('#myButtons').click(function() {
-                // Show the spinner and change the button text
                 $('#spinner').show();
                 $('#myButtons').prop('disabled', true);
-                //  $('#myButtons').text('Loading...');
 
-                // After 1 second, hide the spinner and reset the button
                 setTimeout(function() {
                     $('#spinner').hide();
                     $('#myButtons').prop('disabled', false);

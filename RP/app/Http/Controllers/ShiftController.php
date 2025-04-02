@@ -308,6 +308,25 @@ class ShiftController extends Controller
         $encrytion = array();
         $previous = 0;
 
+
+
+        $id_user = Auth::id();
+        $admin = false;
+        $fetch_position = DB::select("SELECT role AS r FROM  users WHERE id='$id_user'");
+        $rights = array();
+        
+        $role = $fetch_position[0]->r;
+        if($role == "admin"){
+            $admin = true;
+        }
+        $fetch_rights = DB::select("SELECT * FROM management_rights WHERE id='$id_user' ");
+        foreach ($fetch_rights as $result_rights) {
+            error_log($result_rights->id_object);
+            array_push($rights, $result_rights->id_object);
+        } 
+
+
+
         foreach ($fetch as $result) {
 
             $data1[] = $result->id_object;
@@ -346,7 +365,11 @@ class ShiftController extends Controller
                 static $dd = 1;
 
                 $search = $data1[$x] . "";
+                $disable = "disabled";
+                if ($admin == true || in_array(Crypt::decrypt($data1[$x]), $rights) == true) {
+                    $disable = "";
 
+                }
 
 
 
@@ -357,9 +380,9 @@ class ShiftController extends Controller
                 echo "</button><ul class='dropdown-menu' id='drop_menu' aria-labelledby='menu'>";
                 echo "" . objectDropdownShift($encrytion, $sub_object) . "</ul>";
                 if ($is_sub_encrypte == 0 && $object_sub_decrypted == Crypt::decrypt($data1[$x])) {
-                    echo "<div style='float: right' class='mt-2'><input id='" . $data1[$x] . "' type='radio' name='accept-offers' onclick='radiocheck(this.id)'  class='hidden radio-label' checked >";
+                    echo "<div style='float: right' class='mt-2'><input id='" . $data1[$x] . "' type='radio' name='accept-offers' onclick='radiocheck(this.id)'   class='hidden radio-label' checked $disable >";
                 } else {
-                    echo "<div style='float: right' class='mt-2'><input id='" . $data1[$x] . "' type='radio' name='accept-offers' onclick='radiocheck(this.id)'  class='hidden radio-label' >";
+                    echo "<div style='float: right' class='mt-2'><input id='" . $data1[$x] . "' type='radio' name='accept-offers' onclick='radiocheck(this.id)'    class='hidden radio-label' $disable >";
 
                 }
                 echo "<label for='yes-button' class='button-label mt-0' style='margin-left: 15px;margin-right: 15px;  '>Select </label> </div>";
@@ -369,7 +392,7 @@ class ShiftController extends Controller
 
                 for ($h = 0; $h < count($data2); $h++) {
                     if ($search == $data4[$h]) {
-                        sub_object_model($search, $data1, $data2, $data4, $previous, $object_sub_decrypted, $is_sub_encrypte, $icons);
+                        sub_object_model($search, $data1, $data2, $data4, $previous, $object_sub_decrypted, $is_sub_encrypte, $icons, $admin, $rights);
                         break;
                     }
                 }
@@ -790,9 +813,9 @@ class ShiftController extends Controller
                             <div class="avatar-group float-start flex-grow-1">';
                             $img_counter = 0;
                             foreach ($fetch_img as $result_img) {
-                                $fetch_img_count = DB::select("SELECT COUNT(*) AS count FROM profile_pictures WHERE id='$result_img->id' ");
+                                $fetch_img_count2 = DB::select("SELECT COUNT(*) AS count FROM profile_pictures WHERE id='$result_img->id' ");
 
-                                if ($fetch_img_count[0]->count > 0) {
+                                if ($fetch_img_count2[0]->count > 0) {
                                     $fetch_link = DB::select("SELECT * FROM profile_pictures WHERE id='$result_img->id' ");
                                     $link_image = "";
                                     foreach ($fetch_link as $result_link) {
@@ -803,9 +826,10 @@ class ShiftController extends Controller
                                     $imageUrl = Storage::url('profile-images/avatar_blank2.jpg');
                                 }
                                 if( $fetch_img_count[0]->count >6 ||  $img_counter == 5){
+                                    error_log("count: ".$img_counter);
                                     echo '<div class="avatar-group-item" >
                                  <div class="text-light d-flex justify-content-center align-items-center rounded-circle avatar-sm" style="height:50px;width:50px; background-color: #A9A9A9">
-                                 <p class=m-0>'.($fetch_img_count[0]->count -4).'+</p>
+                                 <p class=m-0>'.(($fetch_img_count[0]->count) -5).'+</p>
                                  </div>
                                      <!--<a href="javascript: void(0);" class="d-inline-block" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="456">
                                          <img src="" alt="" class="rounded-circle avatar-sm">
@@ -985,7 +1009,7 @@ function objectDropdownShift($encrytion, $sub_object)
 }
 
 
-function sub_object_model($searching, $dat1, $dat2, $dat4, $previous, $object_sub_decrypted, $is_sub_encrypte, $icons)
+function sub_object_model($searching, $dat1, $dat2, $dat4, $previous, $object_sub_decrypted, $is_sub_encrypte, $icons, $admin, $rights)
 {
     static $dd = 1;
     $find = 0;
@@ -1004,10 +1028,15 @@ function sub_object_model($searching, $dat1, $dat2, $dat4, $previous, $object_su
             $dd++;
             $row = 0;
             $sea = $dat1[$i] . "";
+            $disable = "";
             if ($sea != null) {
                 for ($h = 0; $h < count($dat2); $h++) {
                     if ($sea == $dat4[$h]) {
-
+                        $disable = "disabled";
+                        if ($admin == true || in_array(Crypt::decrypt($dat1[$i]), $rights) == true) {
+                            $disable = "";
+        
+                        }
 
                         echo "<div class='accordion-item w-100 mt-2'>";
 
@@ -1015,9 +1044,9 @@ function sub_object_model($searching, $dat1, $dat2, $dat4, $previous, $object_su
                         echo "<button class='accordion-button w-100' type='button' data-bs-toggle='collapse' data-bs-target='#collapse$dat1[$i]' aria-expanded='false' aria-controls='$dat1[$i]' clicked='true' >";
                         echo "<div class='w-100'><i class='$icons[$i]'></i>&nbsp;$dat2[$i] <div style='float:right' style='margin-right: 35px '>";
                         if ($is_sub_encrypte == 0 && $object_sub_decrypted == Crypt::decrypt($dat1[$i])) {
-                            echo "<input id='" . $dat1[$i] . "' type='radio' name='accept-offers' onclick='radiocheck(this.id)' class='hidden radio-label' checked>";
+                            echo "<input id='" . $dat1[$i] . "' type='radio' name='accept-offers' onclick='radiocheck(this.id)' class='hidden radio-label' checked ".$disable.">";
                         } else {
-                            echo "<input id='" . $dat1[$i] . "' type='radio' name='accept-offers' onclick='radiocheck(this.id)' class='hidden radio-label' >";
+                            echo "<input id='" . $dat1[$i] . "' type='radio' name='accept-offers' onclick='radiocheck(this.id)' class='hidden radio-label' ".$disable." >";
 
                         }
                         echo "<labelfor='yes-button' class='button-label' style='margin-left: 15px;margin-right: 15px;  '>Select </label>
@@ -1029,7 +1058,7 @@ function sub_object_model($searching, $dat1, $dat2, $dat4, $previous, $object_su
                         echo "<div id='collapse$dat1[$i]' class='w-100 accordion-collapse ' aria-labelledby='heading$dat1[$i]' data-bs-parent='heading$previous'>";
                         echo "<div class='accordion-body pt-0 pb-0  w-100'>";
 
-                        sub_object_model($sea, $dat1, $dat2,/* $dat3,*/ $dat4, $dat1[$i], $object_sub_decrypted, $is_sub_encrypte, $icons);
+                        sub_object_model($sea, $dat1, $dat2,/* $dat3,*/ $dat4, $dat1[$i], $object_sub_decrypted, $is_sub_encrypte, $icons, $admin, $rights);
 
 
                         echo "</div>";
@@ -1041,12 +1070,16 @@ function sub_object_model($searching, $dat1, $dat2, $dat4, $previous, $object_su
                     }
                 }
                 if ($find2 == 0) {
-
+                    $disable = "disabled";
+                    if ($admin == true || in_array(Crypt::decrypt($dat1[$i]), $rights) == true) {
+                        $disable = "";
+    
+                    }
                     echo "<button class='btn btn-light w-100 mt-3 mb-3 pt-2 pb-2' style='text-align: left;align-items: center;' ><i class='$icons[$i]'></i>&nbsp;" . $dat2[$i] . "<div style='float:right' style='margin-right: 35px '>";
                     if ($is_sub_encrypte == 0 && $object_sub_decrypted == Crypt::decrypt($dat1[$i])) {
-                        echo "<input id='" . $dat1[$i] . "' type='radio' name='accept-offers' onclick='radiocheck(this.id)' class='hidden radio-label' checked>";
+                        echo "<input id='" . $dat1[$i] . "' type='radio' name='accept-offers' onclick='radiocheck(this.id)' class='hidden radio-label' checked ".$disable.">";
                     } else {
-                        echo "<input id='" . $dat1[$i] . "' type='radio' name='accept-offers' onclick='radiocheck(this.id)' class='hidden radio-label'>";
+                        echo "<input id='" . $dat1[$i] . "' type='radio' name='accept-offers' onclick='radiocheck(this.id)' ". $disable." class='hidden radio-label'>";
                     }
                     echo "<labelfor='yes-button' class='button-label mt-0' style='margin-left: 15px;margin-right: 15px;  '>Select </label>
                </div>";

@@ -28,13 +28,14 @@
     <link href="{{ asset('CSS/select-button.css') }}" rel="stylesheet">
 
     <link href="{{ asset('CSS/timeline.css') }}" rel="stylesheet">
-
+    <title>Management rights</title>
+    <link rel="icon" type="image/x-icon" href="{{ URL('images/cropped_imageic.ico') }}">
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body id="body-pd">
-    @include('vendor.Chatify.pages.header')
-    @include('vendor.Chatify.pages.sidebar')
+    @include('vendor.Chatify.pages.header-admin')
+    @include('vendor.Chatify.pages.sidebar-admin')
     @include('admin.scripts')
     <div class="height-100 bg-light">
         <script>
@@ -84,13 +85,12 @@
                                                 id: {{ $user->id }},
                                             },
                                             success: function(response) {
-                                                // Set the response (image data) as the source for the image element
-                                                //alert(response.url);
+                                    
                                                 $('#imagePersoanl').attr('src', response.url);
 
                                             },
                                             error: function(xhr, status, error) {
-                                                alert('Error fetching image:', error);
+                                                error_alert('Error connection');
                                             }
                                         });
                                     </script>
@@ -136,7 +136,7 @@
                                                 <script>
                                                     var number_load = 0;
                                                      loadTimeline(5);
-                            
+                                                    /**Source: https://codepen.io/TajShireen/pen/JjGvVzg*/
                                             function loadTimeline(number){
                                                 number_load += number;
                                                 $.ajax({
@@ -151,58 +151,13 @@
                                                     $("#timeline_content").html(response);
                                                 },
                                                 error: function(response) {
-                                                    alert('Error fetching image:', response);
+                                                    error_alert('Error connection');
                                                 }
                                             });
                                             }
                                                 </script>
 
-                                            <!--<ul class="sessions px-0">
-                                                <li>
-                                                  <div class="time">09:00 AM</div>
-                                                  <p>How is it already 9:00? Just how??? 🤯🤯</p>
-                                                </li>
-                                                <li>
-                                                  <div class="time">09:05 AM</div>
-                                                  <p>Few more minutes of sleep won't do anyone any harm 🤷..</p>
-                                                </li>
-                                                <li>
-                                                  <div class="time">09:30 AM</div>
-                                                  <p>Get up 🙄</p>
-                                                </li>
-                                                <li>
-                                                  <div class="time">1:00 PM</div>
-                                                  <p>How can I feel sleepy again?😵</p>
-                                                </li>
-                                                <li>
-                                                  <div class="time">01:30 PM</div>
-                                                  <p>Lunch time after which sleep just doesn't want to let go of me. 🤝</p>
-                                                </li>
-                                                <li>
-                                                  <div class="time">3:30 PM</div>
-                                                  <p>Drink the magical chai, it will ward off sleep they said. 🤷‍</p>
-                                                </li>
-                                                <li>
-                                                  <div class="time">4:30 PM </div>
-                                                  <p>The only time I don't feel sleepy cause it's work out time. I mean walking time. 😹</p>
-                                                </li>
-                                                <li>
-                                                  <div class="time">07:00 PM </div>
-                                                  <p>Food my tummy needs, sleep my body needs.👿</p>
-                                                </li>
-                                                <li>
-                                                  <div class="time">07:30 PM </div>
-                                                  <p>My tummy's happy time 🍝</p>
-                                                </li>
-                                                <li>
-                                                  <div class="time">10:00 PM </div>
-                                                  <p>uh oh!!! fuel low, get some snacks but wait should I just take a quick nap?🤓 </p>
-                                                </li>
-                                                <li>
-                                                  <div class="time">2:30 PM </div>
-                                                  <p>All hail! The time to sleep has finally arrived.😴😴😴😴😴 </p>
-                                                </li>
-                                              </ul>-->
+                            
                                                 </div>
                                             </div>
                                         </div>
@@ -244,12 +199,9 @@
                                                 _token: '{{ csrf_token() }}',
                                             },
                                             success: function(response) {
-                                                // Set the response (image data) as the source for the image element
                                                 document.getElementById("main_object").innerHTML = response;
-                                                //$('#imagePersoanl').attr('src', response.url);
                                                 var e = document.getElementById("main_object");
                                                 var id_main_object = e.value;
-                                                //alert(values);
                                                 $.ajax({
                                                     url: '{{ route('structureRightsGet') }}',
                                                     type: 'POST',
@@ -266,13 +218,13 @@
 
                                                     },
                                                     error: function(xhr, status, error) {
-                                                        alert('Error fetching image:', error);
+                                                        error_alert('Error connection');
                                                     }
                                                 });
 
                                             },
                                             error: function(xhr, status, error) {
-                                                alert('Error fetching image:', error);
+                                                error_alert('Error connection');
                                             }
                                         });
                                         $('#main_object').change(function() {
@@ -290,25 +242,22 @@
                                                     $("#assignment_load").html(response);
                                                 },
                                                 error: function(response) {
-                                                    alert('Error fetching image:', response);
+                                                    error_alert('Error connection');
                                                 }
                                             });
                                         });
 
                                         function getValue() {
-                                            //alert(main_obj_var);
                                             objects_arr = [];
                                             let checkboxes =
                                                 document.getElementsByName('ch_rights');
                                             let result = "";
                                             for (var i = 0; i < checkboxes.length; i++) {
                                                 if (checkboxes[i].checked) {
-                                                    //result += checkboxes[i].value;
-                                                    //alert(checkboxes[i].value);
+                                        
                                                     objects_arr.push(checkboxes[i].value);
                                                 }
                                             }
-                                           alert(objects_arr);
                                            $.ajax({
                                                     url: '{{ route('insertRights') }}',
                                                     type: 'POST',
@@ -319,11 +268,10 @@
                                                         main_obj: main_obj_var
                                                     },
                                                     success: function(response) {
-                                                        alert(response);
-                                                        alert("-----------------------");
+                                                        success_alert("Successfully edited");
                                                     },
                                                     error: function(xhr, status, error) {
-                                                        alert('Error fetching image:', error);
+                                                        error_alert('Error connection');
                                                     }
                                                 });
                                         }
@@ -338,5 +286,28 @@
             </div>
         </div>
     </div>
+    <script>
+        /**
+       * Alerty
+      */
+
+      function success_alert(message) {
+          Swal.fire({
+              title: message,
+              text: "",
+              icon: "success"
+          });
+
+      }
+
+      function error_alert(message) {
+          Swal.fire({
+              title: message,
+              text: "",
+              icon: "error"
+          });
+
+      }
+</script>
 </body>
 </html>

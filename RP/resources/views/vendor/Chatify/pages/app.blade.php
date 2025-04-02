@@ -1,6 +1,9 @@
 @if (Auth::user()->role == "admin")
 @include('vendor.Chatify.pages.header-admin')
 @include('vendor.Chatify.pages.sidebar-admin')
+@elseif (Auth::user()->role == "manager")
+@include('vendor.Chatify.pages.header-manager')
+@include('vendor.Chatify.pages.sidebar-manager')
 @endif
 <body id="body-pd">
 @include('Chatify::layouts.headLinks')
@@ -118,7 +121,7 @@
         {{-- ---------------------- Info side ---------------------- --}}
         <div class="messenger-infoView app-scroll">
             {{-- nav actions --}}
-            <nav>
+            <nav class="mt-5 mt-md-0">
                 <p>User Details</p>
                 <a href="#"><i class="fas fa-times"></i></a>
             </nav>

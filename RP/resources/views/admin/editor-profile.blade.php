@@ -15,6 +15,8 @@
     <link rel="stylesheet"
         href="https://mdbcdn.b-cdn.net/wp-content/themes/mdbootstrap4/docs-app/css/mdb5/fonts/roboto-subset.css?ver=3.9.0-update.5"
         rel="stylesheet">
+        <title>Edit profile</title>
+        <link rel="icon" type="image/x-icon" href="{{ URL('images/cropped_imageic.ico') }}">
 
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css" />
@@ -34,6 +36,7 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>
+  
         import {
             Ripple,
             initMDB
@@ -56,11 +59,6 @@
                                 <div class="row">
                                     <div class="col-12 col-sm-auto mb-3">
                                         <div class="mx-auto" style="width: 140px;">
-                                            <!--<div class="d-flex justify-content-center align-items-center rounded"
-                                                style="height: 140px; background-color: rgb(233, 236, 239);">
-                                                <span
-                                                    style="color: rgb(166, 168, 170); font: bold 8pt Arial;">140x140</span>
-                                            </div>-->
                                             <img id="profileImage" src="" alt="Profile Image"
                                                 class="rounded-circle object-fit-cover"
                                                 style="height: 140px; width: 140px;border: 2px solid black;"
@@ -72,24 +70,7 @@
                                             @foreach ($parameters as $p)
                                                 <h4 class="pt-sm-2 pb-1 mb-0 text-nowrap">{{ $p->first_name }}
                                                     {{ $p->middle_name }} {{ $p->last_name }}</h4>
-                                                <p class="mb-0">johnny.s</p>
-                                            @endforeach
-                                            <div class="text-muted"><small>Last seen 2 hours ago</small></div>
-                                            <div class="mt-2">
-                                                <input type="file" id="imageInput" hidden />
-                                                <label for="imageInput" class="btn btn-primary"> <i for="imageInput"
-                                                        class="fa fa-fw fa-camera "></i>
-                                                    <span for="imageInput">Change Photo</span></label>
-                                                <!--<button for="imageInput" class="btn btn-primary" type="button">
-                                                    <i for="imageInput" class="fa fa-fw fa-camera"></i>
-                                                    <span for="imageInput">Change Photo</span>
-                                                </button>-->
-                                            </div>
-                                        </div>
-                                        <div class="text-center text-sm-right">
-                                            <span>Administrator</span>
-                                            <!--<small>administrator</small>-->
-                                            @foreach ($parameters as $p)
+                                                <p class="mb-0">{{ $p->username }}</p>
                                                 <?php $stamp = $p->created_at;
                                                 
                                                 $year = substr($stamp, 0, 4);
@@ -97,16 +78,20 @@
                                                 $day = substr($stamp, 8, 2);
                                                 
                                                 ?>
-                                                <div class="text-muted"> <small>Joined <?php echo $year . ' ' . $month . ' ' . $day; ?></small></div>
+                                                <div class="text-muted"><small> Joined <?php echo $year . ' ' . $month . ' ' . $day; ?></small></div>
+
                                             @endforeach
+                                            <div class="mt-2">
+                                                <input type="file" id="imageInput" hidden />
+                                                <label for="imageInput" class="btn btn-primary"> <i for="imageInput"
+                                                        class="fa fa-fw fa-camera "></i>
+                                                    <span for="imageInput">Change Photo</span></label>
+                                            </div>
+                                        </div>
+                                        <div class="text-center text-sm-right">
+                                            <span class="p-1 rounded text-bg-dark">Administrator</span>
+             
 
-                                            <button id="modalbtn" type="button"
-                                                class="btn btn-outline-info btn-rounded mt-1" data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal">
-                                                Get my id
-                                            </button>
-
-                                            <!-- Modal -->
                                             <div class="modal fade w-100" id="exampleModal" tabindex="-1"
                                                 data-bs-backdrop="false" aria-labelledby="exampleModalLabel"
                                                 aria-hidden="true">
@@ -127,10 +112,7 @@
                                                             </center>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <!--<button type="button" class="btn btn-secondary"
-                                                                data-bs-dismiss="modal">Close</button>
-                                                            <button type="button" class="btn btn-primary">Save
-                                                                changes</button>-->
+                                     
                                                         </div>
                                                     </div>
                                                 </div>
@@ -250,15 +232,7 @@
                                     <div class="row">
                                         <div class="col-12 col-sm-6 mb-3">
                                             <div class="mb-2"><b>Change Password</b></div>
-                                            <!--<div class="row">
-                                                <div class="col">
-                                                    <div class="form-group">
-                                                        <label>Current Password</label>
-                                                        <input id="current_password" class="form-control"
-                                                            type="password" placeholder=".....">
-                                                    </div>
-                                                </div>
-                                            </div>-->
+                                 
                                             <div class="row">
                                                 <div class="col">
                                                     <div class="form-group">
@@ -272,8 +246,7 @@
                                                 <div class="col">
                                                     <div class="form-group">
                                                         <label>Confirm
-                                                            <!--<span
-                                                                    class="d-none d-xl-inline">Password</span>--></label>
+                                                       </label>
                                                         <input id="repeat_password" class="form-control"
                                                             type="password" placeholder=".....">
                                                     </div>
@@ -284,34 +257,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-sm-5 offset-sm-1 mb-3">
-                                            <div class="mb-2"><b>Keeping in Touch</b></div>
-                                            <div class="row">
-                                                <div class="col">
-                                                    <label>Email Notifications</label>
-                                                    <div class="custom-controls-stacked px-2">
-                                                        <div class="custom-control custom-checkbox">
-                                                            <input type="checkbox" class="custom-control-input"
-                                                                id="notifications-blog" checked="">
-                                                            <label class="custom-control-label"
-                                                                for="notifications-blog">Blog posts</label>
-                                                        </div>
-                                                        <div class="custom-control custom-checkbox">
-                                                            <input type="checkbox" class="custom-control-input"
-                                                                id="notifications-news" checked="">
-                                                            <label class="custom-control-label"
-                                                                for="notifications-news">Newsletter</label>
-                                                        </div>
-                                                        <div class="custom-control custom-checkbox">
-                                                            <input type="checkbox" class="custom-control-input"
-                                                                id="notifications-offers" checked="">
-                                                            <label class="custom-control-label"
-                                                                for="notifications-offers">Personal Offers</label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    
                                     </div>
                                     <div class="row">
                                         <div class="col d-flex justify-content-end">
@@ -328,163 +274,20 @@
                     </div>
                 </div>
             </div>
-            <!--<div class="mb-3">
-                <label for="theFile" class="form-label">Default file input example</label>
-                <input id="theFile" class="form-control" type="file">
-            </div>-->
+ 
             @csrf
-            <!--<input type="file" id="image-input" name="image">
-            <button type="button" id="upload-button" onclick="save_image()">Upload Image</button>
-            <div id="message"></div>-->
+     
             <script>
-                /*$(document).ready(function() {
-                                                                                        $('#upload-button').on('click', function() {*/
-                /*function save_image() {
-                    var fileInput = $('#image-input')[0];
-
-                    // Check if a file is selected
-                    if (fileInput.files.length === 0) {
-                        $('#message').html('Please select an image.');
-                        return;
-                    }
-
-                    let formData = new FormData();
-                    formData.append('image', fileInput.files[0]);
-                    //formData.append('_token', $('meta[name="csrf"]').attr("content"));
-                    // alert(formData);
-                    let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                    $.ajax({
-                        url: '{{ route('storeImage') }}',
-                        type: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': csrfToken, // Add CSRF token in the header
-                        },
-                        body: formData,
-
-
-                        success: function(response) {
-                            alert("dashjk");
-                        },
-                        error: function(xhr, status, error) {
-                            alert("dsa");
-                        }
-                    });
-                }*/
-
-                /*document.getElementById('image-input').addEventListener('change', function (event) {
-                            // Get the selected file
-                            let file = event.target.files[0];
-
-                            if (file) {
-                                // Create a new FormData object
-                                let formData = new FormData();
-                                formData.append('image', file); // Append the selected image to FormData
-
-                                // Get the CSRF token from the meta tag
-                                let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-                                // Send the image via AJAX (using Fetch API)
-                                fetch("{{ route('storeImage') }}", {
-                                    method: 'POST',
-                                    headers: {
-                                        'X-CSRF-TOKEN': csrfToken // Add CSRF token in the header
-                                    },
-                                    body: formData // Append FormData with the image file
-                                })
-                                .then(response => response.json()) // Parse the JSON response
-                                .then(data => {
-                                    // Handle success or failure
-                                    if (data.message) {
-                                        document.getElementById('message').innerText = data.message;
-
-                                        // Optionally show the uploaded image if the path is returned
-                                        if (data.path) {
-                                            let img = document.createElement('img');
-                                            img.src = '/storage/' + data.path; // Use the public path to the image
-                                            document.getElementById('message').appendChild(img);
-                                        }
-                                    }
-                                })
-                                .catch(error => {
-                                    // Handle error
-                                    document.getElementById('message').innerText = "An error occurred: " + error;
-                                });
-                            } else {
-                                document.getElementById('message').innerText = "Please select a valid image file.";
-                            }
-                        });*/
-
-                //alert(formData);
-                /*});
-                        })*/
-
-                /*document.getElementById('theFile').addEventListener('change', function(e) {
-                    if (e.target.files[0]) {
-                        var formData = new FormData();
-                        formData.append('file', $('#theFile').get(0).files[0]);
-                        formData.append('fileName', $("#theFile").val());
-                        alert(formData);
-                        $.ajax({
-
-
-                            url: '{{ route('storeImage') }}',
-                            type: "POST",
-                            data: {
-                                _token: '{{ csrf_token() }}',
-                            },
-                            success: function(response) {
-                                alert(response)
-
-                            },
-                            error: function(response) {
-                                alert(response);
-                            }
-                        });
-                    }
-                });*/
-
-                /*$(document).ready(function() {
-                    $('#upload-button').on('click', function() {
-                        var fileInput = $('#image-input')[0];
-
-                       
-                        if (fileInput.files.length === 0) {
-                            $('#message').html('Please select an image.');
-                            return;
-                        }
-
-                        var formData = new FormData();
-                        formData.append('image', fileInput.files[0]); 
-
-                        $.ajax({
-                            url: '{{ route('storeImage') }}',
-                            type: 'POST',
-                            data: formData,
-                            processData: false, 
-                            contentType: false, 
-                            success: function(response) {
-                                alert("asd"):
-                            },
-                            error: function(xhr, status, error) {
-                                alert("----"):
-
-                            }
-                        });
-                    });
-                });*/
+       
             </script>
-            <!--<input type="file" id="imageInput" hidden/>
-            <label for="imageInput">Choose file</label>-->
-            <!--<button onclick="uploadImage()">Upload</button>-->
-
+         
             <div id="responseMessage"></div>
 
             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
             <script>
-                //function uploadImage() {
+               /**source : https://stackoverflow.com/questions/4459379/preview-an-image-before-it-is-uploaded*/ 
                 document.getElementById('imageInput').addEventListener('change', function(e) {
                     if (e.target.files[0]) {
-                        // Get the selected file
                         var file = document.getElementById('imageInput').files[0];
 
                         if (!file) {
@@ -511,11 +314,7 @@
                             },
                             success: function(response) {
                                 if (response.success) {
-                                    /* document.getElementById('responseMessage').innerHTML =
-                                         'Image uploaded successfully! <br> <img src="' + response.path +
-                                         '" alt="Uploaded Image" />';*/
                                     $('#profileImage').attr('src', response.path);
-                                    //alert(response.messages);
                                 } else {
                                     document.getElementById('responseMessage').innerHTML = 'Upload failed!';
                                 }
@@ -528,14 +327,9 @@
                     }
                 });
             </script>
-            <!-- <img id="profileImage" src="" alt="Profile Image">-->
 
             <script>
-                //$(document).ready(function() {
-                // The filename of the image you want to retrieve
-                //var imageFilename = '479MhaJtR1QCzzSvFVq1g1Gk4ZlCbe4VfBJCCAzg.png'; // Change to the actual filename
                 var imageFilename = 'profile-images/swKGI3VjRDAAEVAUADYUaX1TCKZM2J5CSNubnhAN.jpg';
-                ///home/kuba/Plocha/RP_Laravel/RP/storage/app/public/profile-images/swKGI3VjRDAAEVAUADYUaX1TCKZM2J5CSNubnhAN.jpg
                 $.ajax({
                     url: '{{ route('showProfileImage') }}',
                     type: 'POST',
@@ -544,16 +338,14 @@
                         imageFilename: imageFilename
                     },
                     success: function(response) {
-                        // Set the response (image data) as the source for the image element
-                        //alert(response.url);
                         $('#profileImage').attr('src', response.url);
 
                     },
                     error: function(xhr, status, error) {
-                        alert('Error fetching image:', error);
+                        error_alert('Error connection');
                     }
                 });
-                //});
+                var alertVar = 0;
 
                 function updateProfile() {
                     var first_name = document.getElementById("first_name").value;
@@ -562,20 +354,11 @@
                     var username = document.getElementById("username").value;
                     var email = document.getElementById("email").value;
                     var bio = document.getElementById("bio").value;
-                    //var current_password = document.getElementById("current_password").value;
                     var new_password = document.getElementById("new_password").value;
                     var repeat_password = document.getElementById("repeat_password").value;
-                    alert(new_password);
-                    alert(repeat_password);
-                    /*var reg= /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
-                    var result= reg.test(eamil);
-                    alert(result);*/
-
-                    //alert(bio);
                     let email_check = document.getElementById("email").value;
                     let first_check = document.getElementById("first_name").value;
                     let last_check = document.getElementById("last_name").value;
-                    //let current_check = document.getElementById("current_password").value;
                     let new_check = document.getElementById("new_password").value;
                     let repeat_check = document.getElementById("repeat_password").value;
                     if (( new_check == "" && repeat_check == "") || ( new_check != "" && repeat_check != "")) {
@@ -602,30 +385,27 @@
 
                                         },
                                         success: function(response) {
-                                            // Set the response (image data) as the source for the image element
-                                            alert(response.email);
+                                            alertVar = 0;
                                             if (response.email == 0) {
                                                 var popup = document.getElementById("email_validation");
                                                 popup.style.display = "inline";
                                                 popup.innerHTML = "Provide correct email form";
-
-                                                /*document.getElementById('email_validation').innerHTML = "dsadsa";
-                                                $('#email_validation');*/
+                                                alertVar++;
                                             } else {
                                                 var popup = document.getElementById("email_validation");
                                                 popup.style.display = "none";
 
                                             }
-                                            alert(response.username);
                                             if (response.username == 0) {
                                                 var popup2 = document.getElementById("username_validation");
                                                 popup2.style.display = "inline";
                                                 popup2.innerHTML = "Username already exists";
+                                                alertVar++;
+
                                             } else {
                                                 var popup2 = document.getElementById("username_validation");
                                                 popup2.style.display = "none";
                                             }
-                                            alert(response.password);
                                             if (response.password != 1) {
                                                 var popup6 = document.getElementById("password_validation");
                                                 popup6.style.display = "inline";
@@ -643,16 +423,19 @@
                                                     popup6.innerHTML = "Password needs to have at least 8 chars long";
                                                 }
                                             } else {
+                                               if(alertVar == 0){
+
+                                                success_alert("Data changed");
+                                               }
                                                 var popup6 = document.getElementById("password_validation");
                                                 popup6.style.display = "none";
                                                 document.getElementById("new_password").value = "";
                                                 document.getElementById("repeat_password").value = "";
                                             }
-                                            //$('#profileImage').attr('src',response.url );
 
                                         },
                                         error: function(xhr, status, error) {
-                                            alert('Error fetching image:', error);
+                                            error_alert('Error connection');
                                         }
                                     });
                                 } else {
@@ -675,7 +458,29 @@
                     }
                 }
             </script>
+<script>
+          /**
+         * Alerty
+        */
 
+        function success_alert(message) {
+            Swal.fire({
+                title: message,
+                text: "",
+                icon: "success"
+            });
+
+        }
+
+        function error_alert(message) {
+            Swal.fire({
+                title: message,
+                text: "",
+                icon: "error"
+            });
+
+        }
+</script>
         </div>
     </div>
 </body>

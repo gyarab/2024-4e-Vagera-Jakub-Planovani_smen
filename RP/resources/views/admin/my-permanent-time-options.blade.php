@@ -5,9 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Permanent time options</title>
-    <link rel="icon" type="image/x-icon" href="{{ URL('images/cropped_imageic.ico') }}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    <title>My time options</title>
+    <link rel="icon" type="image/x-icon" href="{{ URL('images/cropped_imageic.ico') }}">    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js">
@@ -50,145 +49,32 @@
             <div class="main-body">
 
                 <script>
-        /**
-         * Alerty
-        */
+                    /**
+                     * Alerty
+                     */
 
-        function success_alert(message) {
-            Swal.fire({
-                title: message,
-                text: "",
-                icon: "success"
-            });
+                    function success_alert(message) {
+                        Swal.fire({
+                            title: message,
+                            text: "",
+                            icon: "success"
+                        });
 
-        }
+                    }
 
-        function error_alert(message) {
-            Swal.fire({
-                title: message,
-                text: "",
-                icon: "error"
-            });
+                    function error_alert(message) {
+                        Swal.fire({
+                            title: message,
+                            text: "",
+                            icon: "error"
+                        });
 
-        }
+                    }
                 </script>
 
                 <div class="row gutters-sm">
-                    <div class="col-md-4 mb-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="d-flex flex-column text-center">
-                                    <div class="row gutters-sm">
-                                        <div class="col-4 d-flex flex-column align-items-start">
-                                            <img id="imagePersoanl" src="" alt="Admin"
-                                                class="rounded-circle object-fit-cover"
-                                                style="height: 70px; width: 70px;border: 2p">
-                                        </div>
-                                        <div class="col-8">
-                                            <h4>{{ $user->first_name }} {{ $user->middle_name }}
-                                                {{ $user->last_name }}
-                                            </h4>
-                                            <?php if($user->role == "admin") { ?>
-                                            <span class="p-1 rounded text-bg-dark">Administrator</span>
-                                            <?php }else if($user->role == "manager") { ?>
-                                            <span class="p-1 rounded text-bg-danger">Manager</span>
-                                            <?php }else if($user->role == "fulltime") { ?>
-                                            <span class="p-1 rounded text-bg-primary">Full-Time</span>
-                                            <?php }else if($user->role == "parttime") { ?>
-                                            <span class="p-1 rounded text-bg-success">Part-Time</span>
-                                            <?php } ?>
-                                        </div>
-                                    </div>
 
-                                    <script>
-                                        $.ajax({
-                                            url: '{{ route('showImagePersonal') }}',
-                                            type: 'POST',
-                                            data: {
-                                                _token: '{{ csrf_token() }}',
-                                                id: {{ $user->id }},
-                                            },
-                                            success: function(response) {
-                                          
-                                                $('#imagePersoanl').attr('src', response.url);
-
-                                            },
-                                            error: function(xhr, status, error) {
-                                                error_alert('Error connection');
-                                            }
-                                        });
-                                    </script>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card mt-3">
-                            <div class="card-body">
-                                <div class="align-items-middle">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <div class="d-flex flex-column align-items-middle mt-1">
-                                                <h5>Controller</h5>
-                                            </div>
-                                        </div>
-                                        <div class="col-6">
-                                            <input type="button" onclick="getValue()" style="float: right"
-                                                class="btn btn-primary" value="ASSIGN OPTIONS">
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card mt-3">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <h5 class="mb-0" style="display:inline">Timeline
-                                        </h5>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="">
-
-                                    <div class="row">
-
-                                        <div class="col-12">
-                                            <div class="container_timeline">
-                                                <div class="wrapper_timeline p-0">
-                                                    <div id="timeline_content">
-                                                    </div>
-                                                    <script>
-                                                        var number_load = 0;
-                                                        loadTimeline(5);
-
-                                                        function loadTimeline(number) {
-                                                            number_load += number;
-                                                            $.ajax({
-                                                                url: '{{ route('loadPermanentOptionsTimeline') }}',
-                                                                type: 'POST',
-                                                                data: {
-                                                                    _token: '{{ csrf_token() }}',
-                                                                    id: {{ $user->id }},
-                                                                    number: number_load
-                                                                },
-                                                                success: function(response) {
-                                                                    $("#timeline_content").html(response);
-                                                                },
-                                                                error: function(response) {
-                                                                    error_alert('Error connection');
-                                                                }
-                                                            });
-                                                        }
-                                                    </script>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-8 mb-3">
+                    <div class="col-md-10 mb-3">
                         <div class="card">
                             <div class="card-body">
                                 <div class="align-items-middle">
@@ -199,7 +85,7 @@
                                             </div>
                                         </div>
                                         <div class="col-sm-8">
-                      
+
                                         </div>
                                         <div class="col-12">
                                             <hr>
@@ -208,75 +94,6 @@
                                             <div class="row">
                                                 <div class='col-12 col-md-12'>
 
-                                                    <div class="row">
-                                                        <div class='col-12 col-md-12'>
-                                                            <div class="row">
-                                                                <div class='col-12 col-md-4'>
-                                                                    <input type="checkbox" class="form-check-input"
-                                                                        id="everyday" name="radio"
-                                                                        style="height:20px;width:20px">
-                                                                    <label for="everyday" class="form-check-label"
-                                                                        style="display:inline;font-size: 17px">
-                                                                        Everyday</label>
-                                                                </div>
-                                                                <div class='col-12 col-md-4'>
-                                                                    <input type="checkbox" class="form-check-input"
-                                                                        id="everyworkday" name="radio"
-                                                                        style="height:20px;width:20px">
-                                                                    <label for="everyworkday" class="form-check-label"
-                                                                        style="display:inline;font-size: 17px"> Every
-                                                                        work
-                                                                        day</label>
-                                                                </div>
-                                                                <div class='col-12 col-md-4'>
-
-                                                                    <input type="checkbox" class="form-check-input"
-                                                                        id="weekend" name="radio"
-                                                                        style="height:20px;width:20px">
-                                                                    <label for="weekend" class="form-check-label"
-                                                                        style="display:inline;font-size: 17px"> Every
-                                                                        weekend</label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class='col-12 col-md-12'>
-                                                            <div class="row mt-2">
-                                                                <div class='col-12 col-md-4'>
-                                                                    <!--<label for="from" style="display:inline; font-size:18px">From </label>-->
-
-                                                                    <div class="input-group mb-3">
-                                                                        <div class="input-group-prepend">
-                                                                            <span class="input-group-text"
-                                                                                id="basic-addon1">From</span>
-                                                                        </div>
-                                                                        <input type="time" class="form-control"
-                                                                            id="from" name="from"
-                                                                            style="display:inline" />
-                                                                    </div>
-                                                                </div>
-                                                                <div class='col-12 col-md-4'>
-                                                                    <!--<label for="to" style="display:inline">To </label>-->
-                                                                    <div class="input-group mb-3">
-                                                                        <div class="input-group-prepend">
-                                                                            <span class="input-group-text"
-                                                                                id="basic-addon2">To</span>
-                                                                        </div>
-                                                                        <input type="time" id="to"
-                                                                            class="form-control" name="to"
-                                                                            style="display:inline" />
-                                                                    </div>
-                                                                </div>
-                                                                <div class='col-12 col-md-2'>
-                                                                    <button id="paste" style="float: right;"
-                                                                        class="btn btn-outline-primary"
-                                                                        onclick="pasteFunction()">Paste</button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <hr>
 
 
                                                     <!-- monday -->
@@ -286,7 +103,7 @@
                                                                 <div class='col-12 col-md-4'>
                                                                     <input class="form-check-input mb-2"
                                                                         type="checkbox" id="monday" name="monday"
-                                                                        style="height:20px;width:20px">
+                                                                        style="height:20px;width:20px" disabled>
                                                                     <label for="monday" class="form-check-label"
                                                                         style="display:inline;font-size: 17px;"> Monday
                                                                     </label>
@@ -298,7 +115,7 @@
                                                                         </div>
                                                                         <input id="frommonday" class="form-control"
                                                                             name="frommonday" type="time"
-                                                                            style="display:inline" />
+                                                                            style="display:inline" disabled />
                                                                     </div>
                                                                 </div>
                                                                 <div class='col-12 col-md-4'>
@@ -309,7 +126,7 @@
                                                                         </div>
                                                                         <input type="time" id="tomonday"
                                                                             class="form-control" name="tomonday"
-                                                                            style="display:inline" />
+                                                                            style="display:inline" disabled/>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -322,7 +139,7 @@
                                                                 <div class='col-12 col-md-4'>
                                                                     <input class="form-check-input mb-2"
                                                                         type="checkbox" id="tuesday" name="tuesday"
-                                                                        style="height:20px;width:20px">
+                                                                        style="height:20px;width:20px" disabled>
                                                                     <label for="tuesday" class="form-check-label"
                                                                         style="display:inline;font-size: 17px;">
                                                                         Tuesday
@@ -335,7 +152,7 @@
                                                                         </div>
                                                                         <input id="fromtuesday" class="form-control"
                                                                             name="fromtuesday" type="time"
-                                                                            style="display:inline" />
+                                                                            style="display:inline" disabled/>
                                                                     </div>
                                                                 </div>
                                                                 <div class='col-12 col-md-4'>
@@ -346,7 +163,7 @@
                                                                         </div>
                                                                         <input type="time" id="totuesday"
                                                                             class="form-control" name="totuesday"
-                                                                            style="display:inline" />
+                                                                            style="display:inline" disabled/>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -360,7 +177,7 @@
                                                                     <input class="form-check-input mb-2"
                                                                         type="checkbox" id="wednesday"
                                                                         name="wednesday"
-                                                                        style="height:20px;width:20px">
+                                                                        style="height:20px;width:20px" disabled>
                                                                     <label for="wednesday" class="form-check-label"
                                                                         style="display:inline;font-size: 17px;">
                                                                         Wednesday
@@ -373,7 +190,7 @@
                                                                         </div>
                                                                         <input id="fromwednesday" class="form-control"
                                                                             name="fromwednesday" type="time"
-                                                                            style="display:inline" />
+                                                                            style="display:inline" disabled/>
                                                                     </div>
                                                                 </div>
                                                                 <div class='col-12 col-md-4'>
@@ -384,7 +201,7 @@
                                                                         </div>
                                                                         <input type="time" id="towednesday"
                                                                             class="form-control" name="towednesday"
-                                                                            style="display:inline" />
+                                                                            style="display:inline" disabled />
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -398,7 +215,7 @@
                                                                     <input class="form-check-input mb-2"
                                                                         type="checkbox" id="thursday"
                                                                         name="thursday"
-                                                                        style="height:20px;width:20px">
+                                                                        style="height:20px;width:20px" disabled>
                                                                     <label for="thursday" class="form-check-label"
                                                                         style="display:inline;font-size: 17px;">
                                                                         Thursday
@@ -411,7 +228,7 @@
                                                                         </div>
                                                                         <input id="fromthursday" class="form-control"
                                                                             name="fromthursday" type="time"
-                                                                            style="display:inline" />
+                                                                            style="display:inline" disabled />
                                                                     </div>
                                                                 </div>
                                                                 <div class='col-12 col-md-4'>
@@ -422,7 +239,7 @@
                                                                         </div>
                                                                         <input type="time" id="tothursday"
                                                                             class="form-control" name="tothursday"
-                                                                            style="display:inline" />
+                                                                            style="display:inline" disabled />
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -435,7 +252,7 @@
                                                                 <div class='col-12 col-md-4'>
                                                                     <input class="form-check-input mb-2"
                                                                         type="checkbox" id="friday" name="friday"
-                                                                        style="height:20px;width:20px">
+                                                                        style="height:20px;width:20px" disabled>
                                                                     <label for="friday" class="form-check-label"
                                                                         style="display:inline;font-size: 17px;"> Friday
                                                                     </label>
@@ -447,7 +264,7 @@
                                                                         </div>
                                                                         <input id="fromfriday" class="form-control"
                                                                             name="fromfriday" type="time"
-                                                                            style="display:inline" />
+                                                                            style="display:inline" disabled/>
                                                                     </div>
                                                                 </div>
                                                                 <div class='col-12 col-md-4'>
@@ -458,7 +275,7 @@
                                                                         </div>
                                                                         <input type="time" id="tofriday"
                                                                             class="form-control" name="tofriday"
-                                                                            style="display:inline" />
+                                                                            style="display:inline" disabled/>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -472,7 +289,7 @@
                                                                     <input class="form-check-input mb-2"
                                                                         type="checkbox" id="saturday"
                                                                         name="saturday"
-                                                                        style="height:20px;width:20px">
+                                                                        style="height:20px;width:20px" disabled>
                                                                     <label for="saturday" class="form-check-label"
                                                                         style="display:inline;font-size: 17px;">
                                                                         Saturday
@@ -485,7 +302,7 @@
                                                                         </div>
                                                                         <input id="fromsaturday" class="form-control"
                                                                             name="fromsaturday" type="time"
-                                                                            style="display:inline" />
+                                                                            style="display:inline" disabled/>
                                                                     </div>
                                                                 </div>
                                                                 <div class='col-12 col-md-4'>
@@ -496,7 +313,7 @@
                                                                         </div>
                                                                         <input type="time" id="tosaturday"
                                                                             class="form-control" name="tosaturday"
-                                                                            style="display:inline" />
+                                                                            style="display:inline" disabled/>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -509,7 +326,7 @@
                                                                 <div class='col-12 col-md-4'>
                                                                     <input class="form-check-input mb-2"
                                                                         type="checkbox" id="sunday" name="sunday"
-                                                                        style="height:20px;width:20px">
+                                                                        style="height:20px;width:20px" disabled>
                                                                     <label for="sunday" class="form-check-label"
                                                                         style="display:inline;font-size: 17px;"> Sunday
                                                                     </label>
@@ -521,7 +338,7 @@
                                                                         </div>
                                                                         <input id="fromsunday" class="form-control"
                                                                             name="fromsunday" type="time"
-                                                                            style="display:inline" />
+                                                                            style="display:inline" disabled/>
                                                                     </div>
                                                                 </div>
                                                                 <div class='col-12 col-md-4'>
@@ -532,7 +349,7 @@
                                                                         </div>
                                                                         <input type="time" id="tosunday"
                                                                             class="form-control" name="tosunday"
-                                                                            style="display:inline" />
+                                                                            style="display:inline" disabled />
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -555,20 +372,20 @@
                                     </div>
                                     <script>
                                         var shifts_arr = [];
-                                 
+
                                         var passed_array = new Array();
                                         $.ajax({
                                             url: '{{ route('loadPermanentOptions') }}',
                                             type: 'POST',
                                             data: {
                                                 _token: '{{ csrf_token() }}',
-                                                input: {{ $user->id }},
+                                                input: {{ Auth::id() }},
 
                                             },
                                             success: function(response) {
                                                 passed_array = response.saved_data;
                                                 if (passed_array.length != null) {
-                                            
+
                                                     if (passed_array[0] == 1) {
                                                         document.getElementById("monday").checked = true;
                                                         document.getElementById("frommonday").value = passed_array[1].substring(0, 5);
@@ -700,11 +517,11 @@
                                                     sund: sun_day,
                                                     sunf: suf,
                                                     sunt: sut,
-                                                    id: {{ $user->id }},
+                                                    id: {{ Auth::id() }},
 
                                                 },
                                                 success: function(response) {
-                                                success_alert('Sved successfully');
+                                                    success_alert('Sved successfully');
                                                 },
                                                 error: function(xhr, status, error) {
                                                     error_alert('Error connection');
@@ -847,10 +664,27 @@
                         </div>
                     </div>
                 </div>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
 
             </div>
         </div>
     </div>
+
 </body>
 
 </html>

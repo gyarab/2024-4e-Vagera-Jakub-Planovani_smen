@@ -66,8 +66,10 @@ class CalendarController extends Controller
             if ($obj_id[$x] == $input) {
                 static $dd = 1;
                 $look = $obj_id[$x];
+                if ($admin == true || in_array($obj_id[$x], $rights) == true) {
                 array_push($arr1, $obj_id[$x]);
                 array_push($arr2, $obj_name[$x]);
+                }
 
 
                 $search = $obj_id[$x] . "";
@@ -80,7 +82,7 @@ class CalendarController extends Controller
 
                 for ($h = 0; $h < count($obj_id); $h++) {
                     if ($search == $obj_superior[$h]) {
-                        $this->sub_object($search, $obj_id, $obj_name, $obj_superior, $find2, $look, $input, $arr1, $arr2);
+                        $this->sub_object($search, $obj_id, $obj_name, $obj_superior, $find2, $look, $input, $arr1, $arr2, $admin, $rights);
                         $row++;
                         break;
                     }
@@ -101,7 +103,7 @@ class CalendarController extends Controller
                                 $first++;
                             }
                             $object_final_string = $object_final_string . "<option value='$arr1[$q]' onclick='getSelectedValues()'>$arr2[$q]</option>";
-                            $fetch_shift = DB::select("SELECT * FROM shift_model WHERE id_object ='$arr1[$q]' ");
+                            $fetch_shift = DB::select("SELECT * FROM shift_model WHERE id_object ='$arr1[$q]' AND rep_non=1");
 
                             foreach ($fetch_shift as $result_shifts) {
                                 $needle = $result_shifts->shift_name;
@@ -215,7 +217,7 @@ class CalendarController extends Controller
                                 $first++;
                             }
                             $object_final_string = $object_final_string . "<option value='$arr1[$q]' onclick='getSelectedValues()'>$arr2[$q]</option>";
-                            $fetch_shift = DB::select("SELECT * FROM shift_model WHERE id_object ='$arr1[$q]' ");
+                            $fetch_shift = DB::select("SELECT * FROM shift_model WHERE id_object ='$arr1[$q]' AND rep_non=1");
 
                             foreach ($fetch_shift as $result_shifts) {
                                 $needle = $result_shifts->shift_name;
@@ -244,6 +246,289 @@ class CalendarController extends Controller
         ]);
 
     }
+    public function pickLoaderCalendarEditor(Request $request)
+    {
+
+
+        $shi_arr = $request->input('shift_arr'); /**id smen na nacteni */
+        $obj_arr = $request->input('object_arr');/**id objektu na nacteni */
+        $user = Auth::id(); /**id uzivatele */
+        $type = $request->input('type');
+        $sql = array(); /**arr na sql prikazy */
+        $final = array();/**return arr */
+
+        /**arraye pro nacteni objektu */
+        $obj_id[] = array();
+        $obj_name[] = array();
+        $obj_superior[] = array();
+      
+    
+        $arr1 = array();
+        $arr2 = array();
+        $arr3 = array();
+        $arr4 = array();
+        $arr5 = array();
+        $final_id = array();
+        $final_name = array();
+        $final_color = array();
+
+        $admin = false;
+        $rights = array();
+        $id = Auth::id();
+        $fetch_position = DB::select("SELECT role AS r FROM  users WHERE id='$id'");
+
+        $role = $fetch_position[0]->r;
+        if($role == "admin"){
+            $admin = true;
+        }
+        $fetch_rights = DB::select("SELECT * FROM management_rights WHERE id='$id'");
+        foreach ($fetch_rights as $result_rights) {
+            array_push($rights, $result_rights->id_object);
+
+        } 
+
+
+
+
+
+
+        $r_filter[] = array();
+        if ($shi_arr == null) {
+            $shi_arr[0] = "";
+        }
+        
+
+        sort($shi_arr);
+        if ($obj_arr == null) {
+            $obj_arr[0] = "";
+        }
+
+      
+        $fetch_obj = DB::select("SELECT * FROM object_model");
+        foreach ($fetch_obj as $result_obj) {
+            $obj_id[] = $result_obj->id_object;
+            $obj_name[] = $result_obj->object_name;
+            $obj_superior[] = $result_obj->superior_object_id;
+        }
+    
+        $input = Crypt::decrypt($request->input('input'));
+    
+
+
+        $find2[] = array();
+        $look = 0;
+        for ($x = 0; $x < count($obj_name); $x++) {
+            if ($obj_id[$x] == $input) {
+                static $dd = 1;
+                $look = $obj_id[$x];
+                if (in_array("|--ALL--|", $obj_arr) == true || in_array($obj_id[$x], $obj_arr) == true)  {
+                    if ($admin == true || in_array($obj_id[$x], $rights) == true) {
+ 
+                array_push($arr1, $obj_id[$x]);
+                array_push($arr2, $obj_name[$x]);
+                    
+                
+                    $fetchshim = DB::select("SELECT shift_name, id_shift FROM shift_model WHERE id_object='$obj_id[$x]' AND rep_non=1 ");
+                    foreach ($fetchshim as $result_shift_data) {
+                        array_push($arr3, $result_shift_data->id_shift);
+                        array_push($arr4, $obj_id[$x]);
+                        array_push($arr5, $result_shift_data->shift_name);
+
+                    }
+                }
+                
+             
+                }
+
+
+                $search = $obj_id[$x] . "";
+                $count = 1;
+
+
+                $dd++;
+
+                $row = 0;
+         
+
+                for ($h = 0; $h < count($obj_name); $h++) {
+                    if ($search == $obj_superior[$h]) {
+                        $this->subLoaderEditor($search, $obj_id, $obj_name, $obj_superior, $find2, $look, $input, $arr1, $arr2, $arr3, $arr4, $arr5, $obj_arr, $admin,$rights) ;
+                        $row++;
+                        break;
+                    }
+                }
+                if($arr1 != null){
+                array_multisort($arr2, $arr1);
+                }
+                break;
+
+            }
+
+        }
+        $sort_arr = array();
+        $sort_arr_id = array();
+        $sort_arr_obj = array();
+
+        if(count($arr3) != 0){
+            array_multisort($arr5, $arr4, $arr3);
+        }
+        $us = 0;
+        $position = "";
+        if (count($arr3) != 0) {
+
+            
+            $fetchadmin = DB::select("SELECT role FROM users WHERE id='$user'");
+            foreach ($fetchadmin as $result_admin) {
+                $position = $result_admin->role;
+            }
+       
+          
+            if ($position == "admin" || $position == "manager" || $type == 333) {
+                for ($i = 0; $i < count($arr3); $i++) {
+                    array_push($sort_arr_id, $arr3[$i]);
+                    array_push($sort_arr_obj, $arr4[$i]);
+                }
+               
+            } else {
+                
+                /* ***Nefunguje, pojistka, neni potrebna***/
+                for ($i = 0; $i < count($arr3); $i++) {
+
+                    $fetchfil = DB::select("SELECT * FROM management_rights WHERE id_object='$arr3[$i]' AND id='$user'");
+                    foreach ($fetchfil as $result_fil) {
+                        array_push($sort_arr_id, $arr3[$i]);
+                        array_push($sort_arr_obj, $$arr4[$i]);
+                    }
+               
+                }
+
+            }
+            
+        }
+        if($shi_arr != null){
+           
+            $index = 0;
+            if (in_array("|--ALL--|", $shi_arr) == true) {
+                $fetchkk2 = DB::select("SELECT * FROM shift_model WHERE rep_non=1");
+            
+                foreach ($fetchkk2 as $rowkk2) {
+                    $checkk2 = $rowkk2->id_object;
+
+
+                        if (in_array($rowkk2->id_shift, $sort_arr_id) == false) {
+                            array_push($sort_arr_id, $rowkk2->id_shift);
+                            array_push($sort_arr_obj, $rowkk2->id_object);
+                        }
+                }
+               
+
+            } else {
+                for ($i = 0; $i < count($shi_arr); $i++) {
+                    $fetchkk = DB::select("SELECT * FROM shift_model WHERE shift_name='$shi_arr[$i]' AND rep_non=1");
+                  
+                   
+                    foreach ($fetchkk as $rowkk) {
+                        $checkk = $rowkk->id_object;
+                
+                            if (in_array($rowkk->id_shift, $sort_arr_id) == false) {
+                                array_push($sort_arr_id, $rowkk->id_shift);
+                                array_push($sort_arr_obj, $rowkk->id_object);
+                                array_push($arr1, $rowkk->id_object);
+
+                            }
+                   
+                    }
+
+                }
+           
+        }
+    }
+
+        for ($i = 0; $i < count($arr1); $i++) {
+            $srch = $arr1[$i];
+            for ($l = 0; $l < count($sort_arr_id); $l++) {
+                if ($sort_arr_obj[$l] == $srch) {
+                if(in_array($sort_arr_id[$l], $sort_arr) == false){
+                    array_push($sort_arr, $sort_arr_id[$l]);
+                }
+
+                }
+            }
+        }
+
+        $final_arr = array();
+
+        for ($i = 0; $i < count($sort_arr); $i++) {
+          
+            $fetch_final_result = DB::select("SELECT * FROM shift_model, object_model WHERE shift_model.id_shift='$sort_arr[$i]' AND shift_model.id_object=object_model.id_object AND shift_model.rep_non=1");
+            foreach ($fetch_final_result as $result_final) {
+               
+                $check = $result_final->id_object;
+                $final_id[] = $result_final->id_shift;
+                $final_name[] = $result_final->shift_name;
+                $final_color[] = $result_final->color;
+
+                $red = substr($result_final->color, 1, 2);
+                $green = substr($result_final->color, 3, 2);
+                $blue = substr($result_final->color, 5, 2);
+                $red = base_convert($red, 16, 10);
+                $green = base_convert($green, 16, 10);
+                $blue = base_convert($blue, 16, 10);
+                $red = round($red - $red / 100 * 30);
+                $green = round($green - $green / 100 * 30);
+                $blue = round($blue - $blue / 100 * 30);
+                $red = base_convert($red, 10, 16);
+                $green = base_convert($green, 10, 16);
+                $blue = base_convert($blue, 10, 16);
+                if (strlen($red) < 2) {
+                    $red = "0" . $red;
+                }
+                if (strlen($green) < 2) {
+                    $green = "0" . $green;
+                }
+                if (strlen($blue) < 2) {
+                    $blue = "0" . $blue;
+                }
+                $colordark = "#" . $red . $green . $blue;
+                $final_arr[] = [
+                    'id_shift' => $result_final->id_shift,
+                    'shift_name' => $result_final->shift_name,
+                    'color' => $result_final->color,
+                    'darkcolor' => $colordark,
+                    'monday' => $result_final->monday,
+                    'tuesday' => $result_final->tuesday,
+                    'wednesday' => $result_final->wednesday,
+                    'thursday' => $result_final->thursday,
+                    'friday' => $result_final->friday,
+                    'saturday' => $result_final->saturday,
+                    'sunday' => $result_final->sunday,
+                    'mon_from' => $result_final->mon_from,
+                    'mon_to' => $result_final->mon_to,
+                    'tue_from' => $result_final->tue_from,
+                    'tue_to' => $result_final->tue_to,
+                    'wed_from' => $result_final->wed_from,
+                    'wed_to' => $result_final->wed_to,
+                    'thu_from' => $result_final->thu_from,
+                    'thu_to' => $result_final->thu_to,
+                    'fri_from' => $result_final->fri_from,
+                    'fri_to' => $result_final->fri_to,
+                    'sat_from' => $result_final->sat_from,
+                    'sat_to' => $result_final->sat_to,
+                    'sun_from' => $result_final->sun_from,
+                    'sun_to' => $result_final->sun_to,
+                    'id_object' => $result_final->id_object,
+                    'object_name' => $result_final->object_name,
+                    'description' => $result_final->description,
+                    'object_icon' => $result_final->object_icon,
+
+                ];
+        
+            }
+        }
+
+        return response()->json($final_arr);
+ 
+    }
     public function pickLoaderCalendar(Request $request)
     {
 
@@ -269,8 +554,6 @@ class CalendarController extends Controller
         $final_id = array();
         $final_name = array();
         $final_color = array();
-  
-     
 
 
 
@@ -309,7 +592,7 @@ class CalendarController extends Controller
                 array_push($arr1, $obj_id[$x]);
                 array_push($arr2, $obj_name[$x]);
                 
-                    $fetchshim = DB::select("SELECT shift_name, id_shift FROM shift_model WHERE id_object='$obj_id[$x]' ");
+                    $fetchshim = DB::select("SELECT shift_name, id_shift FROM shift_model WHERE id_object='$obj_id[$x]' AND rep_non=1 ");
                     foreach ($fetchshim as $result_shift_data) {
                         array_push($arr3, $result_shift_data->id_shift);
                         array_push($arr4, $obj_id[$x]);
@@ -388,7 +671,7 @@ class CalendarController extends Controller
            
             $index = 0;
             if (in_array("|--ALL--|", $shi_arr) == true) {
-                $fetchkk2 = DB::select("SELECT * FROM shift_model ");
+                $fetchkk2 = DB::select("SELECT * FROM shift_model WHERE rep_non=1");
             
                 foreach ($fetchkk2 as $rowkk2) {
                     $checkk2 = $rowkk2->id_object;
@@ -403,7 +686,7 @@ class CalendarController extends Controller
 
             } else {
                 for ($i = 0; $i < count($shi_arr); $i++) {
-                    $fetchkk = DB::select("SELECT * FROM shift_model WHERE shift_name='$shi_arr[$i]'");
+                    $fetchkk = DB::select("SELECT * FROM shift_model WHERE shift_name='$shi_arr[$i]' AND rep_non=1");
                   
                    
                     foreach ($fetchkk as $rowkk) {
@@ -439,7 +722,7 @@ class CalendarController extends Controller
 
         for ($i = 0; $i < count($sort_arr); $i++) {
           
-            $fetch_final_result = DB::select("SELECT * FROM shift_model, object_model WHERE shift_model.id_shift='$sort_arr[$i]' AND shift_model.id_object=object_model.id_object");
+            $fetch_final_result = DB::select("SELECT * FROM shift_model, object_model WHERE shift_model.id_shift='$sort_arr[$i]' AND shift_model.id_object=object_model.id_object AND shift_model.rep_non=1");
             foreach ($fetch_final_result as $result_final) {
                
                 $check = $result_final->id_object;
@@ -729,7 +1012,7 @@ class CalendarController extends Controller
        DB::delete("DELETE FROM shift_offer WHERE date='$date' AND id_shift=' $shift '");
     }
     
-    private function sub_object($searching, $dat1, $dat2, $dat4, $find2, $look, $input, array &$arr1, array &$arr2)
+    private function sub_object($searching, $dat1, $dat2, $dat4, $find2, $look, $input, array &$arr1, array &$arr2, $admin, array &$rights)
     {
         static $dd = 1;
         static $find3;
@@ -743,15 +1026,18 @@ class CalendarController extends Controller
                 } else {
 
                 }
+                if ($admin == true || in_array($dat1[$i], $rights) == true) {
+
                 array_push($arr1, $dat1[$i]);
                 array_push($arr2, $dat2[$i]);
+                }
                 $dd++;
                 $row = 0;
                 $sea = $dat1[$i] . "";
                 if ($sea != null) {
                     for ($h = 0; $h < count($dat2); $h++) {
                         if ($sea == $dat4[$h]) {
-                            $this->sub_object($sea, $dat1, $dat2, $dat4, $find2, $look, $input, $arr1, $arr2);
+                            $this->sub_object($sea, $dat1, $dat2, $dat4, $find2, $look, $input, $arr1, $arr2, $admin, $rights);
                             break;
                         }
                     }
@@ -785,7 +1071,7 @@ class CalendarController extends Controller
                 if ($sea != null) {
                     for ($h = 0; $h < count($dat2); $h++) {
                         if ($sea == $dat4[$h]) {
-                            $this->sub_object($sea, $dat1, $dat2, $dat4, $find2, $look, $input, $arr1, $arr2);
+                            $this->sub_object_view($sea, $dat1, $dat2, $dat4, $find2, $look, $input, $arr1, $arr2);
                             break;
                         }
                     }
@@ -807,7 +1093,7 @@ class CalendarController extends Controller
                 if (in_array("|--ALL--|", $obj_arr) == true || in_array($dat1[$i], $obj_arr) == true) {
                     array_push($arr1, $dat1[$i]);
                     array_push($arr2, $dat2[$i]);
-                    $fetchshim_sub = DB::select("SELECT shift_name, id_shift FROM shift_model WHERE id_object='$dat1[$i]' ");
+                    $fetchshim_sub = DB::select("SELECT shift_name, id_shift FROM shift_model WHERE id_object='$dat1[$i]' AND rep_non=1 ");
                     foreach ($fetchshim_sub as $result_shift_data_sub) {
                         array_push($arr3, $result_shift_data_sub->id_shift);
                         array_push($arr4, $dat1[$i]);
@@ -821,6 +1107,44 @@ class CalendarController extends Controller
                     for ($h = 0; $h < count($dat2); $h++) {
                         if ($sea == $dat4[$h]) {
                             $this->subLoader($sea, $dat1, $dat2, $dat4, $find2, $look, $input, $arr1, $arr2, $arr3, $arr4, $arr5, $obj_arr);
+                            break;
+                        }
+                    }
+                }
+
+
+            }
+        }
+
+
+    }
+    private function subLoaderEditor($searching, $dat1, $dat2, $dat4, $find2, $look, $input, array &$arr1, array &$arr2, array &$arr3, array &$arr4, array &$arr5, $obj_arr, $admin, array &$rights)
+    {
+
+        $find = 0;
+        for ($i = 0; $i < count($dat2); $i++) {
+            if ($searching == $dat4[$i]) {
+    
+                if (in_array("|--ALL--|", $obj_arr) == true || in_array($dat1[$i], $obj_arr) == true) {
+                    if ($admin == true || in_array($dat1[$i], $rights) == true) {
+
+                    array_push($arr1, $dat1[$i]);
+                    array_push($arr2, $dat2[$i]);
+                    $fetchshim_sub = DB::select("SELECT shift_name, id_shift FROM shift_model WHERE id_object='$dat1[$i]' AND rep_non=1 ");
+                    foreach ($fetchshim_sub as $result_shift_data_sub) {
+                        array_push($arr3, $result_shift_data_sub->id_shift);
+                        array_push($arr4, $dat1[$i]);
+                        array_push($arr5, $result_shift_data_sub->shift_name);
+
+                    }
+                }
+            
+                }
+                $sea = $dat1[$i] . "";
+                if ($sea != null) {
+                    for ($h = 0; $h < count($dat2); $h++) {
+                        if ($sea == $dat4[$h]) {
+                            $this->subLoaderEditor($sea, $dat1, $dat2, $dat4, $find2, $look, $input, $arr1, $arr2, $arr3, $arr4, $arr5, $obj_arr, $admin, $rights);
                             break;
                         }
                     }

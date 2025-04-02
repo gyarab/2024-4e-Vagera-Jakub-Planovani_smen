@@ -16,8 +16,7 @@
     <link rel="stylesheet"
         href="https://mdbcdn.b-cdn.net/wp-content/themes/mdbootstrap4/docs-app/css/mdb5/fonts/roboto-subset.css?ver=3.9.0-update.5"
         rel="stylesheet">
-        <title>Statistics</title>
-        <link rel="icon" type="image/x-icon" href="{{ URL('images/cropped_imageic.ico') }}">
+
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css" />
     <link href="{{ asset('CSS/sidebar.css') }}" rel="stylesheet">
@@ -33,6 +32,7 @@
     <script src="https://unpkg.com/@popperjs/core@2"></script>
     <script src="https://unpkg.com/tippy.js@6"></script>
     <title>My statistics</title>
+    <link rel="icon" type="image/x-icon" href="{{ URL('images/cropped_imageic.ico') }}">
 </head>
 
 <body id="body-pd">
@@ -40,8 +40,8 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
-    @include('vendor.Chatify.pages.header-admin')
-    @include('vendor.Chatify.pages.sidebar-admin')
+    @include('vendor.Chatify.pages.header-manager')
+    @include('vendor.Chatify.pages.sidebar-manager')
     @include('admin.scripts')
     <script>
         var sum_sch = 0;
@@ -60,34 +60,15 @@
             <div class="card p-3 mb-2 mt-1">
                 <div class='row'>
                     <div class="col-12 col-lg-6">
-                        <div class='row'>
-                            <div class="col-4 d-flex flex-column align-items-start">
-                                <img id="imagePersoanl" src="" alt="Admin"
-                                    class="rounded-circle object-fit-cover"
-                                    style="height: 70px; width: 70px;border: 2p">
-                            </div>
-                            <div class="col-8 d-flex flex-column align-items-start">
-                                <h4>{{ $user->first_name }} {{ $user->middle_name }}
-                                    {{ $user->last_name }}
-                                </h4>
-                                <?php if($user->role == "admin") { ?>
-                                <span class="p-1 rounded text-bg-dark">Administrator</span>
-                                <?php }else if($user->role == "manager") { ?>
-                                <span class="p-1 rounded text-bg-danger">Manager</span>
-                                <?php }else if($user->role == "fulltime") { ?>
-                                <span class="p-1 rounded text-bg-primary">Full-Time</span>
-                                <?php }else if($user->role == "parttime") { ?>
-                                <span class="p-1 rounded text-bg-success">Part-Time</span>
-                                <?php } ?>
-                            </div>
-                        </div>
+                        <h4>My statistics
+                        </h4>
                         <script>
                             $.ajax({
                                 url: '{{ route('showImagePersonal') }}',
                                 type: 'POST',
                                 data: {
                                     _token: '{{ csrf_token() }}',
-                                    id: {{ $user->id }},
+                                    id: {{ Auth::id() }},
                                 },
                                 success: function(response) {
                                     $('#imagePersoanl').attr('src', response.url);
@@ -270,7 +251,7 @@
                                 _token: '{{ csrf_token() }}',
                                 year: year_inp,
                                 month: month_inp,
-                                id: {{ $user->id }}
+                                id: {{ Auth::id() }}
 
                             },
                             success: function(response) {
@@ -359,7 +340,7 @@
                                 _token: '{{ csrf_token() }}',
                                 year: year_inp,
                                 month: month_inp,
-                                id: {{ $user->id }}
+                                id: {{ Auth::id() }}
                             },
                             success: function(response) {
                                 yValues = response;
@@ -473,7 +454,7 @@
                                             _token: '{{ csrf_token() }}',
                                             year: year_inp,
                                             month: month_inp,
-                                            id: {{ $user->id }}
+                                            id: {{ Auth::id() }}
                                         },
                                         success: function(response) {
                                             document.getElementById("com_table").innerHTML = response;
@@ -533,7 +514,7 @@
                                     year: y_select,
                                     month: m_select,
                                     object: o_select,
-                                    id: {{ $user->id }}
+                                    id: {{ Auth::id() }}
                                 },
                                 success: function(response) {
                                     pie_x = [];
@@ -644,7 +625,7 @@
                                         _token: '{{ csrf_token() }}',
                                         year: year_inp,
                                         month: month_inp,
-                                        id: {{ $user->id }}
+                                        id: {{ Auth::id() }}
                                     },
                                     success: function(response) {
                                         document.getElementById("log_table").innerHTML = response;
@@ -699,7 +680,7 @@
                                     _token: '{{ csrf_token() }}',
                                     year: year_inp,
                                     month: month_inp,
-                                    id: {{ $user->id }}
+                                    id: {{ Auth::id() }}
                                 },
                                 success: function(response) {
                                     document.getElementById("break_table").innerHTML = response;

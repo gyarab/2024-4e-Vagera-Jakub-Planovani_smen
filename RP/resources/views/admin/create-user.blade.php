@@ -29,7 +29,8 @@
     <link href="{{ asset('CSS/clock2.css') }}" rel="stylesheet">
     <link href="{{ asset('CSS/toggle-switch.css') }}" rel="stylesheet">
     <link href="{{ asset('CSS/color_picker.css') }}" rel="stylesheet">
-    <title>Document</title>
+    <title>Create user</title>
+    <link rel="icon" type="image/x-icon" href="{{ URL('images/cropped_imageic.ico') }}">
 </head>
 
 <body id="body-pd">

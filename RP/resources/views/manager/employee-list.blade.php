@@ -44,8 +44,8 @@
 <body id="body-pd">
 
 
-    @include('admin.header')
-    @include('admin.sidebar')
+    @include('vendor.Chatify.pages.header-manager')
+    @include('vendor.Chatify.pages.sidebar-manager')
     @include('admin.scripts')
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
@@ -98,10 +98,7 @@
                                 </div>
                             </div>
                             <div class="col-12 col-md-2">
-                                <a id="create_shift" class="btn btn-outline-primary btn-rounded"
-                                   href="/admin/create-user" style="float:right" ><i
-                                        class="bi bi-patch-plus "></i>&nbsp&nbsp Add account</a>
-
+                           
                             </div>
                             <script>
                                 var checkAdmin = 0;
@@ -177,7 +174,6 @@
                         <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mb-3">
                         </div>
                     </div>
-                
                 <div class="bg-white" id="employee_list">
 
                 </div>

@@ -32,6 +32,7 @@
     <script src="https://unpkg.com/@popperjs/core@2"></script>
     <script src="https://unpkg.com/tippy.js@6"></script>
     <title>My statistics</title>
+    <link rel="icon" type="image/x-icon" href="{{ URL('images/cropped_imageic.ico') }}">
 </head>
 
 <body id="body-pd">

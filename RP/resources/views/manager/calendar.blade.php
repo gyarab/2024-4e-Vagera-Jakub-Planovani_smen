@@ -48,8 +48,8 @@
         var doneChnages = false;
     </script>
     <script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@3.1.0/dist/js/multi-select-tag.js"></script>
-    @include('vendor.Chatify.pages.header-admin')
-    @include('vendor.Chatify.pages.sidebar-admin')
+    @include('vendor.Chatify.pages.header-manager')
+    @include('vendor.Chatify.pages.sidebar-manager')
     @include('admin.scripts')
 
     <div class="height-100 bg-light">
@@ -3037,7 +3037,7 @@
      
                     var results = new Array();
                     $.ajax({
-                        url: '{{ route('pickLoaderCalendar') }}',
+                        url: '{{ route('pickLoaderCalendarEditor') }}',
                         type: 'POST',
                         data: {
                             _token: '{{ csrf_token() }}',

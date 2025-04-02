@@ -54,7 +54,7 @@
                                     </h6>
 
 
-                                    <span class="d-none d-sm-inline text-black"><small> Admin</small></span>
+                                    <span class="d-none d-sm-inline text-black"><small> Manager</small></span>
                             </div>
 
                         </div>

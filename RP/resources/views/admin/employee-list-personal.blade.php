@@ -28,7 +28,8 @@
     <link href="{{ asset('CSS/object-structure1.css') }}" rel="stylesheet">
     <link href="{{ asset('CSS/select-button.css') }}" rel="stylesheet">
     <link href="{{ asset('CSS/timeline.css') }}" rel="stylesheet">
-
+    <title>Employess</title>
+    <link rel="icon" type="image/x-icon" href="{{ URL('images/cropped_imageic.ico') }}">
 
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -38,7 +39,7 @@
     @include('vendor.Chatify.pages.header-admin')
     @include('vendor.Chatify.pages.sidebar-admin')
     @include('admin.scripts')
-    <div class="height-100 bg-light">
+    <div class="wh-100 border-start bg-light">
         <script>
             var main_obj_var = 0;
             var main_obj_var2 = 0;
@@ -69,12 +70,11 @@
                                             },
                                             success: function(response) {
                                                 // Set the response (image data) as the source for the image element
-                                                //alert(response.url);
                                                 $('#imagePersoanl').attr('src', response.url);
 
                                             },
                                             error: function(xhr, status, error) {
-                                                alert('Error fetching image:', error);
+                                                error_alert('Error connection');
                                             }
                                         });
                                     </script>
@@ -141,7 +141,6 @@
                                             for="Suspend">Suspend</span>
                                     </div>
                                     <?php if ($user->status == 1) {
-                                        //echo "checked";
                                         echo "<script> document.getElementById('Active').checked = true; </script>";
                                     } elseif ($user->role != 1) {
                                         echo "<script> document.getElementById('Suspend').checked = true; </script>";
@@ -154,11 +153,7 @@
                                 <button id="modalVerification" type="button" class="btn btn-outline-primary btn-sm "
                                     style="float: right" data-bs-toggle="modal"
                                     data-bs-target="#modalVer">Details</button>
-                                <!--<button id="modalbtn" type="button"
-                                class="btn btn-outline-info btn-rounded mt-1" data-bs-toggle="modal"
-                                data-bs-target="#exampleModal">
-                                Get my id
-                            </button>-->
+
 
                                 <!-- Modal -->
                                 <div class="modal fade w-100" id="modalVer" tabindex="-1" data-bs-backdrop="false"
@@ -167,7 +162,7 @@
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h1 class="modal-title fs-5" id="exampleModalLabel">Verification code
-                                                    
+
                                                 </h1>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
@@ -201,18 +196,16 @@
                                                             },
                                                             success: function(response) {
                                                                 location.reload();
-                                                                /*document.getElementById("assignment_load").innerHTML = response;
-                                                                var e = document.getElementById("main_object");
-                                                                main_obj_var = e.value;*/
 
 
                                                             },
                                                             error: function(xhr, status, error) {
-                                                                alert('Error fetching image:', error);
+                                                                error_alert('Error connection');
                                                             }
                                                         });
                                                     }
-                                                    function verifyUser(){
+
+                                                    function verifyUser() {
                                                         $.ajax({
                                                             url: '{{ route('verifyUser') }}',
                                                             type: 'POST',
@@ -225,15 +218,12 @@
                                                                 location.reload();
                                                             },
                                                             error: function(xhr, status, error) {
-                                                                alert('Error fetching image:', error);
+                                                                error_alert('Error connection');
                                                             }
                                                         });
                                                     }
                                                 </script>
-                                                <!--<button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-primary">Save
-                                                changes</button>-->
+
                                             </div>
                                         </div>
                                     </div>
@@ -280,14 +270,11 @@
 
                                         },
                                         error: function(xhr, status, error) {
-                                            alert('Error fetching image:', error);
+                                            error_alert('Error connection');
                                         }
                                     });
                                 </script>
-                                <!--<a class="btn btn-primary btn-sm mt-2" style="float: right; text-font: 5px"
-                                    target="__blank"
-                                    href="https://www.bootdey.com/snippets/view/profile-edit-data-and-skills">Send new
-                                    code</a>-->
+
 
                                 <br>
                                 <h6 class="mt-4 " style="display: inline">Role</h6>
@@ -334,50 +321,51 @@
                             </div>
                             <br>
                         </div>
-                        <div class="card mt-3">
+                        <!-- Cast pro pridani TimeLine -->
+                        <!--<div class="card mt-3">
                             <div class=" align-items-center flex-wrap p-3">
                                 <h5 class="mb-0 ">Timeline </h5>
                                 <hr>
                                 <div class="row">
-                     
+
                                     <div class="col-12">
                                         <div class="container_timeline">
                                             <div class="wrapper_timeline p-0 mt-0">
-                                            <div id="timeline_content">
-                                            </div>
-                                <div id="timeline_content">
-                                </div>
+                                                <div id="timeline_content">
+                                                </div>
+                                                <div id="timeline_content">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                              
+
                                 <script>
-                                                              var number_load = 0;
-                                                     loadTimeline(5);
-                            
-                                            function loadTimeline(number){
-                                                number_load += number;
-                                                $.ajax({
-                                                url: '{{ route('loadEditTimeline') }}',
-                                                type: 'POST',
-                                                data: {
-                                                    _token: '{{ csrf_token() }}',
-                                                    id: {{$user->id}},
-                                                    number: number_load
-                                                },
-                                                success: function(response) {
-                                                    $("#timeline_content").html(response);
-                                                },
-                                                error: function(response) {
-                                                    alert('Error fetching image:', response);
-                                                }
-                                            });
+                                    var number_load = 0;
+                                    loadTimeline(5);
+
+                                    function loadTimeline(number) {
+                                        number_load += number;
+                                        $.ajax({
+                                            url: '{{ route('loadEditTimeline') }}',
+                                            type: 'POST',
+                                            data: {
+                                                _token: '{{ csrf_token() }}',
+                                                id: {{ $user->id }},
+                                                number: number_load
+                                            },
+                                            success: function(response) {
+                                                $("#timeline_content").html(response);
+                                            },
+                                            error: function(response) {
+                                                alert('Error fetching image:', response);
                                             }
+                                        });
+                                    }
                                 </script>
                             </div>
-                        </div>
+                        </div>-->
 
                     </div>
                     <div class="col-md-8">
@@ -389,202 +377,251 @@
                                         </h5>
                                     </div>
                                     <div class="col-6 col-sm-9">
-                                        <!--<button class="btn btn-sm btn-outline-primary" style="float: right">View time options</button>-->
                                         <div class="float-end">
-                                            
+
                                             <?php if ($user->role == 'parttime') {
-                                                //echo "checked";
                                                 echo '<a id="time_permanent"
-                                            class="btn btn-sm btn-outline-primary btn-rounded float-end"
-                                         
-                                            href="/admin/time-options/'. $user->id .'"
-                                            style="float:right"><i
-                                                class="bi bi-patch-plus "></i>&nbsp&nbsp
-                                                View time options</a></div>';
+                                                                                        class="btn btn-sm btn-outline-primary btn-rounded float-end"
+                                                                                     
+                                                                                        href="/admin/time-options/' .
+                                                    $user->id .
+                                                    '"
+                                                                                        style="float:right"><i
+                                                                                            class="bi bi-patch-plus "></i>&nbsp&nbsp
+                                                                                            View time options</a></div>';
                                             } else {
                                                 echo '<a id="time_permanent"
-                                            class="btn btn-sm btn-outline-primary btn-rounded float-end"
-                                         
-                                            href="/admin/permanent-time-options/'. $user->id .'"
-                                            style="float:right"><i
-                                                class="bi bi-patch-plus "></i>&nbsp&nbsp
-                                                View time options</a></div>';
+                                                                                        class="btn btn-sm btn-outline-primary btn-rounded float-end"
+                                                                                     
+                                                                                        href="/admin/permanent-time-options/' .
+                                                    $user->id .
+                                                    '"
+                                                                                        style="float:right"><i
+                                                                                            class="bi bi-patch-plus "></i>&nbsp&nbsp
+                                                                                            View time options</a></div>';
                                             } ?>
-                                           <!-- <a id="time_permanent"
-                                            class="btn btn-sm btn-outline-primary btn-rounded float-end"
-                                         
-                                            href="/admin/permanent-time-options/{{ $user->id }}"
-                                            style="float:right"><i
-                                                class="bi bi-patch-plus "></i>&nbsp&nbsp
-                                                View time options</a></div>-->
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <h6 class="mb-0">First Name</h6>
-                                    </div>
-                                    <div class="col-sm-7 text-secondary">
-                                        <div class="form-group">
-                                            <input id="first_name" type="text" class="form-control"
-                                                value="{{ $user->first_name }}">
-                                            <small id="firstHelp" class="form-text text-danger"
-                                                style="display: none">Needs to be filled</small>
+
                                         </div>
                                     </div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <h6 class="mb-0">Middle Name</h6>
-                                    </div>
-                                    <div class="col-sm-7 text-secondary">
-                                        <div class="form-group">
-                                            <input id="middle_name" type="text" class="form-control"
-                                                value="{{ $user->middle_name }}">
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <h6 class="mb-0">First Name</h6>
                                         </div>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <h6 class="mb-0">Last Name</h6>
-                                    </div>
-                                    <div class="col-sm-7 text-secondary">
-                                        <div class="form-group">
-                                            <input id="last_name" type="text" class="form-control"
-                                                value="{{ $user->last_name }}">
-                                            <small id="lastHelp" class="form-text text-danger"
-                                                style="display: none">Needs to be filled</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <h6 class="mb-0">Username</h6>
-                                    </div>
-                                    <div class="col-sm-7 text-secondary">
-                                        <div class="form-group">
-                                            <input id="username" type="text" class="form-control"
-                                                value="{{ $user->username }}">
-                                            <small id="userHelp" class="form-text text-danger"
-                                                style="display: none">Needs to be filled</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <h6 class="mb-0">Email</h6>
-                                    </div>
-                                    <div class="col-sm-7 text-secondary">
-                                        <div class="form-group">
-                                            <input id="email" type="email" class="form-control"
-                                                value="{{ $user->email }}">
-                                            <small id="emailHelp" class="form-text text-danger"
-                                                style="display: none">Needs to be filled</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <h6 class="mb-0">Phone code</h6>
-                                    </div>
-                                    <div class="col-sm-7 text-secondary">
-                                        @include('phone-selector')
-                                        <small id="codeHelp" class="form-text text-danger"
-                                            style="display: none">Needs to be filled</small>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <h6 class="mb-0">Phone</h6>
-                                    </div>
-                                    <div class="col-sm-7 text-secondary">
-                                        <div class="form-group">
-                                            <input id="phone_number" type="email" class="form-control"
-                                                value="{{ $user->phone_number }}">
-                                            <small id="phoneHelp" class="form-text text-danger"
-                                                style="display: none">Needs to be filled</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- https://www.bootdey.com/snippets/view/profile-with-data-and-skills#html -->
-
-
-                                <hr>
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <a class="btn btn-danger " style="float: left" target="__blank"
-                                            href="https://www.bootdey.com/snippets/view/profile-edit-data-and-skills">DELETE</a>
-
-                                        <a class="btn btn-primary " style="float: right" target="__blank"
-                                            onclick="updateProfile()">Edit</a>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row gutters-sm">
-                            <?php if ($user->role == 'manager') { ?>
-                            <div class="col-sm-6 mb-3">
-                                <script>
-                                    var col_form = 6;
-                                </script>
-                                <?php }else{ ?>
-                                <div class="col-sm-12 mb-3">
-                                    <script>
-                                        var col_form = 4;
-                                    </script>
-
-                                    <?php } ?>
-                                    <div class="card h-100">
-                                        <div class="card-body">
-                                            <h5 class="d-flex align-items-center justify-content-between mb-3">Assigned
-                                                shifts
-                                                <div class="float-end"><a id="create_shift"
-                                                        class="btn btn-sm btn-outline-primary btn-rounded float-end"
-                                                        href="/admin/assign-shifts/{{ $user->id }}"
-                                                        style="float:right"><i
-                                                            class="bi bi-patch-plus "></i>&nbsp&nbsp
-                                                        Add shifts</a></div>
-                                            </h5>
-                                            <hr>
-                                            <select id="main_object" class="form-select form-control-sm"
-                                                aria-label="Default select example">
-                                            </select>
-                                            <div id="assignment_load">
-
+                                        <div class="col-sm-7 text-secondary">
+                                            <div class="form-group">
+                                                <input id="first_name" type="text" class="form-control"
+                                                    value="{{ $user->first_name }}">
+                                                <small id="firstHelp" class="form-text text-danger"
+                                                    style="display: none">Needs to be filled</small>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <script>
-                                    $.ajax({
-                                        url: '{{ route('mainObjectSelect') }}',
-                                        type: 'POST',
-                                        data: {
-                                            _token: '{{ csrf_token() }}',
-                                        },
-                                        success: function(response) {
-                                            // Set the response (image data) as the source for the image element
-                                            document.getElementById("main_object").innerHTML = response;
-                                    
-                                            //$('#imagePersoanl').attr('src', response.url);
-                                            var e = document.getElementById("main_object");
-                                            var id_main_object = e.value;
-               
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <h6 class="mb-0">Middle Name</h6>
+                                        </div>
+                                        <div class="col-sm-7 text-secondary">
+                                            <div class="form-group">
+                                                <input id="middle_name" type="text" class="form-control"
+                                                    value="{{ $user->middle_name }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <h6 class="mb-0">Last Name</h6>
+                                        </div>
+                                        <div class="col-sm-7 text-secondary">
+                                            <div class="form-group">
+                                                <input id="last_name" type="text" class="form-control"
+                                                    value="{{ $user->last_name }}">
+                                                <small id="lastHelp" class="form-text text-danger"
+                                                    style="display: none">Needs to be filled</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <h6 class="mb-0">Username</h6>
+                                        </div>
+                                        <div class="col-sm-7 text-secondary">
+                                            <div class="form-group">
+                                                <input id="username" type="text" class="form-control"
+                                                    value="{{ $user->username }}">
+                                                <small id="userHelp" class="form-text text-danger"
+                                                    style="display: none">Needs to be filled</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <h6 class="mb-0">Email</h6>
+                                        </div>
+                                        <div class="col-sm-7 text-secondary">
+                                            <div class="form-group">
+                                                <input id="email" type="email" class="form-control"
+                                                    value="{{ $user->email }}">
+                                                <small id="emailHelp" class="form-text text-danger"
+                                                    style="display: none">Needs to be filled</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <h6 class="mb-0">Phone code</h6>
+                                        </div>
+                                        <div class="col-sm-7 text-secondary">
+                                            @include('phone-selector')
+                                            <small id="codeHelp" class="form-text text-danger"
+                                                style="display: none">Needs to be filled</small>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <h6 class="mb-0">Phone</h6>
+                                        </div>
+                                        <div class="col-sm-7 text-secondary">
+                                            <div class="form-group">
+                                                <input id="phone_number" type="email" class="form-control"
+                                                    value="{{ $user->phone_number }}">
+                                                <small id="phoneHelp" class="form-text text-danger"
+                                                    style="display: none">Needs to be filled</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- https://www.bootdey.com/snippets/view/profile-with-data-and-skills#html -->
 
+
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <a class="btn btn-danger " style="float: left" target="__blank"
+                                                href="https://www.bootdey.com/snippets/view/profile-edit-data-and-skills">DELETE</a>
+
+                                            <a class="btn btn-primary " style="float: right" target="__blank"
+                                                onclick="updateProfile()">Edit</a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row gutters-sm">
+                                <?php if ($user->role == 'manager') { ?>
+                                <div class="col-sm-6 mb-3">
+                                    <script>
+                                        var col_form = 6;
+                                    </script>
+                                    <?php }else{ ?>
+                                    <div class="col-sm-12 mb-3">
+                                        <script>
+                                            var col_form = 4;
+                                        </script>
+
+                                        <?php } ?>
+                                        <div class="card h-100">
+                                            <div class="card-body">
+                                                <h5 class="d-flex align-items-center justify-content-between mb-3">
+                                                    Assigned
+                                                    shifts
+                                                    <div class="float-end"><a id="create_shift"
+                                                            class="btn btn-sm btn-outline-primary btn-rounded float-end"
+                                                            href="/admin/assign-shifts/{{ $user->id }}"
+                                                            style="float:right"><i
+                                                                class="bi bi-patch-plus "></i>&nbsp&nbsp
+                                                            Add shifts</a></div>
+                                                </h5>
+                                                <hr>
+                                                <select id="main_object" class="form-select form-control-sm"
+                                                    aria-label="Default select example">
+                                                </select>
+                                                <div id="assignment_load">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <script>
+                                        $.ajax({
+                                            url: '{{ route('mainObjectSelect') }}',
+                                            type: 'POST',
+                                            data: {
+                                                _token: '{{ csrf_token() }}',
+                                            },
+                                            success: function(response) {
+                                                document.getElementById("main_object").innerHTML = response;
+
+                                                var e = document.getElementById("main_object");
+                                                var id_main_object = e.value;
+
+
+                                                $.ajax({
+                                                    url: '{{ route('loadAssignmentList') }}',
+                                                    type: 'POST',
+                                                    data: {
+                                                        _token: '{{ csrf_token() }}',
+                                                        id_object: id_main_object,
+                                                        id: {{ $user->id }},
+                                                        col: col_form
+                                                    },
+                                                    success: function(response) {
+                                                        document.getElementById("assignment_load").innerHTML = response;
+                                                        var e = document.getElementById("main_object");
+                                                        main_obj_var = e.value;
+
+
+                                                    },
+                                                    error: function(xhr, status, error) {
+                                                        error_alert('Error connection');
+                                                    }
+                                                });
+                                                var myElem = document.getElementById('main_object2');
+                                                if (myElem != null) {
+                                                    document.getElementById("main_object2").innerHTML = response;
+                                                    var f = document.getElementById("main_object2");
+                                                    var id_main_object2 = f.value;
+
+                                                    $.ajax({
+                                                        url: '{{ route('loadRightsList') }}',
+                                                        type: 'POST',
+                                                        data: {
+                                                            _token: '{{ csrf_token() }}',
+                                                            id_object: id_main_object2,
+                                                            id: {{ $user->id }},
+                                                        },
+                                                        success: function(response) {
+                                                            document.getElementById("rights_load").innerHTML = response;
+                                                            var e = document.getElementById("main_object2");
+                                                            main_obj_var2 = e.value;
+
+                                                        },
+                                                        error: function(xhr, status, error) {
+                                                            error_alert('Error connection');
+                                                        }
+                                                    });
+                                                }
+
+                                            },
+                                            error: function(xhr, status, error) {
+                                                error_alert('Error connection');
+                                            }
+                                        });
+                                        $('#main_object').change(function() {
+                                            var inp = $(this).val();
+                                            main_obj_var = inp;
                                             $.ajax({
                                                 url: '{{ route('loadAssignmentList') }}',
                                                 type: 'POST',
                                                 data: {
                                                     _token: '{{ csrf_token() }}',
-                                                    id_object: id_main_object,
+                                                    id_object: main_obj_var,
                                                     id: {{ $user->id }},
                                                     col: col_form
                                                 },
@@ -596,397 +633,304 @@
 
                                                 },
                                                 error: function(xhr, status, error) {
-                                                    alert('Error fetching image:', error);
+                                                    error_alert('Error connection');
                                                 }
                                             });
-                                            var myElem = document.getElementById('main_object2');
-                                            if (myElem != null){
-                                                document.getElementById("main_object2").innerHTML = response;
-                                                var f = document.getElementById("main_object2");
-                                                var id_main_object2 = f.value;
-                                                
+
+                                        });
+                                    </script>
+
+
+
+
+                                    <?php if ($user->role == 'manager') { ?>
+                                    <div class="col-sm-6 mb-3">
+                                        <div class="card h-100">
+                                            <div class="card-body">
+                                                <h5 class="d-flex align-items-center justify-content-between mb-3">
+                                                    Management
+                                                    rights
+                                                    <div class="float-end"><a id="create_shift"
+                                                            class="btn btn-sm btn-outline-primary btn-rounded float-end"
+                                                            href="/admin/manager-rights/{{ $user->id }}"
+                                                            style="float:right"><i
+                                                                class="bi bi-patch-plus "></i>&nbsp&nbsp Add rigths</a>
+                                                    </div>
+                                                </h5>
+                                                <hr>
+                                                <select id="main_object2" class="form-select form-control-sm"
+                                                    aria-label="Default select example">
+                                                </select>
+                                                <div id="rights_load">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <script>
+                                        $('#main_object2').change(function() {
+                                            var inp = $(this).val();
+                                            main_obj_var2 = inp;
                                             $.ajax({
                                                 url: '{{ route('loadRightsList') }}',
                                                 type: 'POST',
                                                 data: {
                                                     _token: '{{ csrf_token() }}',
-                                                    id_object: id_main_object2,
+                                                    id_object: main_obj_var2,
                                                     id: {{ $user->id }},
                                                 },
                                                 success: function(response) {
                                                     document.getElementById("rights_load").innerHTML = response;
                                                     var e = document.getElementById("main_object2");
                                                     main_obj_var2 = e.value;
-                                                    alert("kkkkkkkkkk");
-
 
 
                                                 },
                                                 error: function(xhr, status, error) {
-                                                    alert('Error fetching image:', error);
+                                                    error_alert('Error connection');
                                                 }
                                             });
-                                        }
 
-                                        },
-                                        error: function(xhr, status, error) {
-                                            alert('Error fetching image:', error);
-                                        }
-                                    });
-                                    $('#main_object').change(function() {
-                                        var inp = $(this).val();
-                                        main_obj_var = inp;
-                                        $.ajax({
-                                            url: '{{ route('loadAssignmentList') }}',
-                                            type: 'POST',
-                                            data: {
-                                                _token: '{{ csrf_token() }}',
-                                                id_object: main_obj_var,
-                                                id: {{ $user->id }},
-                                                col: col_form
-                                            },
-                                            success: function(response) {
-                                                document.getElementById("assignment_load").innerHTML = response;
-                                                var e = document.getElementById("main_object");
-                                                main_obj_var = e.value;
-
-
-                                            },
-                                            error: function(xhr, status, error) {
-                                                alert('Error fetching image:', error);
-                                            }
                                         });
-
-                                    });
-           
-                                </script>
-
-
-
-
-                                <?php if ($user->role == 'manager') { ?>
-                                <div class="col-sm-6 mb-3">
-                                    <div class="card h-100">
-                                        <div class="card-body">
-                                            <h5 class="d-flex align-items-center justify-content-between mb-3">
-                                                Management
-                                                rights
-                                                <div class="float-end"><a id="create_shift"
-                                                        class="btn btn-sm btn-outline-primary btn-rounded float-end"
-                                                        href="/admin/manager-rights/{{$user->id}}" style="float:right"><i
-                                                            class="bi bi-patch-plus "></i>&nbsp&nbsp Add rigths</a>
-                                                </div>
-                                            </h5>
-                                            <hr>
-                                            <select id="main_object2" class="form-select form-control-sm"
-                                            aria-label="Default select example">
-                                        </select>
-                                        <div id="rights_load">
-
-                                        </div>
-                                        </div>
-                                    </div>
+                                    </script>
+                                    <?php } ?>
                                 </div>
+
                                 <script>
-                                                             $('#main_object2').change(function() {
-                                        var inp = $(this).val();
-                                        main_obj_var2 = inp;
-                                        alert("5454");
-                                        $.ajax({
-                                            url: '{{ route('loadRightsList') }}',
-                                            type: 'POST',
-                                            data: {
-                                                _token: '{{ csrf_token() }}',
-                                                id_object: main_obj_var2,
-                                                id: {{ $user->id }},
-                                            },
-                                            success: function(response) {
-                                                document.getElementById("rights_load").innerHTML = response;
-                                                var e = document.getElementById("main_object2");
-                                                main_obj_var2 = e.value;
-                                                alert(main_obj_var2);
+                                    var ele_status_prev = document.getElementsByName('r-status');
+                                    var status_r = "";
+                                    for (i = 0; i < ele_status_prev.length; i++) {
+                                        if (ele_status_prev[i].checked) {
+                                            status_r = ele_status_prev[i].value;
+                                        }
+                                    }
+                                    var ele_role_prev = document.getElementsByName('r-role');
+                                    var role = "";
+                                    for (i = 0; i < ele_role_prev.length; i++) {
+                                        if (ele_role_prev[i].checked) {
+                                            role = ele_role_prev[i].value;
+                                        }
+                                    }
+
+                                    function updateProfile() {
+                                        var first_name = document.getElementById("first_name").value;
+                                        var middle_name = document.getElementById("middle_name").value;
+                                        var last_name = document.getElementById("last_name").value;
+                                        var username = document.getElementById("username").value;
+                                        var email = document.getElementById("email").value;
+
+                                        let email_check = document.getElementById("email").value;
+                                        let first_check = document.getElementById("first_name").value;
+                                        let last_check = document.getElementById("last_name").value;
+                                        var e = document.getElementById("countryCode");
+                                        var phone_code = e.value;
+                                        var phone_number = document.getElementById("phone_number").value;
 
 
-                                            },
-                                            error: function(xhr, status, error) {
-                                                alert('Error fetching image:', error);
+                                        var ele_role = document.getElementsByName('r-role');
+                                        for (i = 0; i < ele_role.length; i++) {
+                                            if (ele_role[i].checked) {
+                                                role = ele_role[i].value;
                                             }
-                                        });
-
-                                    });
-                                </script>
-                                <?php } ?>
-                            </div>
-
-                            <script>
-                                var ele_status_prev = document.getElementsByName('r-status');
-                                var status_r = "";
-                                for (i = 0; i < ele_status_prev.length; i++) {
-                                    if (ele_status_prev[i].checked) {
-                                        status_r = ele_status_prev[i].value;
-                                    }
-                                }
-                                var ele_role_prev = document.getElementsByName('r-role');
-                                var role = "";
-                                for (i = 0; i < ele_role_prev.length; i++) {
-                                    if (ele_role_prev[i].checked) {
-                                        role = ele_role_prev[i].value;
-                                    }
-                                }
-
-                                function updateProfile() {
-                                    var first_name = document.getElementById("first_name").value;
-                                    var middle_name = document.getElementById("middle_name").value;
-                                    var last_name = document.getElementById("last_name").value;
-                                    var username = document.getElementById("username").value;
-                                    var email = document.getElementById("email").value;
-
-                                    /*var reg= /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
-                                    var result= reg.test(eamil);
-                                    alert(result);*/
-
-                                    //alert(bio);
-                                    let email_check = document.getElementById("email").value;
-                                    let first_check = document.getElementById("first_name").value;
-                                    let last_check = document.getElementById("last_name").value;
-                                    //let username = document.getElementById("username").value;
-                                    var e = document.getElementById("countryCode");
-                                    var phone_code = e.value;
-                                    var phone_number = document.getElementById("phone_number").value;
-                                    //let current_check = document.getElementById("current_password").value;
-                                    //let code_check = document.getElementById("phone_code").value;
-                                    //let number_check = document.getElementById("phone_number").value;
-                                    alert(phone_code);
-                                    var ele_role = document.getElementsByName('r-role');
-                                    //let username = document.getElementById("username").value;
-                                    for (i = 0; i < ele_role.length; i++) {
-                                        if (ele_role[i].checked) {
-                                            role = ele_role[i].value;
                                         }
-                                    }
-                                    var ele_status = document.getElementsByName('r-status');
-                                    //let username = document.getElementById("username").value;
-                                    for (i = 0; i < ele_status.length; i++) {
-                                        if (ele_status[i].checked) {
-                                            status_r = ele_status[i].value;
+                                        var ele_status = document.getElementsByName('r-status');
+                                        for (i = 0; i < ele_status.length; i++) {
+                                            if (ele_status[i].checked) {
+                                                status_r = ele_status[i].value;
+                                            }
                                         }
-                                    }
-                                    if (first_check != "") {
-                                        if (last_check != "") {
-                                            var popup4 = document.getElementById("firstHelp");
+                                        if (first_check != "") {
+                                            if (last_check != "") {
+                                                var popup4 = document.getElementById("firstHelp");
 
-                                            popup4.style.display = "none";
-                                            alert(email_check);
-                                            if (email_check != "") {
+                                                popup4.style.display = "none";
+                                                if (email_check != "") {
 
-                                                var popup3 = document.getElementById("lastHelp");
-                                                popup3.style.display = "none";
-                                                $.ajax({
-                                                    url: '{{ route('updateProfilePersonal') }}',
-                                                    type: 'POST',
-                                                    data: {
-                                                        _token: '{{ csrf_token() }}',
-                                                        id: {{ $user->id }},
-                                                        first_name: first_name,
-                                                        middle_name: middle_name,
-                                                        last_name: last_name,
-                                                        username: username,
-                                                        email: email,
-                                                        phone_code: phone_code,
-                                                        phone_number: phone_number,
-                                                        role: role,
-                                                        status: status_r
+                                                    var popup3 = document.getElementById("lastHelp");
+                                                    popup3.style.display = "none";
+                                                    $.ajax({
+                                                        url: '{{ route('updateProfilePersonal') }}',
+                                                        type: 'POST',
+                                                        data: {
+                                                            _token: '{{ csrf_token() }}',
+                                                            id: {{ $user->id }},
+                                                            first_name: first_name,
+                                                            middle_name: middle_name,
+                                                            last_name: last_name,
+                                                            username: username,
+                                                            email: email,
+                                                            phone_code: phone_code,
+                                                            phone_number: phone_number,
+                                                            role: role,
+                                                            status: status_r
 
 
-                                                    },
-                                                    success: function(response) {
-                                                        alert(response.phone);
-                                                        alert(response.yyy);
-                                                        // Set the response (image data) as the source for the image element
-                                                        alert(response.email);
-                                                        if (response.status == 1) {
-                                                            window.location.reload();
+                                                        },
+                                                        success: function(response) {
+                                                         
+                                                            if (response.status == 1) {
+                                                                window.location.reload();
+                                                            }
+                                                            if (response.email == 0) {
+                                                                var popup = document.getElementById("emailHelp");
+                                                                popup.style.display = "inline";
+                                                                popup.innerHTML = "Provide correct email form";
+                                                            } else {
+                                                                var popup = document.getElementById("emailHelp");
+                                                                popup.style.display = "none";
+
+                                                            }
+                                                            if (response.username == 0) {
+                                                                var popup2 = document.getElementById("userHelp");
+                                                                popup2.style.display = "inline";
+                                                                popup2.innerHTML = "Username already exists";
+                                                            } else {
+                                                                var popup2 = document.getElementById("userHelp");
+                                                                popup2.style.display = "none";
+                                                            }
+                                                            if (response.phone == 0) {
+                                                                var popup7 = document.getElementById("phoneHelp");
+                                                                popup7.style.display = "inline";
+                                                                popup7.innerHTML = "Phone must contain only numbers";
+                                                            } else {
+                                                                var popup7 = document.getElementById("phoneHelp");
+                                                                popup7.style.display = "none";
+                                                            }
+
+
+                                                        },
+                                                        error: function(xhr, status, error) {
+                                                            error_alert('Error connection');
                                                         }
-                                                        if (response.email == 0) {
-                                                            var popup = document.getElementById("emailHelp");
-                                                            popup.style.display = "inline";
-                                                            popup.innerHTML = "Provide correct email form";
+                                                    });
 
-                                                            /*document.getElementById('email_validation').innerHTML = "dsadsa";
-                                                            $('#email_validation');*/
-                                                        } else {
-                                                            var popup = document.getElementById("emailHelp");
-                                                            popup.style.display = "none";
-
-                                                        }
-                                                        if (response.username == 0) {
-                                                            var popup2 = document.getElementById("userHelp");
-                                                            popup2.style.display = "inline";
-                                                            popup2.innerHTML = "Username already exists";
-                                                        } else {
-                                                            var popup2 = document.getElementById("userHelp");
-                                                            popup2.style.display = "none";
-                                                        }
-                                                        if (response.phone == 0) {
-                                                            var popup7 = document.getElementById("phoneHelp");
-                                                            popup7.style.display = "inline";
-                                                            popup7.innerHTML = "Phone must contain only numbers";
-                                                        } else {
-                                                            var popup7 = document.getElementById("phoneHelp");
-                                                            popup7.style.display = "none";
-                                                        }
-
-                                                        //$('#profileImage').attr('src',response.url );
-
-                                                    },
-                                                    error: function(xhr, status, error) {
-                                                        alert('Error fetching image:', error);
-                                                    }
-                                                });
-
+                                                } else {
+                                                    var popup = document.getElementById("emailHelp");
+                                                    popup.style.display = "inline";
+                                                    popup.innerHTML = "Provide email address";
+                                                }
                                             } else {
-                                                var popup = document.getElementById("emailHelp");
-                                                popup.style.display = "inline";
-                                                popup.innerHTML = "Provide email address";
+                                                var popup3 = document.getElementById("lastHelp");
+                                                popup3.style.display = "inline";
                                             }
                                         } else {
-                                            var popup3 = document.getElementById("lastHelp");
-                                            popup3.style.display = "inline";
+                                            var popup4 = document.getElementById("firstHelp");
+                                            popup4.style.display = "inline";
                                         }
-                                    } else {
-                                        alert("hjsda");
-                                        var popup4 = document.getElementById("firstHelp");
-                                        popup4.style.display = "inline";
+
                                     }
 
-                                }
+                                    function r_check(id) {
+                                        var r_element = document.getElementById(id);
+                                        if (r_element.value != role) {
+                                            sure_role(role, id, r_element.value);
+                                        }
 
-                                function r_check(id) {
-                                    var r_element = document.getElementById(id);
-                                    //alert(r_element.value);
-                                    if (r_element.value != role) {
-                                        sure_role(role, id, r_element.value);
                                     }
 
-                                }
+                                    function sure_role(role_r, name, ele_val) {
+                                        Swal.fire({
+                                            icon: "question",
+                                            title: "Do you want to grant " + name + " access to this account ?",
+                                            text: "Account will receive different access in network ",
+                                            showCancelButton: true,
+                                            confirmButtonText: "Confirm",
+                                        }).then((result) => {
+                                            if (!result.isConfirmed) {
+                                                if (role_r == "manager") {
+                                                    document.getElementById('Manager').checked = true;
+                                                } else if (role_r == "fulltime") {
+                                                    document.getElementById('Full-Time').checked = true;
 
-                                function sure_role(role_r, name, ele_val) {
-                                    Swal.fire({
-                                        icon: "question",
-                                        title: "Do you want to grant " + name + " access to this account ?",
-                                        text: "Account will receive different access in network ",
-                                        showCancelButton: true,
-                                        confirmButtonText: "Confirm",
-                                    }).then((result) => {
-                                        /* Read more about isConfirmed, isDenied below */
-                                        if (!result.isConfirmed) {
-                                            if (role_r == "manager") {
-                                                document.getElementById('Manager').checked = true;
-                                            } else if (role_r == "fulltime") {
-                                                document.getElementById('Full-Time').checked = true;
+                                                } else if (role_r == "parttime") {
+                                                    document.getElementById('Part-Time').checked = true;
 
-                                            } else if (role_r == "parttime") {
-                                                document.getElementById('Part-Time').checked = true;
-
-                                            } else if (role_r == "admin") {
-                                                document.getElementById('Administrator').checked = true;
-
-                                            }
-                                            /*var return_data;
-                                            $.ajax({
-                                                url: "../log/delete_ver.php",
-                                                method: "POST",
-                                                dataType: "json",
-                                                cache: false,
-                                                async: false,
-                                                data: {
-                                                    email: val_ver
-                                                },
-                                                success: function (data) {
-                                                    return_data = data;
-
+                                                } else if (role_r == "admin") {
+                                                    document.getElementById('Administrator').checked = true;
 
                                                 }
-                                            });
-                                            if (return_data == 0) {
-                                                Swal.fire("User was remove successfully", "", "success");
+
                                             } else {
-                                                Swal.fire("Error occur", "", "error");
+                                                role = ele_val;
                                             }
-                                            load_ver();*/
-                                        } else {
-                                            //alert(ele_val);
-                                            role = ele_val;
-                                        }
-                                    });
-                                }
-
-                                function r_status_check(id) {
-                                    var r_element = document.getElementById(id);
-                                    //alert(r_element.value);
-                                    if (r_element.value != status_r) {
-                                        alert("------------");
-                                        var text_s = "Account will not be able to connect to the network";
-                                        var name_s = "";
-                                        if (r_element.value == 0) {
-                                            text_s = "Account will not be able to connect to the network";
-                                            name_s = "Suspend";
-                                        } else {
-                                            text_s = "Account will be able to connect to the network";
-                                            name_s = "Activate";
-
-                                        }
-                                        sure_status(status_r, name_s, text_s, r_element.value);
+                                        });
                                     }
 
-                                }
-
-                                function sure_status(status, name, text_s, ele_val) {
-                                    Swal.fire({
-                                        icon: "question",
-                                        title: "Do you want  " + name + " this account ?",
-                                        text: text_s,
-                                        showCancelButton: true,
-                                        confirmButtonText: "Confirm",
-                                    }).then((result) => {
-                                        /* Read more about isConfirmed, isDenied below */
-                                        if (!result.isConfirmed) {
-                                            if (status == 1) {
-                                                document.getElementById('Active').checked = true;
-                                            } else if (status == 0) {
-                                                document.getElementById('Suspend').checked = true;
+                                    function r_status_check(id) {
+                                        var r_element = document.getElementById(id);
+                                        if (r_element.value != status_r) {
+                                            var text_s = "Account will not be able to connect to the network";
+                                            var name_s = "";
+                                            if (r_element.value == 0) {
+                                                text_s = "Account will not be able to connect to the network";
+                                                name_s = "Suspend";
+                                            } else {
+                                                text_s = "Account will be able to connect to the network";
+                                                name_s = "Activate";
 
                                             }
-                                            /*if(role == "manager"){
-                                                document.getElementById('Manager').checked = true;
-                                            }else if(role == "fulltime"){
-                                                document.getElementById('Full-Time').checked = true;
-
-                                            }else if(role == "parttime"){
-                                                document.getElementById('Part-Time').checked = true;
-
-                                            }else if(role == "admin"){
-                                                document.getElementById('Administrator').checked = true;
-
-                                            }*/
-
-                                        } else {
-                                            status_r = ele_val;
-
+                                            sure_status(status_r, name_s, text_s, r_element.value);
                                         }
-                                    });
-                                }
-                            </script>
+
+                                    }
+
+                                    function sure_status(status, name, text_s, ele_val) {
+                                        Swal.fire({
+                                            icon: "question",
+                                            title: "Do you want  " + name + " this account ?",
+                                            text: text_s,
+                                            showCancelButton: true,
+                                            confirmButtonText: "Confirm",
+                                        }).then((result) => {
+                                            /* Read more about isConfirmed, isDenied below */
+                                            if (!result.isConfirmed) {
+                                                if (status == 1) {
+                                                    document.getElementById('Active').checked = true;
+                                                } else if (status == 0) {
+                                                    document.getElementById('Suspend').checked = true;
+
+                                                }
+
+
+                                            } else {
+                                                status_r = ele_val;
+
+                                            }
+                                        });
+                                    }
+                                </script>
 
 
 
+                            </div>
                         </div>
-                    </div>
 
+                    </div>
                 </div>
             </div>
-        </div>
-
+            <script>
+                /**
+               * Alerty
+              */
+        
+              function success_alert(message) {
+                  Swal.fire({
+                      title: message,
+                      text: "",
+                      icon: "success"
+                  });
+        
+              }
+        
+              function error_alert(message) {
+                  Swal.fire({
+                      title: message,
+                      text: "",
+                      icon: "error"
+                  });
+        
+              }
+        </script>
 </body>
 
 </html>

@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Calendar view</title>
+    <link rel="icon" type="image/x-icon" href="{{ URL('images/cropped_imageic.ico') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -44,8 +46,8 @@
         var doneChnages = false;
     </script>
     <script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@3.1.0/dist/js/multi-select-tag.js"></script>
-    @include('vendor.Chatify.pages.header-admin')
-    @include('vendor.Chatify.pages.sidebar-admin')
+    @include('vendor.Chatify.pages.header-manager')
+    @include('vendor.Chatify.pages.sidebar-manager')
     @include('admin.scripts')
 
     <div class="height-100 bg-light">
@@ -202,7 +204,7 @@
                 function cal_obj_load(input_obj) {
 
                     $.ajax({
-                        url: '{{ route('cal_obj_load_view') }}',
+                        url: '{{ route('cal_obj_load') }}',
                         type: 'POST',
                         data: {
                             _token: '{{ csrf_token() }}',

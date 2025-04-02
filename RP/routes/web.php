@@ -115,6 +115,7 @@ Route::get('/admin/calendar', function () {
     $parameters = (new ProfileController)->session_parameters();
     return view('admin.calendar',compact('id','parameters'));
 })->middleware(['auth', 'verified', 'admin'])->name('admin.calendar');
+
 Route::get('/admin/calendar-view', function () {
     $id = (new ProfileController)->session_id();
     $parameters = (new ProfileController)->session_parameters();
@@ -150,19 +151,28 @@ Route::get('/admin/employee-statistics', function () {
     $id = (new ProfileController)->session_id();
     $parameters = (new ProfileController)->session_parameters();
     return view('admin.employee-statistics',compact('id','parameters'));
+
 })->middleware(['auth', 'verified', 'admin'])->name('admin.employee-statistics');
+Route::get('/admin/my-permanent-time-options', function () {
+    $id = (new ProfileController)->session_id();
+    $parameters = (new ProfileController)->session_parameters();
+    return view('admin.my-permanent-time-options',compact('id','parameters'));
+})->middleware(['auth', 'verified', 'admin'])->name('admin.my-permanent-time-options');
 
 Route::get('/admin/employee-list/{id}', [EmployeeLoader::class, 'showProfile'])->name('profile');
-//Route::get('/chatify/{id}', [EmployeeLoader::class, 'showChatify'])->name('chatifys');
 
 Route::get('/admin/assign-shifts/{id}', [AssignmentController::class, 'showAssignments'])->name('showAssignments');
 Route::get('/admin/manager-rights/{id}', [RightsController::class, 'showRights'])->name('showRights');
 
 Route::get('/admin/detail-offer/{id}', [OfferController::class, 'showOffer'])->name('showOffer');
+Route::get('/manager/detail-offer/{id}', [OfferController::class, 'showOfferManager'])->name('showOfferManager');
 
 Route::get('/admin/permanent-time-options/{id}', [OptionsController::class, 'showPermanentOption'])->name('showPermanentOption');
 
 Route::get('/admin/employee-statistics/{id}', [CertainStatisticsController::class, 'showCertainStatistics'])->name('showCertainStatistics');
+
+
+
 
 /*Route::post('/api/login_mobile',[AuthManager::class, "login"]);
 Route::post('/api/register_mobile',[AuthManager::class, "register"]);*/
@@ -213,9 +223,88 @@ Route::get('/admin/test2', function () {
 })->middleware(['auth', 'verified', 'admin'])->name('admin.test2');
 
 
+
 Route::get('/manager/dashboard', function () {
-    return view('manager.dashboard');
+    $id = (new ProfileController)->session_id();
+    $parameters = (new ProfileController)->session_parameters();
+    $yesterday = (new PersonalShiftControler)->yesterday_shift();
+    $today = (new PersonalShiftControler)->today_shift();
+    $tommorow = (new PersonalShiftControler)->tomorrow_shift();
+    $planned1 = (new PersonalShiftControler)->number_planned1();
+    $planned2 = (new PersonalShiftControler)->number_planned2();
+    $worked = (new PersonalShiftControler)->number_worked();
+    $board = (new BoardController)->boardLoader();
+    $today_offer = (new PersonalShiftControler)->today_offer();
+    $tommorow_offer = (new PersonalShiftControler)->tommorow_offer();
+    $tommorow_offer2 = (new PersonalShiftControler)->tommorow_offer_next();
+    $tomorrow_shift_next = (new PersonalShiftControler)->tomorrow_shift_next();
+
+    return view('manager.dashboard', compact('id','yesterday','today','tommorow','parameters','worked','planned1','planned2', 'board', 'today_offer', 'tommorow_offer', 'tommorow_offer2', 'tomorrow_shift_next'));
 })->middleware(['auth', 'verified', 'manager'])->name('manager.dashboard');
+
+Route::get('/manager/board-information', function () {
+    $id = (new ProfileController)->session_id();
+    $parameters = (new ProfileController)->session_parameters();
+    $board = (new BoardController)->boardLoader();
+    return view('manager.board-information',compact('id','parameters', 'board'));
+})->middleware(['auth', 'verified', 'manager'])->name('manager.board-information');
+
+Route::get('/manager/my-permanent-time-options', function () {
+    $id = (new ProfileController)->session_id();
+    $parameters = (new ProfileController)->session_parameters();
+    return view('manager.my-permanent-time-options',compact('id','parameters'));
+})->middleware(['auth', 'verified', 'manager'])->name('manager.my-permanent-time-options');
+
+Route::get('/manager/my-permanent-time-options', function () {
+    $id = (new ProfileController)->session_id();
+    $parameters = (new ProfileController)->session_parameters();
+    return view('manager.my-permanent-time-options',compact('id','parameters'));
+})->middleware(['auth', 'verified', 'manager'])->name('manager.my-permanent-time-options');
+
+Route::get('/manager/my-statistics', function () {
+    $id = (new ProfileController)->session_id();
+    $parameters = (new ProfileController)->session_parameters();
+    return view('manager.my-statistics',compact('id','parameters'));
+})->middleware(['auth', 'verified', 'manager'])->name('manager.my-statistics');
+
+Route::get('/manager/calendar-view', function () {
+    $id = (new ProfileController)->session_id();
+    $parameters = (new ProfileController)->session_parameters();
+    return view('manager.calendar-view',compact('id','parameters'));
+})->middleware(['auth', 'verified', 'manager'])->name('manager.calendar-view');
+
+Route::get('/manager/calendar', function () {
+    $id = (new ProfileController)->session_id();
+    $parameters = (new ProfileController)->session_parameters();
+    return view('manager.calendar',compact('id','parameters'));
+})->middleware(['auth', 'verified', 'manager'])->name('manager.calendar');
+
+
+Route::get('/manager/confirm-offer-request', function () {
+    $id = (new ProfileController)->session_id();
+    $parameters = (new ProfileController)->session_parameters();
+       return view('manager.confirm-offer-request',compact('id','parameters'));
+})->middleware(['auth', 'verified', 'manager'])->name('manager.confirm-offer-request');
+
+
+Route::get('/manager/offers', function () {
+    $id = (new ProfileController)->session_id();
+    $parameters = (new ProfileController)->session_parameters();
+    return view('manager.offers',compact('id','parameters'));
+})->middleware(['auth', 'verified', 'manager'])->name('manager.offers');
+
+Route::get('/manager/model-shift', function () {
+    $id = (new ProfileController)->session_id();
+    $parameters = (new ProfileController)->session_parameters();
+    return view('manager.model-shift',compact('id','parameters'));
+})->middleware(['auth', 'verified', 'manager'])->name('manager.model-shift');
+
+Route::get('/manager/employee-list', function () {
+    $id = (new ProfileController)->session_id();
+    $parameters = (new ProfileController)->session_parameters();
+    return view('manager.employee-list',compact('id','parameters'));
+})->middleware(['auth', 'verified', 'manager'])->name('manager.employee-list');
+
 
 Route::get('/full_time/dashboard', function () {
     return view('full_time.dashboard');
@@ -224,6 +313,7 @@ Route::get('/full_time/dashboard', function () {
 Route::get('/part_time/dashboard', function () {
     return view('part_time.dashboard');
 })->middleware(['auth', 'verified', 'part_time'])->name('part_time.dashboard');
+
 
 
 
@@ -288,6 +378,9 @@ Route::post('/cal_obj_load',  [CalendarController::class, 'cal_obj_load'])->name
 Route::post('/cal_obj_load_view',  [CalendarController::class, 'cal_obj_load_view'])->name('cal_obj_load_view');
 
 Route::post('/pickLoaderCalendar',  [CalendarController::class, 'pickLoaderCalendar'])->name('pickLoaderCalendar');
+
+Route::post('/pickLoaderCalendarEditor',  [CalendarController::class, 'pickLoaderCalendarEditor'])->name('pickLoaderCalendarEditor');
+
 Route::post('/getCommentCalendar',  [CalendarController::class, 'getCommentCalendar'])->name('getCommentCalendar');
 Route::post('/getSavedCalendarData',  [CalendarController::class, 'getSavedCalendarData'])->name('getSavedCalendarData');
 Route::post('/getShiftOffer',  [CalendarController::class, 'getShiftOffer'])->name('getShiftOffer');

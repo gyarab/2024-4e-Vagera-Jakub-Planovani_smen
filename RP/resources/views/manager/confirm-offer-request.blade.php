@@ -36,8 +36,8 @@
 </head>
 
 <body id="body-pd">
-    @include('admin.header')
-    @include('admin.sidebar')
+    @include('vendor.Chatify.pages.header-manager')
+    @include('vendor.Chatify.pages.sidebar-manager')
     @include('admin.scripts')
     <div class="row">
         <div class="col-12">

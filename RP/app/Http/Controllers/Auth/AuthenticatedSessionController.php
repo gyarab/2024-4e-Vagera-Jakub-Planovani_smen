@@ -35,7 +35,7 @@ class AuthenticatedSessionController extends Controller
         DB::insert("INSERT INTO users_logs (id, timestamp_at) VALUES ($loggedInUserId, CURRENT_TIMESTAMP)");
 
         if($loggedInUserRole == 'admin'){
-            return redirect()->intended(route('admin.dashboard', absolute: false));
+            return redirect()->intended(route('admin.dashboard-main', absolute: false));
 
         }else if($loggedInUserRole == 'manager'){
             return redirect()->intended(route('manager.dashboard', absolute: false));

@@ -31,12 +31,12 @@
     <link href="{{ asset('CSS/object-structure1.css') }}" rel="stylesheet">
     <link href="{{ asset('CSS/select-button.css') }}" rel="stylesheet">
     <link href="{{ asset('CSS/timeline.css') }}" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src=" https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js "></script>
-    <link href=" https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.min.css " rel="stylesheet">
+
 </head>
 
 <body id="body-pd">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         @media (max-width: 767px) {
@@ -82,8 +82,8 @@
             border: solid #aaa;
         }
     </style>
-    @include('admin.header')
-    @include('admin.sidebar')
+    @include('vendor.Chatify.pages.header-manager')
+    @include('vendor.Chatify.pages.sidebar-manager')
     @include('admin.scripts')
     <div class="bg-light">
 

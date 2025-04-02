@@ -20,8 +20,23 @@ class OfferController extends Controller
     {
      
       $offer_shift = DB::select(" SELECT * FROM shift_offer, shift_model, object_model, shift_active_data, users WHERE shift_active_data.id_shift = shift_offer.id_shift AND shift_active_data.saved_at=shift_offer.date AND shift_offer.id_shift=shift_model.id_shift AND object_model.id_object=shift_model.id_object AND users.id=shift_offer.created_by  AND shift_offer.id_offer='$id' ");
-      $usera = User::find($id);
-      return view('admin/detail-offer', compact('offer_shift'));
+      $id_user = Auth::id();
+        $fetch_position = DB::select("SELECT role AS r FROM  users WHERE id='$id_user'");
+        $role = $fetch_position[0]->r;
+        if($role == "admin"){
+            return view('admin/detail-offer', compact('offer_shift'));
+        }
+    }
+    public function showOfferManager($id)
+    {
+     
+      $offer_shift = DB::select(" SELECT * FROM shift_offer, shift_model, object_model, shift_active_data, users WHERE shift_active_data.id_shift = shift_offer.id_shift AND shift_active_data.saved_at=shift_offer.date AND shift_offer.id_shift=shift_model.id_shift AND object_model.id_object=shift_model.id_object AND users.id=shift_offer.created_by  AND shift_offer.id_offer='$id' ");
+      $id_user = Auth::id();
+        $fetch_position = DB::select("SELECT role AS r FROM  users WHERE id='$id_user'");
+        $role = $fetch_position[0]->r;
+            return view('manager/detail-offer', compact('offer_shift'));
+     
+        
     }
     public function adminGetAllOffer(Request $request)
     {

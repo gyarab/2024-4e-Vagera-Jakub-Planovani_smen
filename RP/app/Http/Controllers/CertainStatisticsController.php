@@ -18,19 +18,13 @@ class CertainStatisticsController extends Controller
 {
     public function showCertainStatistics($id)
     {
-        //$user = DB::select("SELECT * FROM users WHERE id='$id'"); // Fetch user from database
-        //$user = 5;
-        //$offer_shift = DB::select(" SELECT * FROM shift_offer, shift_model, object_model, shift_active_data, users WHERE shift_active_data.id_shift = shift_offer.id_shift AND shift_active_data.saved_at=shift_offer.date AND shift_offer.id_shift=shift_model.id_shift AND object_model.id_object=shift_model.id_object AND users.id=shift_offer.created_by  AND shift_offer.id_offer='$id' ");
         $user = User::find($id);
-        //$code_id = $user->id;
         return view('admin/employee-statistics', compact('user'));
     }
     public function certainStatsTable(Request $request)
     {
-        //$mysqli = require("../database.php");
 
 
-        //$conn = new mysqli($host, $username, $password, $dbname);
         $saved_data = array();
         $Year = $request->input('year');
         $Month = $request->input('month');
@@ -53,19 +47,12 @@ class CertainStatisticsController extends Controller
 
             $Date = $Year . "-" . $Month . "-" . $Day;
             $fetch_attendace_count = DB::select("SELECT COUNT(*) AS count FROM attendance, shift_model WHERE attendance.id='$Id' AND attendance.saved_at='$Date' AND attendance.id_shift=shift_model.id_shift");
-            //echo "SELECT COUNT(*) AS count FROM attendance, shift_model WHERE attendance.id='$Id' AND attendance.saved_at='$Date' AND attendance.id_shift=shift_model.id_shift";
             $fetch_attendace = DB::select("SELECT * FROM attendance, shift_model WHERE attendance.id='$Id' AND attendance.saved_at='$Date' AND attendance.id_shift=shift_model.id_shift ");
-            //$sql = "SELECT * FROM shift_active_data, attendance, create_shift WHERE (shift_active_data.id_of_shift = create_shift.id_shift AND shift_active_data.id_saved = attendance.planned_id AND shift_active_data.saved_date='$Date' AND shift_active_data.id_user=$Id AND shift_active_data.id_saved IN (SELECT planned_id FROM attendance));";
-            //$check_get = mysqli_query($conn, $sql);
-            //echo $Date;
             if ($fetch_attendace_count[0]->count == 0) {
 
             } else {
-                //$result = $mysqli->query($sql);
 
-                //while ($rows = $result->fetch_assoc()) {
                 foreach ($fetch_attendace as $rows) {
-                    //return 1;
                     $time = 0;
                     $time_row = 0;
                     $first_row = 0;

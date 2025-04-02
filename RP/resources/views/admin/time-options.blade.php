@@ -25,26 +25,10 @@
     <link href="{{ asset('CSS/clock2.css') }}" rel="stylesheet">
     <link href="{{ asset('CSS/object-structure1.css') }}" rel="stylesheet">
     <link href="{{ asset('CSS/select-button.css') }}" rel="stylesheet">
-
+    <title>My time options</title>
+    <link rel="icon" type="image/x-icon" href="{{ URL('images/cropped_imageic.ico') }}">
     <link href="{{ asset('CSS/timeline.css') }}" rel="stylesheet">
     <link href="{{ asset(path: 'CSS/calendar.css') }}" rel="stylesheet">
-
-    <!-- <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@3.1.0/dist/css/multi-select-tag.css">
-        <meta charset='utf-8' />
-        <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                var calendarEl = document.getElementById('calendarss');
-                var calendar = new FullCalendar.Calendar(calendarEl, {
-                    initialView: 'dayGridMonth',
-                    eventContent: {
-                        html: '<p>some html</p>'
-                    }
-                });
-                calendar.render();
-            });
-        </script>-->
 </head>
 
 <body id="body-pd">
@@ -57,39 +41,65 @@
     <style>
 
     </style>
-    @include('vendor.Chatify.pages.header')
-    @include('vendor.Chatify.pages.sidebar')
+    @include('vendor.Chatify.pages.header-admin')
+    @include('vendor.Chatify.pages.sidebar-admin')
     @include('admin.scripts')
-    <div class="bg-light" class="height: 100vh">
-        <!--<script src="../js/main_page.js"></script>-->
+    <div class="border-start bg-light p-1" class="height: 100vh">
 
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
         </script>
+        <script>
+               /**
+         * Alerty
+        */
 
-        <div class="card p-2 mb-2 mx-2">
-            <header>
+        function success_alert(message) {
+            Swal.fire({
+                title: message,
+                text: "",
+                icon: "success"
+            });
+
+        }
+
+        function error_alert(message) {
+            Swal.fire({
+                title: message,
+                text: "",
+                icon: "error"
+            });
+
+        }
+        </script>
+
+        <div class="card p-2 mb-2 mx-2 mt-3 ">
+                <br>
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-6">
                         <h5 class="px-1 px-md-5 py-2">Time options</h5>
-                        <hr>
+           
+                    <br>
                     </div>
+                    <div class="col-6">
+                        <input type="button" name="save" class="btn btn-primary mt-2 mx-2" style="font-size: 15px;float:right;"
+                        value="Save" id="butsave">
+                    </div>
+                    <hr>      
+
                 </div>
                 <div class="row">
                     <div class="col-6">
-                        <p class="current-date mx-1 mt-1 mx-md-5"></p>
+                        <h5 class="current-date mx-1 mt-1 mx-md-5"></h5>
                     </div>
-                    <!-- <div class="col-6">-->
                     <div class="col-6 icons">
-                        <span id="next" style="float: right"><i class="bi bi-arrow-right-square"></i></span>
+                        <span id="next" style="float: right"><i class="bi bi-arrow-right-square" class='mx-1' style="font-size: 2.10em;"></i></span>
 
-                        <span id="prev" style="float: right" class="mx-3"><i
-                                class="bi bi-arrow-left-square"></i></span>
-                        <!--</div>-->
+                        <span id="prev" style="float: right; height:50px" class="mx-3"><i
+                                class="bi bi-arrow-left-square" style="font-size: 2.10em;"></i></span>
                     </div>
                 </div>
-            </header>
             <div class="calendar d-none d-md-block">
                 <ul class="weeks">
 
@@ -123,9 +133,7 @@
         <div class="row">
             <div class="col-12">
                 <br>
-                <input type="button" name="save" class="btn btn-primary" style="font-size: 15px;float:right;"
-                    value="Save to database" id="butsave">
-                <br>
+          
                 <br>
                 <br>
             </div>
@@ -166,7 +174,6 @@
             "August", "September", "October", "November", "December"
         ];
         const renderCalendar = () => {
-            // alert("asd");
             let firstDayofMonth = new Date(currYear, currMonth, 1).getDay(), // getting first day of month
                 lastDateofMonth = new Date(currYear, currMonth + 1, 0).getDate(), // getting last date of month
                 lastDayofMonth = new Date(currYear, currMonth, lastDateofMonth).getDay(), // getting last day of month
@@ -186,47 +193,12 @@
             for (let i = 1; i <= lastDateofMonth; i++) {
                 liTag +=
                     `<input type='hidden' id='current_load_date' name='current_load_date' value='${currYear}-${currMonthNull}'>`;
-                if (i == 1) {
-                    /*var text_return = "";
-                    result_arr = [];*/
-                    /*$.ajax({
-                        type: "POST",
-                        url: "../options/load_time_options.php",
-                        dataType: "json",
-                        cache: false,
-                        async: false,
-                        data: {
-                            month: currMonthNull, year: currYear, id: usid
-                        },
-                        success: function (data) {
-                            text_return = JSON.stringify(data);
-                            //alert(data);
-                        }
-
-                    });
-                    text_return = text_return.substring(1, text_return.length - 1);
-                    result_arr = text_return.split(",");
-                    if (result_arr.length != 0) {
-                        for (var ff = 0; ff < result_arr.length; ff++) {
-                            result_arr[ff] = result_arr[ff].substring(1, result_arr[ff].length - 1);
-                            if (result_arr[ff] == "empty") {
-                                from_result_arr[ff] = "";
-                                to_result_arr[ff] = "";
-                            } else {
-                                from_result_arr[ff] = result_arr[ff].substring(0, 5);
-                                to_result_arr[ff] = result_arr[ff].substring(10, 15);
-                            }
-
-                        }
-                    }*/
-
-                }
+              
                 var from_data;
                 var to_data;
                 if (saved_data[i - 1] == "empty") {
                     from_data = "";
                     to_data = "";
-                    //  alert("dsas");
                 } else {
                     from_data = saved_data[i - 1].substring(0, 5);
                     to_data = saved_data[i - 1].substring(10, 15);
@@ -237,7 +209,6 @@
                 // adding active class to li if the current day, month, and year matched
                 let isToday = i === date.getDate() && currMonth === new Date().getMonth() &&
                     currYear === new Date().getFullYear() ? "active" : "";
-                //liTag += `<li class="${isToday}"><p class="day">${i}</p></li>`;
                 if (i == currDay && nowMonth == currMonth && nowYear == currYear) {
                     liTag +=
                         `<li><div class='row'><div class='col-12'><center><div class="circle"><h6 style="display: inline-block;color: #ffffff;">${i}</h6></div></center>`;
@@ -257,7 +228,6 @@
                     var dayNull = (i);
                 }
                 var complete_date = currYear + "-" + currMonthNull + "-" + dayNull;
-                // alert(complete_date);
                 if (my_shifts.includes(complete_date)) {
                     liTag +=
                         `<i class="bi bi-suitcase-lg-fill mt-1 mx-2" style="font-size: 20px; display:inline;color:#0d6efd ; float: left"></i>`;
@@ -315,36 +285,6 @@
                 if (i == 1) {
                     var text_return = "";
                     result_arr = [];
-                    /*$.ajax({
-                        type: "POST",
-                        url: "../options/load_time_options.php",
-                        dataType: "json",
-                        cache: false,
-                        async: false,
-                        data: {
-                            month: currMonthNull, year: currYear, id: usid
-                        },
-                        success: function (data) {
-                            text_return = JSON.stringify(data);
-                            //alert(data);
-                        }
-
-                    });
-                    text_return = text_return.substring(1, text_return.length - 1);
-                    result_arr = text_return.split(",");
-                    if (result_arr.length != 0) {
-                        for (var ff = 0; ff < result_arr.length; ff++) {
-                            result_arr[ff] = result_arr[ff].substring(1, result_arr[ff].length - 1);
-                            if (result_arr[ff] == "empty") {
-                                from_result_arr[ff] = "";
-                                to_result_arr[ff] = "";
-                            } else {
-                                from_result_arr[ff] = result_arr[ff].substring(0, 5);
-                                to_result_arr[ff] = result_arr[ff].substring(10, 15);
-                            }
-
-                        }
-                    }*/
 
                 }
                 var from_data;
@@ -352,7 +292,6 @@
                 if (saved_data[i - 1] == "empty") {
                     from_data = "";
                     to_data = "";
-                    //  alert("dsas");
                 } else {
                     from_data = saved_data[i - 1].substring(0, 5);
                     to_data = saved_data[i - 1].substring(10, 15);
@@ -363,15 +302,10 @@
                 // adding active class to li if the current day, month, and year matched
                 let isToday = i === date.getDate() && currMonth === new Date().getMonth() &&
                     currYear === new Date().getFullYear() ? "active" : "";
-                //liTag += `<li class="${isToday}"><p class="day">${i}</p></li>`;
                 if (i == currDay && nowMonth == currMonth && nowYear == currYear) {
-                    //liTag += `<div class='row'><div class='col-12'><center><div class="circle"><p style="display: inline-block;color: #ffffff;">${i}</p></div></center>`;
-                    // liTag += `<div class='card shadow-sm row rounded'><div class='pb-2 col-12'><div class='row'><div class=' col-12 text-center col-md-1 '><center><div class="circle2 text-center mt-2"><p style="display: inline-block;color: #ffffff;">${i}</p></div></center></div><div class="col-12 col-md-11">`;
-
+                  
                 } else {
-                    //liTag += `<div class='row'><div class='col-12'><p>${i}</p>`;
-                    // liTag += `<div class='card shadow-sm row rounded'><div class='pb-2 col-12'><div class='row'><div class=' col-12 text-center col-md-1 '><p class="mt-2" style="font-size: 20px">${i}</p></div><div class="col-12 col-md-11">`;
-
+               
                 }
                 liTag += `<div class="row mx-1 gx-2 mb-1"><div class="col-2  px-0 ">
                             <div class="card rounded-0 p-2 h-100">
@@ -399,12 +333,9 @@
                 } else {
                     var dayNull = (i);
                 }
-                //alert(tt);
 
                 var complete_date = currYear + "-" + currMonthNull + "-" + dayNull;
-                // alert(complete_date);
                 if (my_shifts.includes(complete_date)) {
-                    // alert(complete_date);
                     liTag += `  <i class="bi bi-suitcase-lg-fill mt-1"
                                             style="font-size: 20px; display:inline; color:#0d6efd ;"></i>`;
                 } else {
@@ -438,21 +369,15 @@
                 liTag +=
                     `<div class='row'><div class='col-12'><button type="button" class="btn btn-primary px-1 " style="position:relative;border: 1px solid black;font-size:15px;height: 25px;padding:0px;float:left" title="Copy" onClick="copy_cell(this.id)" id="co${i}t"><i class="bi bi-c-circle"></i>&nbsp;Copy</button><button type="button" class="btn btn-outline-primary px-1" style="position:relative;border: 1px solid black;font-size:15px;margin-bottom:10px;margin-left:10px;height: 25px;float:left;padding:0px;" title="Paste" onClick="paste_cell(this.id)" id="pa${i}t"><i class="bi bi-copy"></i>&nbsp;Paste</button><button id="d${i}t" onclick="scrapTable(this.id)" class="btn btn-danger p-0 px-1 mx-1" style="float: right;height:25px"><i class="bi bi-trash3"></i></button></div></div>`;
 
-                // liTag += `<div class='row'><div class='col-12'><button type="button" class="btn btn-primary px-1" style="position:relative;border: 1px solid black;font-size:15px;margin-bottom:10px;height: 25px;padding:0px;float:left" title="Copy" onClick="copy_cellt(this.id)" id="co${i}t">Copy</button><button type="button" class="btn btn-primary px-1" style="position:relative;border: 1px solid black;font-size:15px;margin-bottom:10px;margin-left:10px;height: 25px;float:left;padding:0px;" title="Paste" onClick="paste_cellt(this.id)" id="pa${i}t">Paste</button></div></div>`;
-                //liTag += `</div></div></div></div></div></div>`;
                 liTag += `</div></div></div>`;
             }
 
-            for (let i = lastDayofMonth; i < 6; i++) { // creating li of next month first days
-                //liTag += `<li class="inactive"><div class='row'><div class='col-12'>${i - lastDayofMonth + 1}</div></div></li>`
-
-            }
+        
             currentDate.innerText =
                 `${months[currMonth]} ${currYear}`; // passing current mon and yr as currentDate text
             daysTagt.innerHTML = liTag;
         }
-        //renderCalendar();
-        //  renderTable();
+     
         prevNextIcon.forEach(icon => { // getting prev and next icons
             icon.addEventListener("click", () => { // adding click event on both icons
                 // if clicked icon is previous icon then decrement current month by 1 else increment it by 1
@@ -465,9 +390,6 @@
                 } else {
                     date = new Date(); // pass the current date as date value
                 }
-                //renderCalendar(); // calling renderCalendar function
-                
-                //renderTable();
                 RenderAjax();
             });
         });
@@ -491,30 +413,14 @@
                     date: date_full
                 },
                 success: function(response) {
-                    /* offer_arr = [];
-                     tooltip_arr = [];
-                     tooltip_user_arr = [];
-                     comments_id = [];
-                     tooltip_comments = [];
-                     offer_arr = response.offer;
-                     tooltip_arr = response.tooltip;
-                     tooltip_user_arr = response.tooltip_user;
-                     tooltip_comments = response.tooltip_comments;*/
                     saved_data = response.saved_data;
                     my_shifts = response.shifts;
-                    alert(response.shifts);
-                    //alert(response.response);*/
                     renderTable();
                     renderCalendar();
-                    // alert(shift_month[0]);
-                    /* alert(response.saved_data);
-                     alert(response.shifts);*/
-                    // alert(offer_arr[0]);
-                    //renderTable(offer_arr);
-                    //$("#MultiCarouselInsert").html(response);
+ 
                 },
                 error: function(response) {
-                    alert("dsadhgcjx");
+                    error_alert("Connection failled");
                 }
             });
         }
@@ -523,7 +429,6 @@
         var to_paste;
         var from_paste2;
         var to_paste2;
-        //var paste_id;
         function copy_cell(copy_id) {
 
             copy_id = copy_id.substring(2);
@@ -533,14 +438,11 @@
             from_paste = document.getElementById("fr" + copy_id + "t").value;
             to_paste = document.getElementById("to" + copy_id + "t").value;
 
-            /*alert(document.getElementById("fr" + copy_id).value);
-            alert(to_paste);*/
         }
 
         function paste_cell(paste_id) {
 
             paste_id = paste_id.substring(2);
-            alert("-----");
 
             if (from_paste != "") {
                 document.getElementById("fr" + paste_id).value = from_paste;
@@ -575,25 +477,18 @@
 
         function keyUpFrom(from_id) {
             document.getElementById(from_id+"t").value = document.getElementById(from_id).value;
-
-            //document.getElementById("demo").innerHTML = x;
         }
 
         function keyUpTo(to_id) {
             document.getElementById(to_id+ "t").value = document.getElementById(to_id).value;
-            //document.getElementById("demo").innerHTML = x;
         }
         function keyUpFromTable(from_id) {
-           /* alert(from_id);
-            alert(from_id.substring(0 , from_id.length - 1));*/
             document.getElementById(from_id.substring(0 , from_id.length - 1)).value = document.getElementById(from_id).value;
 
-            //document.getElementById("demo").innerHTML = x;
         }
 
         function keyUpToTable(to_id) {
             document.getElementById(to_id.substring(0 , to_id.length - 1)).value = document.getElementById(to_id).value;
-            //document.getElementById("demo").innerHTML = x;
         }
         function scrapTable(scrap_id){
             document.getElementById("fr"+scrap_id.substring(1)).value = "";
@@ -613,7 +508,6 @@
 
         $("#butsave").click(function() {
 
-            //var lastRowId = $('#table1 tr:last').attr("id"); /*finds id of the last row inside table*/
             var from = new Array();
             var to = new Array();
             var date = new Array();
@@ -641,8 +535,7 @@
 
             }
             var year_month = $("#current_load_date").val();
-            alert(from);
-            alert(to);
+ 
             $.ajax({
                 url: '{{ route('insertTimeOptions') }}',
                 type: 'POST',
@@ -654,33 +547,13 @@
                     date: date,
                 },
                 success: function(response) {
-                    alert("saved succeddfully");
+                    success_alert("Time options saved");
                 },
                 error: function(response) {
-                    alert("dsadhgcjx");
+                    error_alert("Connection failled");
                 }
             });
-            /*var fromTime = JSON.stringify(from);
-            var toTime = JSON.stringify(to);
 
-            var dateArr = JSON.stringify(date);
-            alert(dateArr);
-
-            var year_month = $("#current_load_date").val();
-            $.ajax({
-                url: "../options/insert_time_options.php",
-                type: "post",
-                data: {
-                    from: fromTime,
-                    to: toTime,
-                    dateym: year_month,
-                    date: dateArr,
-                    id: usid
-                },
-                success: function(data) {
-                    success_alert(data); /* alerts the response from php.*/
-              /*  }
-            });*/
         });
     </script>
     </div>

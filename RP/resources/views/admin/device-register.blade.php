@@ -30,7 +30,8 @@
 
     <link href="{{ asset('CSS/timeline.css') }}" rel="stylesheet">
 
-
+    <title>Devices</title>
+    <link rel="icon" type="image/x-icon" href="{{ URL('images/cropped_imageic.ico') }}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 

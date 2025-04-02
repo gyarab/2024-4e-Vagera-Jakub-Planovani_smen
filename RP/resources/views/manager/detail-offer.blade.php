@@ -38,8 +38,8 @@
 </head>
 
 <body id="body-pd">
-    @include('vendor.Chatify.pages.header-admin')
-    @include('vendor.Chatify.pages.sidebar-admin')
+    @include('vendor.Chatify.pages.header-manager')
+    @include('vendor.Chatify.pages.sidebar-manager')
     @include('admin.scripts')
     <div class="border-start bg-light" style="height: 100vh;">
         <br>

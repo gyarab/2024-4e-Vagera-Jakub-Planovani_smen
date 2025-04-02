@@ -91,7 +91,7 @@ class MessagesController extends Controller
         if (Chatify::storage()->exists($filePath)) {
             return Chatify::storage()->download($filePath);
         }
-        return abort(404, "Sorry, File does not exist in our server or may have been deleted! 2");
+        return abort(404, "Sorry, File does not exist in our server or may have been deleted! ");
     }
 
     /**
@@ -186,7 +186,7 @@ class MessagesController extends Controller
 
         // if there is no messages yet.
         if ($totalMessages < 1) {
-            $response['messages'] ='<p class="message-hint center-el"><span>Say \'hi\' and start messaging 2 </span></p>';
+            $response['messages'] ='<p class="message-hint center-el"><span>Say \'hi\' and start messaging  </span></p>';
             return Response::json($response);
         }
         if (count($messages->items()) < 1) {
@@ -250,7 +250,7 @@ class MessagesController extends Controller
                 $contacts .= Chatify::getContactItem($user);
             }
         } else {
-            $contacts = '<p class="message-hint center-el"><span>Your contact list is empty 2</span></p>';
+            $contacts = '<p class="message-hint center-el"><span>Your contact list is empty </span></p>';
         }
 
         return Response::json([
