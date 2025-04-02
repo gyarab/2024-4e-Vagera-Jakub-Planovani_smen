@@ -160,6 +160,9 @@ Route::get('/admin/my-permanent-time-options', function () {
 })->middleware(['auth', 'verified', 'admin'])->name('admin.my-permanent-time-options');
 
 Route::get('/admin/employee-list/{id}', [EmployeeLoader::class, 'showProfile'])->name('profile');
+Route::get('/manager/employee-list/{id}', [EmployeeLoader::class, 'showProfileManager'])->name('profileManager');
+
+
 
 Route::get('/admin/assign-shifts/{id}', [AssignmentController::class, 'showAssignments'])->name('showAssignments');
 Route::get('/admin/manager-rights/{id}', [RightsController::class, 'showRights'])->name('showRights');

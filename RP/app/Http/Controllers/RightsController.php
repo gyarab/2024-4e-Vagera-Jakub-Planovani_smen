@@ -40,6 +40,7 @@ class RightsController extends Controller
             $name_obj[] = $result_objects->object_name;
             $superior_obj[] = $result_objects->superior_object_id;
 
+
         }
         array_multisort($id_obj, $name_obj, $superior_obj);
         for ($x = 0; $x < count($name_obj); $x++) {
@@ -70,7 +71,7 @@ class RightsController extends Controller
             $fetch_rights = DB::select("SELECT * FROM management_rights, object_model WHERE management_rights.id='$id' AND management_rights.id_object='$result' AND object_model.id_object=management_rights.id_object ");
             foreach ($fetch_rights as $result_rights) {
                 echo "<div class='col-6'>";
-                echo "<h6 class='mt-2'>$result_rights->object_name</h6>";
+                echo "<h6 class='mt-2'><i class='$result_rights->object_icon'></i> $result_rights->object_name</h6>";
                 echo "<hr>";
                 echo "</div>";
             }
