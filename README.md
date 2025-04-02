@@ -18,7 +18,7 @@ Maturitní ročníkový projekt 2024/2025. Projekt umožnuje vytvářet, plánov
 
 ## Instalace webového serveru
 
-Webový server je uložen na větvy master. Instalace je možná přes příkaz:  
+Webový server je uložen na větvy **master**. Instalace je možná přes příkaz:  
 ```git
 git clone -b master https://github.com/gyarab/2024-4e-Vagera-Jakub-Planovani_smen.git
 ```
@@ -62,9 +62,10 @@ PUSHER_PORT=443
 PUSHER_APP_TLS=true
 ```
 ## Instace Android aplikace
-Android aplikace je uložena na větvi main. Instalace je možná přes příkaz:  
+Android aplikace je uložena v [zde](https://github.com/gyarab/2024-4e-Vagera-Jakub-Android-Aplikace) v repozitáři :  
 ```git
-git clone -b main https://github.com/gyarab/2024-4e-Vagera-Jakub-Planovani_smen.git
+2024-4e-Vagera-Jakub-Android-Aplikace
+
 ```
 Pro úspěšné přihlášení do aplikace je zapotřebí mít spuštený webového server a aby uživatel měl v databázi účet. Cesta k serveru se v aplikaci nastavuje v souboru `/connection/ConnectionFile.java`. K ověřování server používá nástroj Laravel Sanctum. Pokud server běží na adrese jiné něž localhost, je zapotřebí na serveru do souboru `/config/sanctum.php` nastavit tuto adresu.
 ```php
