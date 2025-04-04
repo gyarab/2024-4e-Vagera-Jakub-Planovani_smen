@@ -32,23 +32,24 @@ class AuthenticatedSessionController extends Controller
 
         $loggedInUserRole = $request ->user()->role;
         $loggedInUserId = $request ->user()->id;
+        $loggedStatus = $request ->user()->status;
         DB::insert("INSERT INTO users_logs (id, timestamp_at) VALUES ($loggedInUserId, CURRENT_TIMESTAMP)");
 
-        if($loggedInUserRole == 'admin'){
+        if($loggedInUserRole == 'admin' && $loggedStatus == 1){
             return redirect()->intended(route('admin.dashboard-main', absolute: false));
 
-        }else if($loggedInUserRole == 'manager'){
+        }else if($loggedInUserRole == 'manager' && $loggedStatus == 1){
             return redirect()->intended(route('manager.dashboard', absolute: false));
 
-        }else if($loggedInUserRole == 'full_time'){
+        }else if($loggedInUserRole == 'fulltime' && $loggedStatus == 1){
             return redirect()->intended(route('full_time.dashboard', absolute: false));
 
-        }else if($loggedInUserRole == 'part_time'){
+        }else if($loggedInUserRole == 'parttime' && $loggedStatus == 1){
             return redirect()->intended(route('part_time.dashboard', absolute: false));
 
         }else{
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect()->intended(route('welcome', absolute: false));
         }
     }
 

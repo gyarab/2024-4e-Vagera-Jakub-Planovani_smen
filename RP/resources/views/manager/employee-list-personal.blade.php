@@ -344,7 +344,7 @@
                                                 echo '<a id="time_permanent"
                                                                                         class="btn btn-sm btn-outline-primary btn-rounded float-end"
                                                                                      
-                                                                                        href="/admin/time-options/' .
+                                                                                        href="/manager/time-options/' .
                                                     $user->id .
                                                     '"
                                                                                         style="float:right"><i
@@ -355,7 +355,7 @@
                                                 echo '<a id="time_permanent"
                                                                                         class="btn btn-sm btn-outline-primary btn-rounded float-end"
                                                                                      
-                                                                                        href="/admin/permanent-time-options/' .
+                                                                                        href="/manager/permanent-time-options/' .
                                                     $user->id .
                                                     '"
                                                                                         style="float:right"><i
@@ -376,7 +376,7 @@
                                         <div class="col-sm-7 text-secondary">
                                             <div class="form-group">
                                                 <input id="first_name" type="text" class="form-control"
-                                                    value="{{ $user->first_name }}">
+                                                    value="{{ $user->first_name }}" disabled>
                                                 <small id="firstHelp" class="form-text text-danger"
                                                     style="display: none">Needs to be filled</small>
                                             </div>
@@ -390,7 +390,7 @@
                                         <div class="col-sm-7 text-secondary">
                                             <div class="form-group">
                                                 <input id="middle_name" type="text" class="form-control"
-                                                    value="{{ $user->middle_name }}">
+                                                    value="{{ $user->middle_name }}" disabled>
                                             </div>
                                         </div>
                                     </div>
@@ -402,7 +402,7 @@
                                         <div class="col-sm-7 text-secondary">
                                             <div class="form-group">
                                                 <input id="last_name" type="text" class="form-control"
-                                                    value="{{ $user->last_name }}">
+                                                    value="{{ $user->last_name }}" disabled>
                                                 <small id="lastHelp" class="form-text text-danger"
                                                     style="display: none">Needs to be filled</small>
                                             </div>
@@ -416,7 +416,7 @@
                                         <div class="col-sm-7 text-secondary">
                                             <div class="form-group">
                                                 <input id="username" type="text" class="form-control"
-                                                    value="{{ $user->username }}">
+                                                    value="{{ $user->username }}" disabled>
                                                 <small id="userHelp" class="form-text text-danger"
                                                     style="display: none">Needs to be filled</small>
                                             </div>
@@ -430,7 +430,7 @@
                                         <div class="col-sm-7 text-secondary">
                                             <div class="form-group">
                                                 <input id="email" type="email" class="form-control"
-                                                    value="{{ $user->email }}">
+                                                    value="{{ $user->email }}" disabled>
                                                 <small id="emailHelp" class="form-text text-danger"
                                                     style="display: none">Needs to be filled</small>
                                             </div>
@@ -441,8 +441,8 @@
                                         <div class="col-sm-3">
                                             <h6 class="mb-0">Phone code</h6>
                                         </div>
-                                        <div class="col-sm-7 text-secondary">
-                                            @include('phone-selector')
+                                        <div class="col-sm-7 text-secondary" disabled>
+                                            @include('phone-selector-disable', ['countryCode' => $user->phone_code]) 
                                             <small id="codeHelp" class="form-text text-danger"
                                                 style="display: none">Needs to be filled</small>
                                         </div>
@@ -455,7 +455,7 @@
                                         <div class="col-sm-7 text-secondary">
                                             <div class="form-group">
                                                 <input id="phone_number" type="email" class="form-control"
-                                                    value="{{ $user->phone_number }}">
+                                                    value="{{ $user->phone_number }}" disabled>
                                                 <small id="phoneHelp" class="form-text text-danger"
                                                     style="display: none">Needs to be filled</small>
                                             </div>
@@ -467,10 +467,7 @@
                                     <hr>
                                     <div class="row">
                                         <div class="col-sm-12">
-                                            <?php if ($user->role == 'fulltime' || $user->role == 'parttime') { ?>
-                                            <a class="btn btn-primary " style="float: right" target="__blank"
-                                                onclick="updateProfile()">Edit</a>
-                                                <?php } ?>
+                  
 
                                         </div>
                                     </div>
@@ -495,12 +492,14 @@
                                                 <h5 class="d-flex align-items-center justify-content-between mb-3">
                                                     Assigned
                                                     shifts
+                                                    <?php if ($user->role == 'fulltime' || $user->role == 'parttime') { ?>
                                                     <div class="float-end"><a id="create_shift"
                                                             class="btn btn-sm btn-outline-primary btn-rounded float-end"
-                                                            href="/admin/assign-shifts/{{ $user->id }}"
+                                                            href="/manager/assign-shifts/{{ $user->id }}"
                                                             style="float:right"><i
                                                                 class="bi bi-patch-plus "></i>&nbsp&nbsp
                                                             Add shifts</a></div>
+                                                            <?php } ?>
                                                 </h5>
                                                 <hr>
                                                 <select id="main_object" class="form-select form-control-sm"

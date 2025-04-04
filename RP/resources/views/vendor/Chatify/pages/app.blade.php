@@ -4,6 +4,12 @@
 @elseif (Auth::user()->role == "manager")
 @include('vendor.Chatify.pages.header-manager')
 @include('vendor.Chatify.pages.sidebar-manager')
+@elseif (Auth::user()->role == "fulltime")
+@include('vendor.Chatify.pages.header-fulltime')
+@include('vendor.Chatify.pages.sidebar-fulltime')
+@elseif (Auth::user()->role == "parttime")
+@include('vendor.Chatify.pages.header-parttime')
+@include('vendor.Chatify.pages.sidebar-parttime')
 @endif
 <body id="body-pd">
 @include('Chatify::layouts.headLinks')

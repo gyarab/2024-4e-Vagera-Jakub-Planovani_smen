@@ -477,7 +477,7 @@
                                             <h6 class="mb-0">Phone code</h6>
                                         </div>
                                         <div class="col-sm-7 text-secondary">
-                                            @include('phone-selector')
+                                            @include('phone-selector', ['countryCode' => $user->phone_code])
                                             <small id="codeHelp" class="form-text text-danger"
                                                 style="display: none">Needs to be filled</small>
                                         </div>

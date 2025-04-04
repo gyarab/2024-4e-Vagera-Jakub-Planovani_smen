@@ -1,5 +1,4 @@
-<!-- source: https://gist.github.com/andyj/7108917 -->
-<select id="countryCode" name="countryCode" class="form-control" >
+<select id="countryCode" name="countryCode" class="form-control" disabled >
 	<option data-countryCode="CZ" value="420" selected>Czech Republic (+420)</option>
 	<option data-countryCode="GB" value="44" >UK (+44)</option>
 	<option data-countryCode="US" value="1">USA (+1)</option>

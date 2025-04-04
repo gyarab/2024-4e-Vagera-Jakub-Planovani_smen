@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Počítač: localhost:3306
--- Vytvořeno: Úte 01. dub 2025, 00:13
+-- Vytvořeno: Pát 04. dub 2025, 19:47
 -- Verze serveru: 8.0.41-0ubuntu0.20.04.1
 -- Verze PHP: 7.4.33
 
@@ -385,7 +385,7 @@ CREATE TABLE `sessions` (
 
 CREATE TABLE `shift_active_data` (
   `id_active` int NOT NULL,
-  `id_planned` int NOT NULL,
+  `id_planned` int DEFAULT NULL,
   `saved_at` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `id_shift` int NOT NULL,
   `saved_from` time NOT NULL,
@@ -493,23 +493,6 @@ CREATE TABLE `shift_offer` (
 -- --------------------------------------------------------
 
 --
--- Struktura tabulky `shift_planned_data`
---
-
-CREATE TABLE `shift_planned_data` (
-  `id_planned` int NOT NULL,
-  `saved_at` varchar(255) NOT NULL,
-  `id` int DEFAULT NULL,
-  `id_shift` int NOT NULL,
-  `saved_from` time NOT NULL,
-  `saved_to` time NOT NULL,
-  `timestamp_update` int NOT NULL,
-  `comments_on` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- --------------------------------------------------------
-
---
 -- Struktura tabulky `shift_request`
 --
 
@@ -520,24 +503,6 @@ CREATE TABLE `shift_request` (
   `requested_at` timestamp NOT NULL,
   `request_status` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `shift_stored_data`
---
-
-CREATE TABLE `shift_stored_data` (
-  `id` int NOT NULL,
-  `saved_date` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `id_of_shift` int NOT NULL,
-  `saved_from` time NOT NULL,
-  `saved_to` time NOT NULL,
-  `up_timestamp` int NOT NULL,
-  `id_user` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `user_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `comments` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -589,7 +554,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `first_name`, `middle_name`, `last_name`, `username`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`, `role`, `bio`, `active_status`, `avatar`, `dark_mode`, `messenger_color`, `status`, `phone_code`, `phone_number`, `delete_status`) VALUES
-(1, 'Example', 'Test.', 'User', 'tester', 'example@gmail.com', '2024-12-27 14:14:43', '$2y$12$34fdU2mXMGxZyLZ2F7UhOeep5Vx/g.b/OylUPcDTRvRIEqzw/QB5m', 'GhLuKseEa1ogdtsmJCNsxWkKUQ7JS0A63PuJEyMnhgfa7QkVqUJ5EtKdesD6', '2024-11-09 20:07:19', '2025-01-26 16:28:47', 'admin', 'Main admin', 1, '46708c69-686e-4733-94c7-08bac317c60e.jpg', 0, '#2180f3', 1, 44, 1111, 0);
+(1, 'First', 'Middle', 'Last', 'username', 'example@gmail.com', '2024-12-27 14:14:43', '$2y$12$34fdU2mXMGxZyLZ2F7UhOeep5Vx/g.b/OylUPcDTRvRIEqzw/QB5m', 'R1HO9C1syLCowPQUvcXGTK2faYWp42yjTpeB4pjUPlWVG6E5f2gw2p2Pwnrq', '2024-11-09 20:07:19', '2025-04-01 18:26:39', 'admin', 'I am Administrator', 1, '46708c69-686e-4733-94c7-08bac317c60e.jpg', 0, '#2180f3', 1, 420, 1000, 0),;
 
 -- --------------------------------------------------------
 
@@ -798,23 +763,11 @@ ALTER TABLE `shift_offer`
   ADD PRIMARY KEY (`id_offer`);
 
 --
--- Klíče pro tabulku `shift_planned_data`
---
-ALTER TABLE `shift_planned_data`
-  ADD PRIMARY KEY (`id_planned`);
-
---
 -- Klíče pro tabulku `shift_request`
 --
 ALTER TABLE `shift_request`
   ADD PRIMARY KEY (`id_request`),
   ADD UNIQUE KEY `unique_index` (`id`,`id_offer`);
-
---
--- Klíče pro tabulku `shift_stored_data`
---
-ALTER TABLE `shift_stored_data`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Klíče pro tabulku `time_options`
@@ -973,22 +926,10 @@ ALTER TABLE `shift_offer`
   MODIFY `id_offer` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT pro tabulku `shift_planned_data`
---
-ALTER TABLE `shift_planned_data`
-  MODIFY `id_planned` int NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT pro tabulku `shift_request`
 --
 ALTER TABLE `shift_request`
   MODIFY `id_request` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pro tabulku `shift_stored_data`
---
-ALTER TABLE `shift_stored_data`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pro tabulku `time_options`

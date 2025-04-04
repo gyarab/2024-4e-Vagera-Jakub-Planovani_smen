@@ -35,6 +35,7 @@ use App\Http\Controllers\AuthManager;
 
 
 /** source: https://www.youtube.com/watch?v=0uUgkbhQvxk */
+/**Start web stranek URL*/
 Route::get('/', function () {
     return view('welcome');
 });
@@ -69,13 +70,7 @@ Route::get('/admin/device-register', function () {
     $parameters = (new ProfileController)->session_parameters();
     return view('admin.device-register',compact('id','parameters'));
 })->middleware(['auth', 'verified', 'admin'])->name('admin.device-register');
-/*Route::get('/admin/shift-model/create-model-shift', function () {
-    $id = (new ProfileController)->session_id();
-    $parameters = (new ProfileController)->session_parameters();
-    return view('admin.shift-model.create-model-shift',compact('id','parameters'));
-})->middleware(['auth', 'verified', 'admin'])->name('admin.shift-model.create-model-shift');*/
 
-//Route::get('/structure', [ObjectStructureController::class, 'structureGet']);
 
 
 Route::get('/admin/object-model/create-model-object', function () {
@@ -140,6 +135,11 @@ Route::get('/admin/permanent-time-options', function () {
     $parameters = (new ProfileController)->session_parameters();
     return view('admin.permanent-time-options',compact('id','parameters'));
 })->middleware(['auth', 'verified', 'admin'])->name('admin.permanent-time-options');
+Route::get('/admin/time-options', function () {
+    $id = (new ProfileController)->session_id();
+    $parameters = (new ProfileController)->session_parameters();
+    return view('admin.time-options',compact('id','parameters'));
+})->middleware(['auth', 'verified', 'admin'])->name('admin.time-options');
 
 Route::get('/admin/time-options', function () {
     $id = (new ProfileController)->session_id();
@@ -161,37 +161,36 @@ Route::get('/admin/my-permanent-time-options', function () {
 
 Route::get('/admin/employee-list/{id}', [EmployeeLoader::class, 'showProfile'])->name('profile');
 Route::get('/manager/employee-list/{id}', [EmployeeLoader::class, 'showProfileManager'])->name('profileManager');
+Route::get('/full_time/employee-list/{id}', [EmployeeLoader::class, 'showProfileEmployee'])->name('profileEmployee');
+Route::get('/part_time/employee-list/{id}', [EmployeeLoader::class, 'showProfileEmployee'])->name('profileEmployee');
 
 
 
 Route::get('/admin/assign-shifts/{id}', [AssignmentController::class, 'showAssignments'])->name('showAssignments');
+Route::get('/manager/assign-shifts/{id}', [AssignmentController::class, 'showAssignmentsManager'])->name('showAssignmentsManager');
+
 Route::get('/admin/manager-rights/{id}', [RightsController::class, 'showRights'])->name('showRights');
 
 Route::get('/admin/detail-offer/{id}', [OfferController::class, 'showOffer'])->name('showOffer');
 Route::get('/manager/detail-offer/{id}', [OfferController::class, 'showOfferManager'])->name('showOfferManager');
 
 Route::get('/admin/permanent-time-options/{id}', [OptionsController::class, 'showPermanentOption'])->name('showPermanentOption');
+Route::get('/manager/permanent-time-options/{id}', [OptionsController::class, 'showPermanentOptionManager'])->name('showPermanentOptionManager');
+Route::get('/admin/time-options/{id}', [OptionsController::class, 'showTimeoptions'])->name('showTimeoptions');
+Route::get('/manager/time-options/{id}', [OptionsController::class, 'showTimeoptionsManager'])->name('showTimeoptionsManager');
+
+
 
 Route::get('/admin/employee-statistics/{id}', [CertainStatisticsController::class, 'showCertainStatistics'])->name('showCertainStatistics');
+Route::get('/manager/employee-statistics/{id}', [CertainStatisticsController::class, 'showCertainStatisticsManager'])->name('showCertainStatisticsManager');
 
 
-
-
-/*Route::post('/api/login_mobile',[AuthManager::class, "login"]);
-Route::post('/api/register_mobile',[AuthManager::class, "register"]);*/
-/*Route::get('/admin/employee-list/{id}', function () {
-    $id = (new ProfileController)->session_id();
-    $parameters = (new ProfileController)->session_parameters();
-    $showProfile = (new EmployeeLoader)->showProfile($id);
-    return view('admin.employee-list-personal',compact('id','parameters', 'showProfile'));
-})->middleware(['auth', 'verified', 'admin'])->name('profile');*/
 
 Route::get('/admin/editor-profile', function () {
     $id = (new ProfileController)->session_id();
     $parameters = (new ProfileController)->session_parameters();
    
 
-    //Route::get('/profile-image/{filename}', [ImageController::class, 'showProfileImage'])->name('profile.image');
     return view('admin.editor-profile',compact('id','parameters'));
 })->middleware(['auth', 'verified', 'admin'])->name('admin.editor-profile');
 
@@ -206,13 +205,9 @@ Route::get('/admin/confirm-offer-request', function () {
     $parameters = (new ProfileController)->session_parameters();
    
 
-    //Route::get('/profile-image/{filename}', [ImageController::class, 'showProfileImage'])->name('profile.image');
     return view('admin.confirm-offer-request',compact('id','parameters'));
 })->middleware(['auth', 'verified', 'admin'])->name('admin.confirm-offer-request');
 
-//Route::get('/admin/editor-profile/{filename}', [UserAvatarController::class, 'showProfileImage'])->name('showProfileImage');
-//Route::post('/admin/object-model/create-model-object', [ObjectStructureController::class, 'structureGet'])->name('structureGet');
-//Route::post('/admin/object-model/create-model-object', [ObjectStructureController::class, 'parametrsGet'])->name('parametrsGet');
 
 
 Route::get('/admin/dttest', function () {
@@ -308,21 +303,139 @@ Route::get('/manager/employee-list', function () {
     return view('manager.employee-list',compact('id','parameters'));
 })->middleware(['auth', 'verified', 'manager'])->name('manager.employee-list');
 
+Route::get('/manager/permanent-time-options', function () {
+    $id = (new ProfileController)->session_id();
+    $parameters = (new ProfileController)->session_parameters();
+    return view('manager.permanent-time-options',compact('id','parameters'));
+})->middleware(['auth', 'verified', 'manager'])->name('manager.permanent-time-options');
+
+Route::get('/manager/editor-profile', function () {
+    $id = (new ProfileController)->session_id();
+    $parameters = (new ProfileController)->session_parameters();
+   
+
+    return view('manager.editor-profile',compact('id','parameters'));
+})->middleware(['auth', 'verified', 'manager'])->name('manager.editor-profile');
 
 Route::get('/full_time/dashboard', function () {
-    return view('full_time.dashboard');
+    $id = (new ProfileController)->session_id();
+    $parameters = (new ProfileController)->session_parameters();
+    $yesterday = (new PersonalShiftControler)->yesterday_shift();
+    $today = (new PersonalShiftControler)->today_shift();
+    $tommorow = (new PersonalShiftControler)->tomorrow_shift();
+    $planned1 = (new PersonalShiftControler)->number_planned1();
+    $planned2 = (new PersonalShiftControler)->number_planned2();
+    $worked = (new PersonalShiftControler)->number_worked();
+    $board = (new BoardController)->boardLoader();
+    $today_offer = (new PersonalShiftControler)->today_offer();
+    $tommorow_offer = (new PersonalShiftControler)->tommorow_offer();
+    $tommorow_offer2 = (new PersonalShiftControler)->tommorow_offer_next();
+    $tomorrow_shift_next = (new PersonalShiftControler)->tomorrow_shift_next();
+
+    return view('full_time.dashboard', compact('id','yesterday','today','tommorow','parameters','worked','planned1','planned2', 'board', 'today_offer', 'tommorow_offer', 'tommorow_offer2', 'tomorrow_shift_next'));
 })->middleware(['auth', 'verified', 'full_time'])->name('full_time.dashboard');
 
+Route::get('/full_time/offers', function () {
+    $id = (new ProfileController)->session_id();
+    $parameters = (new ProfileController)->session_parameters();
+    return view('full_time.offers',compact('id','parameters'));
+})->middleware(['auth', 'verified', 'full_time'])->name('full_time.offers');
+
+
+Route::get('/full_time/employee-list', function () {
+    $id = (new ProfileController)->session_id();
+    $parameters = (new ProfileController)->session_parameters();
+    return view('full_time.employee-list',compact('id','parameters'));
+})->middleware(['auth', 'verified', 'full_time'])->name('full_time.employee-list');
+
+Route::get('/full_time/my-permanent-time-options', function () {
+    $id = (new ProfileController)->session_id();
+    $parameters = (new ProfileController)->session_parameters();
+    return view('full_time.my-permanent-time-options',compact('id','parameters'));
+})->middleware(['auth', 'verified', 'full_time'])->name('full_time.my-permanent-time-options');
+
+Route::get('/full_time/my-statistics', function () {
+    $id = (new ProfileController)->session_id();
+    $parameters = (new ProfileController)->session_parameters();
+    return view('full_time.my-statistics',compact('id','parameters'));
+})->middleware(['auth', 'verified', 'full_time'])->name('full_time.my-statistics');
+
+Route::get('/full_time/calendar-view', function () {
+    $id = (new ProfileController)->session_id();
+    $parameters = (new ProfileController)->session_parameters();
+    return view('full_time.calendar-view',compact('id','parameters'));
+})->middleware(['auth', 'verified', 'full_time'])->name('full_time.calendar-view');
+
+Route::get('/full_time/editor-profile', function () {
+    $id = (new ProfileController)->session_id();
+    $parameters = (new ProfileController)->session_parameters();
+   
+
+    return view('full_time.editor-profile',compact('id','parameters'));
+})->middleware(['auth', 'verified', 'full_time'])->name('full_time.editor-profile');
+
+
 Route::get('/part_time/dashboard', function () {
-    return view('part_time.dashboard');
+    $id = (new ProfileController)->session_id();
+    $parameters = (new ProfileController)->session_parameters();
+    $yesterday = (new PersonalShiftControler)->yesterday_shift();
+    $today = (new PersonalShiftControler)->today_shift();
+    $tommorow = (new PersonalShiftControler)->tomorrow_shift();
+    $planned1 = (new PersonalShiftControler)->number_planned1();
+    $planned2 = (new PersonalShiftControler)->number_planned2();
+    $worked = (new PersonalShiftControler)->number_worked();
+    $board = (new BoardController)->boardLoader();
+    $today_offer = (new PersonalShiftControler)->today_offer();
+    $tommorow_offer = (new PersonalShiftControler)->tommorow_offer();
+    $tommorow_offer2 = (new PersonalShiftControler)->tommorow_offer_next();
+    $tomorrow_shift_next = (new PersonalShiftControler)->tomorrow_shift_next();
+
+    return view('part_time.dashboard', compact('id','yesterday','today','tommorow','parameters','worked','planned1','planned2', 'board', 'today_offer', 'tommorow_offer', 'tommorow_offer2', 'tomorrow_shift_next'));
 })->middleware(['auth', 'verified', 'part_time'])->name('part_time.dashboard');
 
+Route::get('/part_time/time-options', function () {
+    $id = (new ProfileController)->session_id();
+    $parameters = (new ProfileController)->session_parameters();
+    return view('part_time.time-options',compact('id','parameters'));
+})->middleware(['auth', 'verified', 'part_time'])->name('part_time.time-options');
+
+Route::get('/part_time/my-statistics', function () {
+    $id = (new ProfileController)->session_id();
+    $parameters = (new ProfileController)->session_parameters();
+    return view('part_time.my-statistics',compact('id','parameters'));
+})->middleware(['auth', 'verified', 'part_time'])->name('part_time.my-statistics');
+
+Route::get('/part_time/calendar-view', function () {
+    $id = (new ProfileController)->session_id();
+    $parameters = (new ProfileController)->session_parameters();
+    return view('part_time.calendar-view',compact('id','parameters'));
+})->middleware(['auth', 'verified', 'part_time'])->name('part_time.calendar-view');
+
+Route::get('/part_time/offers', function () {
+    $id = (new ProfileController)->session_id();
+    $parameters = (new ProfileController)->session_parameters();
+    return view('part_time.offers',compact('id','parameters'));
+})->middleware(['auth', 'verified', 'part_time'])->name('part_time.offers');
+
+Route::get('/part_time/employee-list', function () {
+    $id = (new ProfileController)->session_id();
+    $parameters = (new ProfileController)->session_parameters();
+    return view('part_time.employee-list',compact('id','parameters'));
+})->middleware(['auth', 'verified', 'part_time'])->name('part_time.employee-list');
+
+Route::get('/part_time/editor-profile', function () {
+    $id = (new ProfileController)->session_id();
+    $parameters = (new ProfileController)->session_parameters();
+   
+
+    return view('part_time.editor-profile',compact('id','parameters'));
+})->middleware(['auth', 'verified', 'part_time'])->name('part_time.editor-profile');
 
 
 
-/*Route::get('dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');*/
+
+/**Start ajax stranek URL*/
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -331,9 +444,6 @@ Route::middleware('auth')->group(function () {
 
 });
 
-
-
-//use App\Http\Controllers\UserController;
 
 Route::post('/ajax-submit',  [UserController::class, 'ajaxStore'])->name('user.ajaxStore');
 Route::post('/verification_action',  [VerificationController::class, 'verification_action'])->name('verification_action');
@@ -457,18 +567,6 @@ Route::post('/endBreak',   [AttendanceController::class, 'endBreak'])->name('end
 
 
 
-//loadTimeOptions
-//changeDeviceStatus
-/*Route::post('/admin/object-model/create-model-object/create', [ObjectStructureController::class, 'structureGet'])->name('structureGet');
-Route::post('/admin/object-model/create-model-object/update', [ObjectStructureController::class, 'parametrsGet'])->name('parametrsGet');*/
-//Route::get('/admin/object-model/create-model-object', [ObjectStructureController::class, 'index'])->name('objectModelIndex');
-
-/*Route::post('/admin/object-model/create-model-object', function () {
-    $id = (new ObjectStructureController)->session_id();
-    $parameters = (new ObjectStructureController)->session_parameters();
-    return view('admin.object-model.create-model-object',compact('id','parameters'));
-})->middleware(['auth', 'verified', 'admin'])->name('admin.object-model.create-model-object');*/
-
 Route::prefix('admin/object-model/create-model-object/')->group(function () {
     Route::post('structureGet', [ObjectStructureController::class, 'structureGet'])->name('structureGet');
     Route::post('parametrsGet', [ObjectStructureController::class, 'parametrsGet'])->name('parametrsGet');
@@ -481,7 +579,6 @@ Route::prefix('admin/object-model/create-model-object/')->group(function () {
 
     
     
-    //Route::post('objectDropdown', [ObjectStructureController::class, 'objectDropdown'])->name('objectDropdown');
 });
 
 Route::prefix('admin/employee-list/')->group(function () {
@@ -491,20 +588,16 @@ Route::prefix('admin/employee-list/')->group(function () {
     Route::post('getNameRole', [EmployeeLoader::class, 'getNameRole'])->name('getNameRole');
 
     
-    //Route::post('objectDropdown', [ObjectStructureController::class, 'objectDropdown'])->name('objectDropdown');
 });
 
 Route::prefix('admin/email/')->group(function () {
     Route::post('sendEmail', [EmailController::class, 'sendEmail'])->name('sendEmail');
     
-    //Route::post('objectDropdown', [ObjectStructureController::class, 'objectDropdown'])->name('objectDropdown');
 });
 
 Route::get('/email-verification', function () {
-    //$details = (new EmailController)->sendEmail();
 
     return view('email-verification');
-    //return view('email-verification');
 })->name('email-verification');
 
 Route::prefix('admin/shift-model/create-model-shift/')->group(function () {
@@ -530,20 +623,7 @@ Route::prefix('admin/shift-model/create-model-shift/')->group(function () {
         Route::post('loadEditTimeline', [UserAvatarController::class, 'loadEditTimeline'])->name('loadEditTimeline');
 
         
-        
-        /*Route::post('/get-image', function (Request $request) {
-            $filename = $request->input('filename');
-        
-            // Check if the image exists in the 'public' disk (storage/app/public)
-            if (Storage::disk('public')->exists('profile-images/' . $filename)) {
-                // Return the URL to the image
-                return response()->json([
-                    'url' => Storage::disk('public')->url('profile-images/' . $filename)
-                ]);
-            }
-        
-            return response()->json(['error' => 'Image not found'], 404);
-        })->name('get.image');*/
+
     
         });
         Route::post('showImagePersonal', [UserAvatarController::class, 'showImagePersonal'])->name('showImagePersonal');
@@ -569,25 +649,6 @@ Route::post('/admin/object-model/update-model-object', [ObjectStructureControlle
 
 
 
-
-
-//Route::post('/admin/object-model/create-model-object', [ObjectStructureController::class, 'parametrsGet'])->name('parametrsGet');
-
-/*Route::get('/email/verify',function(){
-    return view('auth.verify-email');
-})->middleware('auth')->name('verification.notice');
-
-Route::post('/email/verify/{id}/{hash}',function(EmailVerificationRequest $request){
-    $request->fulfill();
-
-    return view('/profile');
-})->middleware(['auth','signed'])->name('verification.verify');
-
-Route::post('/email/verification-notification',function(Request $request){
-    $request->user()->sendEmailVerificationNotification();
-    
-    return back()->with('message','Verification link sent!');
-})->middleware(['auth','throttle:6,1'])->name('verification.send');*/
 
 
 Route::get('/admin/dashboard3', function () {
@@ -632,109 +693,7 @@ Route::post('/broadcasting/auth', function (Request $request) {
     }
 });
 
-//Route::get('/', 'MessagesController@index')->name(config('chatify.routes.prefix'));
 
-/**
- *  Fetch info for specific id [user/group]
- */
-//Route::post('/idInfo', 'MessagesController@idFetchData');
-
-/**
- * Send message route
- */
-//Route::post('/sendMessage', 'MessagesController@send')->name('send.message');
-
-/**
- * Fetch messages
- */
-//Route::post('/fetchMessages', 'MessagesController@fetch')->name('fetch.messages');
-
-/**
- * Download attachments route to create a downloadable links
- */
-//Route::get('/download/{fileName}', 'MessagesController@download')->name(config('chatify.attachments.download_route_name'));
-
-/**
- * Authentication for pusher private channels
- */
-//Route::post('/chat/auth', 'MessagesController@pusherAuth')->name('pusher.auth');
-
-/**
- * Make messages as seen
- */
-//Route::post('/makeSeen', 'MessagesController@seen')->name('messages.seen');
-
-/**
- * Get contacts
- */
-//Route::get('/getContacts', 'MessagesController@getContacts')->name('contacts.get');
-
-/**
- * Update contact item data
- */
-//Route::post('/updateContacts', 'MessagesController@updateContactItem')->name('contacts.update');
-
-
-/**
- * Star in favorite list
- */
-//Route::post('/star', 'MessagesController@favorite')->name('star');
-
-/**
- * get favorites list
- */
-//Route::post('/favorites', 'MessagesController@getFavorites')->name('favorites');
-
-/**
- * Search in messenger
- */
-//Route::get('/search', 'MessagesController@search')->name('search');
-
-/**
- * Get shared photos
- */
-//Route::post('/shared', 'MessagesController@sharedPhotos')->name('shared');
-
-/**
- * Delete Conversation
- */
-//Route::post('/deleteConversation', 'MessagesController@deleteConversation')->name('conversation.delete');
-
-/**
- * Delete Message
- */
-//Route::post('/deleteMessage', 'MessagesController@deleteMessage')->name('message.delete');
-
-/**
- * Update setting
- */
-//Route::post('/updateSettings', 'MessagesController@updateSettings')->name('avatar.update');
-
-/**
- * Set active status
- */
-//Route::post('/setActiveStatus', 'MessagesController@setActiveStatus')->name('activeStatus.set');
-
-
-
-
-
-
-/*
-* [Group] view by id
-*/
-//Route::get('/group/{id}', 'MessagesController@index')->name('group');
-
-/*
-* user view by id.
-* Note : If you added routes after the [User] which is the below one,
-* it will considered as user id.
-*
-* e.g. - The commented routes below :
-*/
-// Route::get('/route', function(){ return 'Munaf'; }); // works as a route
-//Route::get('/{id}', 'MessagesController@index')->name('user');
-// Route::get('/route', function(){ return 'Munaf'; }); // works as a user id
 
 
 

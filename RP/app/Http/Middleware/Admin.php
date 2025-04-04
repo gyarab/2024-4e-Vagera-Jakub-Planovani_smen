@@ -29,10 +29,10 @@ class Admin
         }else if ($userRole == 'manager'){
             return redirect()->route('manager.dashboard');
 
-        }else if ($userRole == 'full_time'){
+        }else if ($userRole == 'fulltime'){
             return redirect()->route('full_time.dashboard');
 
-        }else if($userRole == 'part_time'){
+        }else if($userRole == 'parttime'){
             return redirect()->route('part_time.dashboard');
 
         }else{

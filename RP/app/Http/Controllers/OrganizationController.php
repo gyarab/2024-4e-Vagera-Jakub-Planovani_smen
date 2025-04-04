@@ -30,9 +30,8 @@ class OrganizationController extends Controller
         $fetch_object = DB::select("SELECT * FROM object_model");
         $data2 = array();
         $icons = array();
-        $data3 = array();
-        $numberval = array();
-
+        $counerArr = array();
+        $counerArr[0] = 0;
 
         foreach ($fetch_object as $result_object) {
             $data1[] = $result_object->id_object;
@@ -79,6 +78,7 @@ class OrganizationController extends Controller
 
                         $fetchddm = DB::select($sqldd[$k]);
                         foreach ($fetchddm as $rows_dm) {
+                            $counerArr[0] = 1;
                             if ($rows_dm->saved_at == $yesterday) {
                                 $add_ym = "(yesterday)";
                             } else {
@@ -165,7 +165,7 @@ class OrganizationController extends Controller
 
                 for ($h = 0; $h < count($data2); $h++) {
                     if ($search == $data4[$h]) {
-                        $this->sub_object($search, $data1, $data2, $data4, $icons);
+                        $this->sub_object($search, $data1, $data2, $data4, $icons, $counerArr);
                         $row++;
                         break;
                     }
@@ -179,9 +179,18 @@ class OrganizationController extends Controller
             }
 
         }
+        if ($counerArr[0] == 0) {
+             echo '<div id="no_data" class="card p-0 m-0">
+            <center>
+                <p class=" p-0 m-1 text-secondary"><i
+                        class="mx-1 bi bi-sticky"></i>No Data found</p>
+            </center>
+        </div>';
+            
+        }
     }
 
-    private function sub_object($searching, $dat1, $dat2, $dat4, $icons)
+    private function sub_object($searching, $dat1, $dat2, $dat4, $icons, array &$counerArr)
     {
 
         $dates = date('Y-m-d');
@@ -217,6 +226,7 @@ class OrganizationController extends Controller
                         $fetchdd = DB::select($sqldd[$k]);
                            
                         foreach ($fetchdd as $rows_d) {
+                            $counerArr[0] = 1;
                             if($iconCounter == 0){
                                 echo "<div style='padding: 5px;border-width: thin'>";
                                 echo "<h6 ><i class='$icons[$i]'></i>&nbsp;" . $dat2[$i] . " : </h6>";   
@@ -301,7 +311,7 @@ class OrganizationController extends Controller
                 if ($sea != null) {
                     for ($h = 0; $h < count($dat2); $h++) {
                         if ($sea == $dat4[$h]) {
-                            $this->sub_object($sea, $dat1, $dat2, $dat4, $icons);
+                            $this->sub_object($sea, $dat1, $dat2, $dat4, $icons, $counerArr);
                             break;
                         }
                     }

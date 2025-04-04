@@ -86,11 +86,28 @@
 
                 <ul id="drop_menu" class="dropdown-menu dropdown-menu-dark text-small shadow text-black;"
                     style="overflow-x: visible;" aria-labelledby="dropdownUser4" data-toggle="dropdown">
-                    <li><a class="dropdown-item" href="/profile"><i class="bi bi-person"></i></a></li>
+                    <li><a class="dropdown-item" href="/admin/editor-profile"><i class="bi bi-person"></i></a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-right"></i></a></li>
+                    <li>    
+                        <form method="POST" >
+                            @csrf
+                            <button type="submit" class="dropdown-item">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </button>
+                        </form>       
+                        <!--<form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                        </form>
+                            <a class="dropdown-item" :href="route('logout')"
+                                onclick="event.preventDefault();this.closest('form').submit();"> <i class="bi bi-box-arrow-right"></i></a>
+--->
+
+
+                      
+                    </li>
+                   
                 </ul>
             </div>
         </div>

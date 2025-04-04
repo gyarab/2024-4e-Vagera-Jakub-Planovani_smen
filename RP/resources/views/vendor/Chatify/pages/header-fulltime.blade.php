@@ -54,7 +54,7 @@
                                     </h6>
 
 
-                                    <span class="d-none d-sm-inline text-black"><small> Manager</small></span>
+                                    <span class="d-none d-sm-inline text-black"><small> Employee</small></span>
                             </div>
 
                         </div>
@@ -99,7 +99,7 @@
 
 
                     <ul class="dropdown-menu dropdown-menu-dark text-small shadow mt-2" aria-labelledby="dropdownUser1">
-                        <li><a class="dropdown-item" href="/manager/editor-profile">Profile</a></li>
+                        <li><a class="dropdown-item" href="/full_time/editor-profile">Profile</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>

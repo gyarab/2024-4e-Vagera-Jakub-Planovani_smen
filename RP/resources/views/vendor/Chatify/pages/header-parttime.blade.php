@@ -1,4 +1,3 @@
-
 <header class=" header bg-white " id="header">
     <div class="header_toggle  "> <i class='bx bx-menu' id="header-toggle"></i> </div>
     <div class="container-fluid">
@@ -54,7 +53,7 @@
                                     </h6>
 
 
-                                    <span class="d-none d-sm-inline text-black"><small> Manager</small></span>
+                                    <span class="d-none d-sm-inline text-black"><small> Employee</small></span>
                             </div>
 
                         </div>
@@ -99,7 +98,7 @@
 
 
                     <ul class="dropdown-menu dropdown-menu-dark text-small shadow mt-2" aria-labelledby="dropdownUser1">
-                        <li><a class="dropdown-item" href="/manager/editor-profile">Profile</a></li>
+                        <li><a class="dropdown-item" href="/part_time/editor-profile">Profile</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>

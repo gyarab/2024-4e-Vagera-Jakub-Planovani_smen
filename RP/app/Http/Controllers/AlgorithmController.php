@@ -33,10 +33,141 @@ class AlgorithmController extends Controller
  
         if ($fromArr != null) {
             for ($x = 0; $x < count($fromArr); $x++) {
+                if (($fromArr[$x] != "")) { 
+
+
+                    $fetch_unique_row = DB::select("SELECT COUNT(*) AS count FROM shift_active_data WHERE saved_at='$dateArr[$x]' AND id_shift='$idArr[$x]' ");
+                    $check_unique = $fetch_unique_row[0]->count;
+         
+                    if ($check_unique == 0) {
+                        if ($namesidArr[$x] == "") {
+                            DB::insert("INSERT INTO shift_active_data (saved_at, id_shift, saved_from, saved_to, timestamp_update, id, comments) VALUES ('$dateArr[$x]','$idArr[$x]','$fromArr[$x]','$toArr[$x]','$time',NULL, '$areaArr[$x]')");
+                        } else {
+                            DB::insert("INSERT INTO shift_active_data (saved_at, id_shift, saved_from, saved_to, timestamp_update, id, comments) VALUES ('$dateArr[$x]','$idArr[$x]','$fromArr[$x]','$toArr[$x]','$time','$namesidArr[$x]', '$areaArr[$x]')");
+                        }
+
+                    } else {
+                        if ($namesidArr[$x] == "") {
+                            DB::update("UPDATE shift_active_data SET saved_from='$fromArr[$x]', saved_to='$toArr[$x]' , timestamp_update='$time', id=NULL, comments='$areaArr[$x]' WHERE saved_at='$dateArr[$x]' AND id_shift='$idArr[$x]'");
+                        } else {
+                            DB::update("UPDATE shift_active_data SET saved_from='$fromArr[$x]', saved_to='$toArr[$x]' , timestamp_update='$time', id='$namesidArr[$x]', comments='$areaArr[$x]' WHERE saved_at='$dateArr[$x]' AND id_shift='$idArr[$x]'");
+
+                        }
+      
+                    }
+                }
+            }
+        }
+        $day = "";
+        /**
+         * Aplikuji se jen novejsi data
+         */
+        if ($deleteArr != null) {
+            for ($x = 0; $x < count($deleteArr); $x++) {
+
+                $year = substr($YM, 0, -3);
+                $month = substr($YM, -2);
+                $fetch_check_shift = DB::select("SELECT COUNT(*) AS count FROM shift_check WHERE id_shift = '$deleteArr[$x]' AND year_shift='$year' AND month_shift='$month'");
+                $check_unique_save = $fetch_check_shift[0]->count;
+                if ($check_unique_save == 0) {
+                    DB::insert("INSERT INTO shift_check (id_shift, year_shift, month_shift) VALUES ('$deleteArr[$x]','$year','$month')");
+            
+                }
+                for ($z = 1; $z < 32; $z++) {
+                    if ($z < 10) {
+                        $day = "0" . $z;
+                    } else {
+                        $day = $z;
+                    }
+                    $date = $YM . "-" . $day;
+                    $fetch_up_time = DB::select("SELECT * FROM shift_active_data WHERE saved_at = '$date' AND id_shift='$deleteArr[$x]'");
+                  
+
+                    foreach ($fetch_up_time as $result_up_time) {
+                        $last_up = $result_up_time->timestamp_update;
+
+                        if ($last_up < $time) {
+                         
+                            $fetch_check_unique_shift = DB::select("SELECT COUNT(*) AS count FROM shift_active_data WHERE (shift_active_data.saved_at='$date' AND shift_active_data.id_shift='$deleteArr[$x]' AND shift_active_data.id_planned IN (SELECT id_planned FROM attendance WHERE (log_from IS NOT NULL AND log_to IS NULL) OR (log_from IS NOT NULL AND log_to IS NOT NULL)) )");
+                            $check_unique_shift = $fetch_check_unique_shift[0]->count;
+                            if ($check_unique_shift == 0) {
+                                DB::delete("DELETE FROM shift_active_data WHERE saved_at = '$date' AND id_shift='$deleteArr[$x]'");
+                    
+                            }
+         
+                        }
+                    }
+                }
+            }
+        }
+
+
+        $offers = 0;
+        if (empty($offer)) {
+       
+
+        } else {
+            $authUser = Auth::id();
+            $offers = count($offer);
+            for ($x = 0; $x < count($offer); $x++) {
+                $id_shift_offer = substr($offer[$x], 7);
+                $day_offer = substr($offer[$x], 0, 2);
+                $date = $YM . "-" . $day_offer;
+                DB::insert("REPLACE INTO shift_offer (id_shift, date, created_at, created_by) VALUE ('$id_shift_offer', '$date', '$time' , '$authUser') ");
+
+
+            }
+        }
+        for ($t = 1; $t < 32; $t++) {
+
+            if ($t < 10) {
+                $day_offer = "0" . $t;
+            } else {
+                $day_offer = $t;
+            }
+            $offer_date = $YM . "-" . $day_offer;
+            $fetch_offer = DB::select("SELECT * FROM shift_offer WHERE date='$offer_date' ");
+            foreach ($fetch_offer as $result_offer) {
+                $shift_offer = $result_offer->id_shift;
+                $fetch_offer2 = DB::select("SELECT * FROM shift_active_data WHERE saved_at='$offer_date' AND id_shift='$shift_offer'  ");
+                foreach ($fetch_offer2 as $result_offer2) {
+                    if ($result_offer2->id != null) {
+                        DB::delete("DELETE FROM shift_offer WHERE date='$offer_date' AND id_shift='$shift_offer' ");
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+    /**
+     * 
+     * stary ukladaci kod
+     */
+    /*public function insertCalendarData(Request $request)
+    {
+        $offer = array();
+        $offer = [];
+        $fromArr = $request->input('from');
+        $toArr = $request->input('to');
+        $idArr = $request->input('id_shift');
+        $dateArr = $request->input('date');
+        $deleteArr = $request->input('id_delete');
+        $namesidArr = $request->input('namesid');
+        $nameArr = $request->input('name');
+        $areaArr = $request->input('area');
+        $offer = $request->input('offer');
+        $YM = $request->input('dateym');
+        $time = time();
+ 
+        if ($fromArr != null) {
+            for ($x = 0; $x < count($fromArr); $x++) {
                 if (($fromArr[$x] != "")) { /*not allowing empty values and the row which has been removed.*/
 
 
-                    $fetch_unique_row = DB::select("SELECT COUNT(*) AS count FROM shift_planned_data WHERE saved_at='$dateArr[$x]' AND id_shift='$idArr[$x]' ");
+                    /*$fetch_unique_row = DB::select("SELECT COUNT(*) AS count FROM shift_planned_data WHERE saved_at='$dateArr[$x]' AND id_shift='$idArr[$x]' ");
                     $check_unique = $fetch_unique_row[0]->count;
          
                     if ($check_unique == 0) {
@@ -162,7 +293,7 @@ class AlgorithmController extends Controller
 
         }
 
-    }
+    }*/
 
 
     public function loadEmployeeTableCalendar(Request $request)
@@ -307,11 +438,9 @@ class AlgorithmController extends Controller
         if ($c_id == null) {
             $c_id = array();
         }else{
-            error_log("+++++");
             for ($i = 0; $i < count($c_id); $i++) {
                 error_log($c_id[$i]);
             }   
-            error_log("+++++");
 
         }
         if ($c_from == null) {

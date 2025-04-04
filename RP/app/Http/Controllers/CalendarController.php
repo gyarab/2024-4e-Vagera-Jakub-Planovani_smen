@@ -848,7 +848,7 @@ class CalendarController extends Controller
                     $d = $Year . "-" . $Month . "-" . $dt;
                     $check_existance_cell = 0;
                     if ($max_day >= $dt) {
-                        $fetch_message = DB::select("SELECT COUNT(*) AS count FROM shift_planned_data WHERE id_shift='$idArr[$x]' AND saved_at='$d' ");
+                        $fetch_message = DB::select("SELECT COUNT(*) AS count FROM shift_active_data WHERE id_shift='$idArr[$x]' AND saved_at='$d' ");
                         $check_existance_cell = $fetch_message[0]->count;
      
                     } else {
@@ -857,10 +857,10 @@ class CalendarController extends Controller
                     if ($check_existance_cell == 0 || $IS == 1) {
                         $saved_data[$coll][$i] = "";
                     } else {
-                        $sql_get = DB::select("SELECT * FROM shift_planned_data WHERE id_shift='$idArr[$x]' AND saved_at='$d' ");
+                        $sql_get = DB::select("SELECT * FROM shift_active_data WHERE id_shift='$idArr[$x]' AND saved_at='$d' ");
                         $get_com = "";
                         foreach ($sql_get as $result_get) {
-                            $get_com = $result_get->comments_on;
+                            $get_com = $result_get->comments;
                         }
              
 
@@ -928,7 +928,7 @@ class CalendarController extends Controller
                     $t = "-";
                     $d = $Year . "-" . $Month . "-" . $dt;
                     if ($max_day >= $dt) {
-                        $fetch_get = DB::select("SELECT COUNT(*) as count FROM shift_planned_data WHERE id_shift='$idArr[$x]' AND saved_at='$d' ");
+                        $fetch_get = DB::select("SELECT COUNT(*) as count FROM shift_active_data WHERE id_shift='$idArr[$x]' AND saved_at='$d' ");
                         $check_get = $fetch_get[0]->count;
                     } else {
                         $IS = 1;
@@ -937,7 +937,7 @@ class CalendarController extends Controller
                         $saved_data[$x][$i] = "empty";
                     } else {
                         
-                        $fetch_data = DB::select("SELECT shift_planned_data.saved_from, shift_planned_data.saved_to, shift_planned_data.id FROM shift_planned_data WHERE shift_planned_data.id_shift='$idArr[$x]' AND shift_planned_data.saved_at='$d'");
+                        $fetch_data = DB::select("SELECT shift_active_data.saved_from, shift_active_data.saved_to, shift_active_data.id FROM shift_active_data WHERE shift_active_data.id_shift='$idArr[$x]' AND shift_active_data.saved_at='$d'");
                         foreach ($fetch_data as $result_data) {
                             $get_from = $result_data->saved_from;
                             $get_to = $result_data->saved_to;

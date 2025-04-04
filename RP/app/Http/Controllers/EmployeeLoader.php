@@ -35,6 +35,18 @@ class EmployeeLoader extends Controller
     $user = User::find($id);
     return view('manager/employee-list-personal', compact('user'));
   }
+  public function showProfileEmployee($id)
+  {
+   
+    $user = User::find($id);
+    $user_sender = User::find(Auth::id());
+    if($user_sender->role == "parttime"){
+      return view('part_time/employee-list-personal', compact('user'));
+
+    }else{
+      return view('full_time/employee-list-personal', compact('user'));
+    }
+  }
   public function showChatify ($id){
     
     $user = User::find($id);
@@ -302,11 +314,21 @@ class EmployeeLoader extends Controller
  
         echo '   <li class="list-inline-item dropdown"><center>';
         echo '        <a class="text-muted dropdown-toggle font-size-18 px-2"';
-        echo '            href="#" role="button" data-bs-toggle="dropdown"';
+        if ($role == 'fulltime' || $role == 'parttime') {
+          echo ' href="' . route('profileEmployee', ['id' => $id_arr[$d]]) .'" ';
+          echo' role="button" ';
+
+        }else{
+          echo ' href="#"';
+          echo' role="button" data-bs-toggle="dropdown"';
+
+
+        }            
         echo '           aria-haspopup="true"><i';
         echo '              class="bx bx-dots-vertical-rounded"></i></a>';
-        echo '     <div class="dropdown-menu dropdown-menu-end">';
+    
         if($role == "admin"){
+          echo '     <div class="dropdown-menu dropdown-menu-end">';
           echo '         <a class="dropdown-item " href="' . route('profile', ['id' => $id_arr[$d]]) . '"><i';
           echo '             class="bx bx-pencil text-primary font-size-18"></i>&nbsp;Edit</a><a';
           echo '             class="dropdown-item" href="/chatify/'. $id_arr[$d].   '"><i class="bi bi-chat-dots"></i>&nbsp;Message';
@@ -314,12 +336,14 @@ class EmployeeLoader extends Controller
           echo '              href="' . route('showCertainStatistics', ['id' => $id_arr[$d]]) . '"><i class="bi bi-bar-chart-line"></i>&nbsp;Stats</a>';
           echo '      </div>';
         }else if($role == "manager"){
+          echo '     <div class="dropdown-menu dropdown-menu-end">';
           echo '         <a class="dropdown-item " href="' . route('profileManager', ['id' => $id_arr[$d]]) . '"><i';
           echo '             class="bx bx-pencil text-primary font-size-18"></i>&nbsp;Edit</a><a';
           echo '             class="dropdown-item" href="/chatify/'. $id_arr[$d].   '"><i class="bi bi-chat-dots"></i>&nbsp;Message';
-          echo '</a><a class="dropdown-item"';
-          echo '              href="' . route('showCertainStatistics', ['id' => $id_arr[$d]]) . '"><i class="bi bi-bar-chart-line"></i>&nbsp;Stats</a>';
+          echo '</a>';
           echo '      </div>';
+
+     
         }
   
         echo '       </center></li>';

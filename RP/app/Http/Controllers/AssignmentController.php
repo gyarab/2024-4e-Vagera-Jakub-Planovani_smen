@@ -21,11 +21,16 @@ class AssignmentController extends Controller
         $user = User::find($id);
         return view('admin/assign-shifts', compact('user'));
     }
+    public function showAssignmentsManager($id){
+        $user = User::find($id);
+        return view('manager/assign-shifts', compact('user'));
+    }
     public function loadAssignmentList(Request $request){
         $id_obj = $request->input('id_object');
         $id_decrypted_obj = Crypt::decrypt($id_obj);
         $id = $request->input('id');
         $col = $request->input('col');
+ 
          $id_obj = array();
          $name_obj = array();
          $superior_obj = array();
@@ -128,8 +133,8 @@ class AssignmentController extends Controller
     }
     public function loadShiftAssignmentStructure(Request $request)
     {
+
         $shift_crypted = $request->input('id_shift');
-        error_log($shift_crypted);
         $shift = Crypt::decrypt($shift_crypted);
         $fetch_count = DB::select("SELECT COUNT(*) AS count FROM shift_assignment, users WHERE users.id=shift_assignment.id AND shift_assignment.id_shift='$shift' AND users.delete_status !=1 ORDER BY users.last_name,users.first_name, users.middle_name ");
         $fetch = DB::select("SELECT *, users.id AS user_id FROM shift_assignment, users WHERE users.id=shift_assignment.id AND shift_assignment.id_shift='$shift'  AND users.delete_status !=1 ORDER BY users.last_name,users.first_name, users.middle_name");
@@ -183,7 +188,21 @@ class AssignmentController extends Controller
         $name_obj = array();
         $superior_obj = array();
         $icons = array();
+        $rights = array();
+        $id_user = Auth::id();
+        $admin = false;
+        $fetch_position = DB::select("SELECT role AS r FROM  users WHERE id='$id_user'");
+        $rights = array();
+        
+        $role = $fetch_position[0]->r;
+        if($role == "admin"){
+            $admin = true;
+        }
+        $fetch_rights = DB::select("SELECT * FROM management_rights WHERE id='$id_user' ");
+        foreach ($fetch_rights as $result_rights) {
+            array_push($rights, $result_rights->id_object);
 
+        } 
         $fetch = DB::select("SELECT * FROM object_model ");
         foreach ($fetch as $result) {
 
@@ -209,6 +228,12 @@ class AssignmentController extends Controller
                     if($counter > 0){
                         echo "checked";
                     }
+                    if ($admin == true || in_array($id_obj[$x], $rights) == true) {
+
+                    }else{
+                        echo "disabled";
+                    }
+
                     
                     echo " value='$id_encrypted' /><label for='ch_$id_encrypted' class='mx-2 px-2 py-1 text-light' id='h_shi-" . $id_encrypted . "' style='margin-top: 10px;height: 50px;background: " . $result_shift->color . ";border-radius: 25px;display:inline;text-overflow: ellipsis;white-space: nowrap;overflow: hidden' title='" . $result_shift->shift_name . "'>" . $result_shift->shift_name . "</label>";
 
@@ -218,7 +243,7 @@ class AssignmentController extends Controller
                 $row = 0;
                 for ($h = 0; $h < count($name_obj); $h++) {
                     if ($id_obj[$x]  == $superior_obj[$h]) {
-                       subLoad($id_obj[$x], $id_obj, $name_obj, $superior_obj, $id, $icons/*$rname*/);
+                       subLoad($id_obj[$x], $id_obj, $name_obj, $superior_obj, $id, $icons, $admin, $rights);
                         $row++;
                         break;
                     }
@@ -325,7 +350,7 @@ class AssignmentController extends Controller
         }
     }
 }
-function subLoad($searching, $dat1, $dat2, $dat4, $id, $icons)
+function subLoad($searching, $dat1, $dat2, $dat4, $id, $icons, $admin, $rights)
 {
     static $dd = 1;
     $find = 0;
@@ -354,6 +379,11 @@ function subLoad($searching, $dat1, $dat2, $dat4, $id, $icons)
                 if($counter > 0){
                     echo "checked";
                 }
+                if ($admin == true || in_array($dat1[$i], $rights) == true) {
+
+                }else{
+                    echo "disabled";
+                }
                 echo " /><label for='ch_$id_encrypted_sub' class='mx-2 my-2 px-2 py-1 text-light' id='h_shi-" . $id_encrypted_sub . "' style='display: inline;margin-top: 5px;height: 50px;background: " . $result_shift_sub->color . ";border-radius: 25px;display:inline;text-overflow: ellipsis;white-space: nowrap;overflow: hidden' title='" . $result_shift_sub->shift_name . "'>" . $result_shift_sub->shift_name . "</label></div>";
 
     
@@ -367,7 +397,7 @@ function subLoad($searching, $dat1, $dat2, $dat4, $id, $icons)
             if ($sea != null) {
                 for ($h = 0; $h < count($dat2); $h++) {
                     if ($sea == $dat4[$h]) {
-                        subLoad($sea, $dat1, $dat2, $dat4, $id, $icons);
+                        subLoad($sea, $dat1, $dat2, $dat4, $id, $icons, $admin, $rights);
                         break;
                     }
                 }

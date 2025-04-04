@@ -25,7 +25,7 @@
     <link href="{{ asset('CSS/clock2.css') }}" rel="stylesheet">
     <link href="{{ asset('CSS/object-structure1.css') }}" rel="stylesheet">
     <link href="{{ asset('CSS/select-button.css') }}" rel="stylesheet">
-    <title>Time options</title>
+    <title>My time options</title>
     <link rel="icon" type="image/x-icon" href="{{ URL('images/cropped_imageic.ico') }}">
     <link href="{{ asset('CSS/timeline.css') }}" rel="stylesheet">
     <link href="{{ asset(path: 'CSS/calendar.css') }}" rel="stylesheet">
@@ -41,8 +41,8 @@
     <style>
 
     </style>
-    @include('vendor.Chatify.pages.header-admin')
-    @include('vendor.Chatify.pages.sidebar-admin')
+    @include('vendor.Chatify.pages.header-parttime')
+    @include('vendor.Chatify.pages.sidebar-parttime')
     @include('admin.scripts')
     <div class="border-start bg-light p-1" class="height: 100vh">
 
@@ -77,66 +77,21 @@
         <div class="card p-2 mb-2 mx-2 mt-3 ">
                 <br>
                 <div class="row">
-                    <div class="col-12 col-md-6">
-                        <h5 class="px-1  py-2">Time options</h5>
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="d-flex flex-column text-center">
-                                    <div class="row gutters-sm">
-                                        <div class="col-4 d-flex flex-column align-items-start">
-                                            <img id="imagePersoanl" src="" alt="Admin"
-                                                class="rounded-circle object-fit-cover"
-                                                style="height: 70px; width: 70px;border: 2p">
-                                        </div>
-                                        <div class="col-8">
-                                            <h4>{{ $user->first_name }} {{ $user->middle_name }}
-                                                {{ $user->last_name }}
-                                            </h4>
-                                            <?php if($user->role == "admin") { ?>
-                                            <span class="p-1 rounded text-bg-dark">Administrator</span>
-                                            <?php }else if($user->role == "manager") { ?>
-                                            <span class="p-1 rounded text-bg-danger">Manager</span>
-                                            <?php }else if($user->role == "fulltime") { ?>
-                                            <span class="p-1 rounded text-bg-primary">Full-Time</span>
-                                            <?php }else if($user->role == "parttime") { ?>
-                                            <span class="p-1 rounded text-bg-success">Part-Time</span>
-                                            <?php } ?>
-                                        </div>
-                                    </div>
-
-                                    <script>
-                                        $.ajax({
-                                            url: '{{ route('showImagePersonal') }}',
-                                            type: 'POST',
-                                            data: {
-                                                _token: '{{ csrf_token() }}',
-                                                id: {{ $user->id }},
-                                            },
-                                            success: function(response) {
-                                          
-                                                $('#imagePersoanl').attr('src', response.url);
-
-                                            },
-                                            error: function(xhr, status, error) {
-                                                error_alert('Error connection');
-                                            }
-                                        });
-                                    </script>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="col-6">
+                        <h5 class="px-1 px-md-5 py-2">Time options</h5>
+           
                     <br>
                     </div>
-                    <div class="col-12 col-md-6 d-flex align-items-center justify-content-end">
-                        <input type="button" name="save" class="btn btn-primary mt-2 mx-2 mb-2 mb-md-0" style="font-size: 20px;float:right;"
+                    <div class="col-6">
+                        <input type="button" name="save" class="btn btn-primary mt-2 mx-2" style="font-size: 15px;float:right;"
                         value="Save" id="butsave">
                     </div>
                     <hr>      
 
                 </div>
                 <div class="row">
-                    <div class="col-6  d-flex align-items-center">
-                        <h4 class="current-date mx-1 mt-1 mx-md-5"></h4>
+                    <div class="col-6">
+                        <h5 class="current-date mx-1 mt-1 mx-md-5"></h5>
                     </div>
                     <div class="col-6 icons">
                         <span id="next" style="float: right"><i class="bi bi-arrow-right-square" class='mx-1' style="font-size: 2.10em;"></i></span>
@@ -455,8 +410,7 @@
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    date: date_full,
-                    id: {{ $user->id }},
+                    date: date_full
                 },
                 success: function(response) {
                     saved_data = response.saved_data;
@@ -591,7 +545,6 @@
                     to: to,
                     dateym: year_month,
                     date: date,
-                    id: {{ $user->id }},
                 },
                 success: function(response) {
                     success_alert("Time options saved");

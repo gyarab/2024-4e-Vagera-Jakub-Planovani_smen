@@ -15,49 +15,29 @@
                     <img src="{{ URL('images/big_icon.png') }}" alt="hugenerd" width="20" height="20">
                     <span class="nav_logo-name text-dark">Clock Work</span> </a>
                 <div class="nav_list">
-                    <a href="/manager/dashboard" class="nav_link active mb-1 text-dark link-secondary"><i
+                    <a href="/full_time/dashboard" class="nav_link active mb-1 text-dark link-secondary"><i
                             class='bx bx-grid-alt nav_icon'></i> <span class="nav_name">Dashboard</span> </a>
-                    <a href="/manager/employee-list" class="nav_link mb-1 text-dark link-secondary"> <i
+                    <a href="/full_time/employee-list" class="nav_link mb-1 text-dark link-secondary"> <i
                             class='bx bx-user nav_icon'></i> <span class="nav_name">Employees</span> </a>
-                    <a href="/manager/model-shift" class="nav_link mb-1 text-dark link-secondary"> <i class="bi bi-card-heading nav_icon"></i> <span class="nav_name">Shift models
-                            </span>
-                        </a> <a href="/manager/offers" class="nav_link mb-1 text-dark link-secondary"
+                
+                    <a href="/full_time/offers" class="nav_link mb-1 text-dark link-secondary"
                         class=" nav_link nav-link px-0 mx-0 align-middle"> <i class='bx bx-hash nav_icon' ></i> <span class="nav_name">Shift offers</span> </a>
-                            <a href="/manager/confirm-offer-request" class="nav_link mb-1 text-dark link-secondary"
-                        class=" nav_link nav-link px-0 mx-0 align-middle"> <i class='bx bx-folder nav_icon'
-                            data-bs-parent="#menu"></i> <span class="nav_name">Shift requests</span> </a>
+                    
                          <a href="/chatify" class="nav_link mb-1 text-dark link-secondary"
                         class=" nav_link nav-link px-0 mx-0 align-middle"> <i
                         class='bx bx-message-square-detail nav_icon'></i> <span class="nav_name">Chat</span> </a>
+                        <a href="/full_time/calendar-view" class="nav_link mb-1 text-dark link-secondary"
+                        class=" nav_link nav-link px-0 mx-0 align-middle"> <i class="bi bi-eye nav_icon"></i> <span class="nav_name">View calendar</span> </a>
+         
 
-                    <li class="mx-0">
-                        <a href="#submenu6" class="nav_link mb-1 text-dark link-secondary"
-                            data-bs-toggle="collapse" class=" nav_link nav-link px-0 mx-0 align-middle">
-                            <i class='bi bi-calendar-week nav_icon'></i> <span
-                                class="ms-1 d-none d-sm-inline">Calendar</span> </a>
-                        <ul class="collapse nav flex-column ms-1" id="submenu6" data-bs-parent="#menu">
-                            <li class="w-100">
-                                <a href="/manager/calendar-view" class="nav_link mb-1 text-dark link-secondary"
-                                    class="nav-link px-0"> <i class="bi bi-eye nav_icon"></i> <span class="d-none d-sm-inline">View calendar</span></a>
-                            </li>
-                            <li>
-                                <a href="/manager/calendar" class="nav_link mb-1 text-dark link-secondary"
-                                    class="nav-link px-0"> <i class="bi bi-pen nav_icon"></i> <span class="d-none d-sm-inline">Edit calendar</span> </a>
-                            </li>
-                        </ul>
-                    </li>
-
-
-                    <div ><a href="/manager/my-statistics" class="nav_link  mb-1 text-dark link-secondary"> <i
+                    <div ><a href="/full_time/my-statistics" class="nav_link  mb-1 text-dark link-secondary"> <i
                                 class='bx bx-bar-chart-alt-2 nav_icon'></i> <span class="nav_name">My statistics</span>
                         </a>
                     </div>
-                    <div ><a href="/manager/my-permanent-time-options" class="nav_link  mb-1 text-dark link-secondary"> <i class='bx bx-briefcase-alt nav_icon' ></i> <span class="nav_name">My time options</span>
+                    <div ><a href="/full_time/my-permanent-time-options" class="nav_link  mb-1 text-dark link-secondary"> <i class='bx bx-briefcase-alt nav_icon' ></i> <span class="nav_name">My time options</span>
                         </a>
                     </div>
-                <div ><a href="/manager/board-information" class="nav_link  mb-1 text-dark link-secondary"> <i class='bx bx-chalkboard nav_icon' ></i> <span class="nav_name">Info-board</span>
-                </a>
-                </div>
+               
 
 
 
@@ -81,7 +61,7 @@
 
                 <ul id="drop_menu" class="dropdown-menu dropdown-menu-dark text-small shadow text-black dropdown-toggle"
                     style="overflow-x: visible;" aria-labelledby="dropdownUser4" data-bs-toggle="dropdown" data-toggle="dropdown">
-                    <li><a class="dropdown-item" href="/manager/editor-profile"><i class="bi bi-person"></i></a></li>
+                    <li><a class="dropdown-item" href="/full_time/editor-profile"><i class="bi bi-person"></i></a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>

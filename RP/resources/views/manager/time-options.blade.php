@@ -41,8 +41,8 @@
     <style>
 
     </style>
-    @include('vendor.Chatify.pages.header-admin')
-    @include('vendor.Chatify.pages.sidebar-admin')
+    @include('vendor.Chatify.pages.header-manager')
+    @include('vendor.Chatify.pages.sidebar-manager')
     @include('admin.scripts')
     <div class="border-start bg-light p-1" class="height: 100vh">
 

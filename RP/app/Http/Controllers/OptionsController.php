@@ -21,6 +21,21 @@ class OptionsController extends Controller
         $user = User::find($id);
         return view('admin/permanent-time-options', compact('user'));
     }
+    public function showPermanentOptionManager($id)
+    {
+        $user = User::find($id);
+        return view('manager/permanent-time-options', compact('user'));
+    }
+    public function showTimeoptionsManager($id)
+    {
+        $user = User::find($id);
+        return view('manager/time-options', compact('user'));
+    }
+    public function showTimeoptions($id)
+    {
+        $user = User::find($id);
+        return view('admin/time-options', compact('user'));
+    }
     public function insertPermanenntOption(Request $request)
     {
         $mon_f = $request->input('monf');
@@ -146,7 +161,7 @@ VALUES
         $shift_month = array();
 
         $date = $request->input('date');
-        $id_user = Auth::id();
+        $id_user = $request->input('id');
 
         $dt = "";
 
@@ -203,7 +218,7 @@ VALUES
         $fromArr = $request->input('from');
         $toArr = $request->input('to');
         $dateArr = $request->input('date');
-        $id_user = Auth::id();
+        $id_user = $request->input('id');
         $YM = $request->input('dateym');
         $time = time();
 

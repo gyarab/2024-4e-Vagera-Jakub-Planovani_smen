@@ -21,6 +21,12 @@ class CertainStatisticsController extends Controller
         $user = User::find($id);
         return view('admin/employee-statistics', compact('user'));
     }
+
+    public function showCertainStatisticsManager($id)
+    {
+        $user = User::find($id);
+        return view('manager/employee-statistics', compact('user'));
+    }
     public function certainStatsTable(Request $request)
     {
 
